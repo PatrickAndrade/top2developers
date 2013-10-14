@@ -47,6 +47,7 @@ class Connection implements Runnable {
 	private Socket mSocket;
 	private BufferedReader bfr;
 	private DataOutputStream dout;
+	private CommandParser parser;
 	
 	private final static String QUIT_COMMAND = "quit";
 
@@ -55,17 +56,25 @@ class Connection implements Runnable {
 		bfr = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
 		dout = new DataOutputStream(mSocket.getOutputStream());
 		System.out.println("	Started connection with " + mSocket.getInetAddress());
+		
+		parser = new CommandParser();
 	}
 
 	public void run() {
 		String command = "";
+		String answer = "";
 		
 		while(!command.equals(QUIT_COMMAND)){
 			try {
 				command = bfr.readLine();
 				
+				answer = parser.parse(command);
 				System.out.println("I read the command: " + command);
 				dout.writeChars("Thanks for requesting the command " + command + "\n");
+				
+				if (!answer.equals("")) {
+					dout.writeChars("Answer : " + answer);
+				}
 				
 			} catch (IOException e) {
 				e.printStackTrace();
