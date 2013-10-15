@@ -16,10 +16,11 @@ import java.net.Socket;
 
 public class TelnetServer {
 	private final static int PORT = 11211;
+	private static ServerSocket serverSocket;
 	
 	public static void main(String[] args) {
 		try {
-			ServerSocket serverSocket = new ServerSocket(PORT);
+			serverSocket = new ServerSocket(PORT);
 			
 			System.out.println("Telnet server on port " + PORT + " started sucessfully !");
 
@@ -39,7 +40,6 @@ public class TelnetServer {
 		} catch (IOException e) {
 			System.out.println("Impossible to start the Telnet server !");
 		}
-
 	}
 }
 
