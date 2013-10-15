@@ -21,8 +21,8 @@ import java.util.Set;
  */
 class KeyValueStore<K, V> implements Map<K, V> {
 
-	private static  final KeyValueStore<?, ?> INSTANCE = new KeyValueStore<>();
-	private HashMap<K, V> map;
+	private static final KeyValueStore<?, ?> INSTANCE = new KeyValueStore<>();
+	private Map<K, V> map;
 	
 	
 	private KeyValueStore() {
