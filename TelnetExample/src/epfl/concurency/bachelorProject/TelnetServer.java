@@ -73,7 +73,7 @@ class Connection implements Runnable {
 				dout.writeChars("Thanks for requesting the command " + command + "\n");
 				
 				if (!answer.equals("")) {
-					dout.writeChars("Answer : " + answer);
+					dout.writeChars("Answer : " + answer + "\n	");
 				}
 				
 			} catch (IOException e) {
