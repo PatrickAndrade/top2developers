@@ -18,14 +18,14 @@ import java.util.Set;
 public final class KeyValueStore<K, V> implements Map<K, V> {
 
 	private static final KeyValueStore<?, ?> INSTANCE = new KeyValueStore<>();
-	private Map<K, V> map;
+	private Map<K, V> mMap;
 
 	private KeyValueStore() {
 		if (INSTANCE != null) {
 			throw new IllegalStateException("Already instantiated");
 		}
 
-		map = new HashMap<K, V>();
+		mMap = new HashMap<K, V>();
 	}
 
 	public static KeyValueStore<?, ?> getInstance() {
@@ -34,61 +34,61 @@ public final class KeyValueStore<K, V> implements Map<K, V> {
 
 	@Override
 	public void clear() {
-		map.clear();
+		mMap.clear();
 	}
 
 	@Override
 	public boolean containsKey(Object key) {
-		return map.containsKey(key);
+		return mMap.containsKey(key);
 	}
 
 	@Override
 	public boolean containsValue(Object value) {
-		return map.containsValue(value);
+		return mMap.containsValue(value);
 	}
 
 	@Override
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		return map.entrySet();
+		return mMap.entrySet();
 	}
 
 	@Override
 	public V get(Object key) {
-		return map.get(key);
+		return mMap.get(key);
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return map.isEmpty();
+		return mMap.isEmpty();
 	}
 
 	@Override
 	public Set<K> keySet() {
-		return map.keySet();
+		return mMap.keySet();
 	}
 
 	@Override
 	public V put(K key, V value) {
-		return map.put(key, value);
+		return mMap.put(key, value);
 	}
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
-		map.putAll(m);
+		mMap.putAll(m);
 	}
 
 	@Override
 	public V remove(Object key) {
-		return map.remove(key);
+		return mMap.remove(key);
 	}
 
 	@Override
 	public int size() {
-		return map.size();
+		return mMap.size();
 	}
 
 	@Override
 	public Collection<V> values() {
-		return map.values();
+		return mMap.values();
 	}
 }
