@@ -35,4 +35,10 @@ public class ValueInteger extends Value<Integer> {
 		increment(-k);
 	}
 
+	@Override
+	// This will return a clone of the ValueInteger
+	protected Value<Integer> clone() throws CloneNotSupportedException {
+		return new ValueInteger(getValue());
+	}
+
 }

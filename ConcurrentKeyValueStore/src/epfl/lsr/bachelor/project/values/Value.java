@@ -6,7 +6,7 @@ package epfl.lsr.bachelor.project.values;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public abstract class Value<K> {
+public abstract class Value<K> implements Cloneable {
 	private K mValue;
 
 	/**
@@ -32,6 +32,9 @@ public abstract class Value<K> {
 	public void setValue(K newValue) {
 		this.mValue = newValue;
 	}
+	
+	@Override
+	protected abstract Value<K> clone() throws CloneNotSupportedException;
 	
 	/**
 	 * This enables to kow if this kind of value support the commands Incr/Decr

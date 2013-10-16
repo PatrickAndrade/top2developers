@@ -31,4 +31,10 @@ public class ValueString extends Value<String> {
 		return;
 	}
 
+	@Override
+	// This will return a clone of the ValueString
+	protected Value<String> clone() throws CloneNotSupportedException {
+		return new ValueString(getValue());
+	}
+
 }
