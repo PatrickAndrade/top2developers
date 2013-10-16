@@ -6,10 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-
-
-
-
 import epfl.lsr.bachelor.project.server.request.Request;
 import epfl.lsr.bachelor.project.util.CommandParser;
 
@@ -30,12 +26,14 @@ public final class Connection implements Runnable {
 
 	public Connection(Socket socket, RequestBuffer requestBuffer) throws IOException {
 		mSocket = socket;
-		mBufferedReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
+		mBufferedReader = new BufferedReader(new InputStreamReader(
+				mSocket.getInputStream()));
 		mDataOutputStream = new DataOutputStream(mSocket.getOutputStream());
 		mCommandParser = new CommandParser();
 		mRequestBuffer = requestBuffer;
-		
-		System.out.println("  -> Started connection with " + mSocket.getInetAddress());
+
+		System.out.println("  -> Started connection with "
+				+ mSocket.getInetAddress());
 	}
 
 	public void run() {
@@ -45,19 +43,21 @@ public final class Connection implements Runnable {
 			try {
 				mDataOutputStream.writeChars("ConcurrentKeyValueStore > ");
 				command = mBufferedReader.readLine();
-				Request request = mCommandParser.parse(command);
-				
-				if (request != null) {
-					if (!command.equals(QUIT_COMMAND)) {
+
+				if (!command.equals(QUIT_COMMAND)) {
+					Request request = mCommandParser.parse(command);
+
+					if (request != null) {
 						request.setConnection(this);
 						mRequestBuffer.add(request);
 						waitUntilRequestIsPerformed();
 						request.respond();
+					} else {
+						mDataOutputStream
+								.writeChars("-Err unable to execute command '"
+										+ command + "'\n");
 					}
-				} else {
-					mDataOutputStream.writeChars("Error\n");
 				}
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -68,7 +68,7 @@ public final class Connection implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public synchronized void waitUntilRequestIsPerformed() {
 		try {
 			wait();
@@ -76,17 +76,18 @@ public final class Connection implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public synchronized void notifyThatRequestIsPerformed() {
 		notify();
 	}
-	
+
 	public DataOutputStream getDataOutputStream() {
 		return mDataOutputStream;
 	}
 
 	private void closeConnection(Socket socket) throws IOException {
 		socket.close();
-		System.err.println("   -> Connection with " + mSocket.getInetAddress() + " aborted !");
+		System.err.println("   -> Connection with " + mSocket.getInetAddress()
+				+ " aborted !");
 	}
 }

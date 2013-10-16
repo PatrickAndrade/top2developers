@@ -37,8 +37,8 @@ public abstract class Value<K> implements Cloneable {
 	public abstract Value<K> clone() throws CloneNotSupportedException;
 	
 	/**
-	 * This enables to kow if this kind of value support the commands Incr/Decr
-	 * @return true or false dependind on the value itself
+	 * This enables to know if this kind of value support the commands Incr/Decr
+	 * @return true or false depending on the value itself
 	 */
 	public abstract boolean supportIncrementDecrement();
 	
@@ -55,4 +55,9 @@ public abstract class Value<K> implements Cloneable {
 	 * @param k the number of decrement
 	 */
 	public abstract void decrement(int k);
+	
+	/**
+	 * Enables to print in a readable way the value
+	 */
+	public abstract String toString();
 }

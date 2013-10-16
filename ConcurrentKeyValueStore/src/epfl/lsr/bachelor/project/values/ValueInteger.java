@@ -41,4 +41,9 @@ public class ValueInteger extends Value<Integer> {
 		return new ValueInteger(getValue());
 	}
 
+	@Override
+	public String toString() {
+		return getValue().toString();
+	}
+
 }

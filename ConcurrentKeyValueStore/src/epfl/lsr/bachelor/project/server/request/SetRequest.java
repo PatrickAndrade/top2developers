@@ -1,8 +1,5 @@
 package epfl.lsr.bachelor.project.server.request;
 
-import java.io.IOException;
-
-import epfl.lsr.bachelor.project.store.KeyValueStore;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
@@ -19,16 +16,11 @@ public class SetRequest extends Request {
 
 	@Override
 	public void perform() {
-		// TODO Auto-generated method stub
-		@SuppressWarnings("unchecked")
-		KeyValueStore<String, Value<?>> keyValueStore = (KeyValueStore<String, Value<?>>) KeyValueStore.getInstance();
-		keyValueStore.put(getKey(), getValue());
+		if (KEY_VALUE_STORE.put(getKey(), getValue()) == null) {
+			setMessageToReturn("STORED");
+		} else {
+			setMessageToReturn("REPLACED");
+		}
 		getConnection().notifyThatRequestIsPerformed();
 	}
-
-	@Override
-	public void respond() throws IOException {
-		getConnection().getDataOutputStream().writeChars("Done\n");
-	}
-
 }

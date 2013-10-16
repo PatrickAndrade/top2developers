@@ -48,11 +48,12 @@ public class TelnetServer {
 		//attendre que l'on ait satisfait les derniers clients
 		while (!mThreadPool.isTerminated()) { }
 		
-		try {
-			mServerSocket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (mServerSocket != null) {
+			try {
+				mServerSocket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

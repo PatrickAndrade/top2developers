@@ -37,4 +37,9 @@ public class ValueString extends Value<String> {
 		return new ValueString(getValue());
 	}
 
+	@Override
+	public String toString() {
+		return getValue();
+	}
+
 }
