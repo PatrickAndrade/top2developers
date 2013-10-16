@@ -6,7 +6,7 @@ import epfl.lsr.bachelor.project.server.Connection;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * TODO: Comment this class
+ * Represent a request received from the client
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -28,8 +28,9 @@ abstract public class Request {
 	/**
 	 * Call to perform the request. When we finish to peform the request,
 	 * we must notify() the thread that wait for this monitor!
+	 * @throws CloneNotSupportedException 
 	 */
-	abstract public void perform();
+	abstract public void perform() throws CloneNotSupportedException;
 
 	/**
 	 * Call to respond

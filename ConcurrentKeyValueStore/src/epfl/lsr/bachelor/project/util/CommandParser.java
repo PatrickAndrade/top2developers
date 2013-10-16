@@ -3,7 +3,6 @@ package epfl.lsr.bachelor.project.util;
 import epfl.lsr.bachelor.project.server.request.GetRequest;
 import epfl.lsr.bachelor.project.server.request.Request;
 import epfl.lsr.bachelor.project.server.request.SetRequest;
-import epfl.lsr.bachelor.project.store.KeyValueStore;
 import epfl.lsr.bachelor.project.values.Value;
 import epfl.lsr.bachelor.project.values.ValueInteger;
 import epfl.lsr.bachelor.project.values.ValueString;

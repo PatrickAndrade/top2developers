@@ -4,7 +4,7 @@ import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.request.Request;
 
 /**
- * TODO: Comment this class
+ * Thread that performs the requests (it's like a pipe between {@link RequestBuffer} and {@link KeyValueStore}
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -29,7 +29,11 @@ final public class SingleThreadPipe implements Runnable {
 	public void run() {
 		while (true) {
 			Request request = mRequestBuffer.take();
-			request.perform();
+			try {
+				request.perform();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

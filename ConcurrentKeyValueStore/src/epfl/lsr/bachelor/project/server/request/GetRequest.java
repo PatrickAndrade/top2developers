@@ -6,7 +6,7 @@ import epfl.lsr.bachelor.project.store.KeyValueStore;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * TODO: Comment this class
+ * Represent a get request received from the client
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -18,15 +18,22 @@ public class GetRequest extends Request {
 	}
 
 	@Override
-	public void perform() {
-		@SuppressWarnings({ "unchecked"})
+	public void perform() throws CloneNotSupportedException {
+		@SuppressWarnings({"unchecked"})
 		KeyValueStore<String, Value<?>> keyValueStore = (KeyValueStore<String, Value<?>>) KeyValueStore.getInstance();
-		setValue(keyValueStore.get(getKey()));
+		Value<?> value = keyValueStore.get(getKey());
+		if (value != null) {
+			setValue(value.clone());
+		}
 		getConnection().notifyThatRequestIsPerformed();
 	}
 
 	@Override
 	public void respond() throws IOException {
-		getConnection().getDataOutputStream().writeChars(getValue().getValue() + "\n");
+		if ((getValue() != null) && (getValue().getValue() != null)) {
+			getConnection().getDataOutputStream().writeChars(getValue().getValue() + "\n");
+		} else {
+			getConnection().getDataOutputStream().writeChars("NIL\n");
+		}
 	}
 }

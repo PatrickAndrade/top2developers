@@ -6,7 +6,7 @@ import epfl.lsr.bachelor.project.store.KeyValueStore;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * TODO: Comment this class
+ * Represent a set request received from the client
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
