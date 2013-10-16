@@ -34,7 +34,7 @@ public abstract class Value<K> implements Cloneable {
 	}
 	
 	@Override
-	protected abstract Value<K> clone() throws CloneNotSupportedException;
+	public abstract Value<K> clone() throws CloneNotSupportedException;
 	
 	/**
 	 * This enables to kow if this kind of value support the commands Incr/Decr

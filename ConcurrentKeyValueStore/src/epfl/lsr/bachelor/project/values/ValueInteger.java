@@ -37,7 +37,7 @@ public class ValueInteger extends Value<Integer> {
 
 	@Override
 	// This will return a clone of the ValueInteger
-	protected Value<Integer> clone() throws CloneNotSupportedException {
+	public Value<Integer> clone() throws CloneNotSupportedException {
 		return new ValueInteger(getValue());
 	}
 
