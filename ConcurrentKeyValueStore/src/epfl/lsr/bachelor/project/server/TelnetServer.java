@@ -8,6 +8,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import epfl.lsr.bachelor.project.pipe.SingleThreadPipe;
+
 /**
  * First implementation of the Telnet server accepting the connections on port 22122
  * 
@@ -18,22 +20,26 @@ public class TelnetServer {
 	public final static int PORT = 22122;
 	private static final int NUMBER_CURRENT_CONNECTION = 100;
 	
-	private static ServerSocket serverSocket;
+	private static ServerSocket mServerSocket;
 	
-	private static ExecutorService threadPool = Executors.newFixedThreadPool(NUMBER_CURRENT_CONNECTION);
+	private static ExecutorService mThreadPool = Executors.newFixedThreadPool(NUMBER_CURRENT_CONNECTION);
+	
+	private static RequestBuffer mRequestBuffer = new RequestBuffer();
 
 	public static void main(String[] args) {
 		try {
-			serverSocket = new ServerSocket(PORT);
+			mServerSocket = new ServerSocket(PORT);
+			
+			new Thread(SingleThreadPipe.create(mRequestBuffer)).start();
 
 			init();
 
 			while (true) {
 
-				Socket socket = serverSocket.accept();
+				Socket socket = mServerSocket.accept();
 				
-				Connection connection = new Connection(socket);
-				threadPool.execute(connection);		//TODO:si le client ce deco avant qu'un thread n execute connection,
+				Connection connection = new Connection(socket, mRequestBuffer);
+				mThreadPool.execute(connection);		//TODO:si le client se déco avant qu'un thread n execute connection,
 													//géré la deconnection!!!
 //				new Thread(new Connection(socket)).start();
 
@@ -41,11 +47,11 @@ public class TelnetServer {
 		} catch (IOException e) {
 			System.out.println("Telnet server encoured some unexpected error ! Please restart !");
 		}
-		threadPool.shutdown();
-		while (!threadPool.isTerminated()) { }; //attendre que l'on ait satisfait les derniers clients
+		mThreadPool.shutdown();
+		while (!mThreadPool.isTerminated()) { }; //attendre que l'on ait satisfait les derniers clients
 		
 		try {
-			serverSocket.close();
+			mServerSocket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

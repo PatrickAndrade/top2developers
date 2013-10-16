@@ -11,22 +11,24 @@ import epfl.lsr.bachelor.project.values.Value;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class GetRequest extends Request {
+public class SetRequest extends Request {
 
-	public GetRequest(String key) {
-		super(key);
+	public SetRequest(String key, Value<?> value) {
+		super(key, value);
 	}
 
 	@Override
 	public void perform() {
-		@SuppressWarnings({ "unchecked"})
+		// TODO Auto-generated method stub
+		@SuppressWarnings("unchecked")
 		KeyValueStore<String, Value<?>> keyValueStore = (KeyValueStore<String, Value<?>>) KeyValueStore.getInstance();
-		setValue(keyValueStore.get(getKey()));
+		keyValueStore.put(getKey(), getValue());
 		getConnection().notifyThatRequestIsPerformed();
 	}
 
 	@Override
 	public void respond() throws IOException {
-		getConnection().getDataOutputStream().writeChars(getValue().getValue() + "\n");
+		getConnection().getDataOutputStream().writeChars("Done\n");
 	}
+
 }

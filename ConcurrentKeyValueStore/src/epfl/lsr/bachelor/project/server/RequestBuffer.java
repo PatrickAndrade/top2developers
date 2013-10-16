@@ -1,6 +1,6 @@
 package epfl.lsr.bachelor.project.server;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import epfl.lsr.bachelor.project.server.request.Request;
 
@@ -11,5 +11,22 @@ import epfl.lsr.bachelor.project.server.request.Request;
  * 
  */
 public class RequestBuffer {
-	private ArrayList<Request> requestList = new ArrayList<>();
+	private LinkedList<Request> mRequestList = new LinkedList<Request>();
+	
+	public synchronized void add(Request request) {
+		mRequestList.add(request);
+		notify();
+	}
+	
+	public synchronized Request take() {
+		if (mRequestList.isEmpty()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return mRequestList.removeFirst();
+	}
 }
