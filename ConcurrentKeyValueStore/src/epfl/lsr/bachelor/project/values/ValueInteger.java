@@ -20,7 +20,12 @@ public class ValueInteger extends Value<Integer> {
 	@Override
 	// This will increment the value by k
 	public void increment(int k) {
-		setValue(getValue() + k);
+		if ((double) getValue() / (double) Integer.MAX_VALUE + (double) k
+				/ (double) Integer.MAX_VALUE <= 1
+				&& (double) getValue() / (double) Integer.MIN_VALUE
+						+ (double) k / (double) Integer.MIN_VALUE <= 1) {
+			setValue(getValue() + k);
+		}
 	}
 
 	@Override
