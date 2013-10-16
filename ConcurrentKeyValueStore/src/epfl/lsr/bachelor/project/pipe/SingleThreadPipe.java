@@ -4,7 +4,7 @@ import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.request.Request;
 
 /**
- * Thread that performs the requests (it's like a pipe between {@link RequestBuffer} and {@link KeyValueStore}
+ * Thread that performs the requests (it's like a pipe between RequestBuffer  and KeyValueStore
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
