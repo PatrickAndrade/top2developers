@@ -47,16 +47,13 @@ public final class Connection implements Runnable {
 				command = mBufferedReader.readLine();
 				Request request = mCommandParser.parse(command);
 				
-//				if (!answer.equals("")) {
-//					mDataOutputStream.writeChars(answer + "\n");
-//				}
-				
 				if (request != null) {
-					request.setConnection(this);
-					mRequestBuffer.add(request);
-					waitUntilRequestIsPerformed();
-					request.respond();
-//					mDataOutputStream.writeChars(answer + "\n");
+					if (!command.equals(QUIT_COMMAND)) {
+						request.setConnection(this);
+						mRequestBuffer.add(request);
+						waitUntilRequestIsPerformed();
+						request.respond();
+					}
 				} else {
 					mDataOutputStream.writeChars("Error\n");
 				}

@@ -22,28 +22,23 @@ public class CommandParser {
 		String[] commandField = command.split(" ");
 
 		if (commandField.length < 1) {
-//			return "";
 			return null;
 		} else {
 			switch (commandField[0]) {
 				case "get":
 					if (commandField.length < GET_ARGUMENTS) {
-//						return "-ERR wrong number of arguments for 'get' command";
 						return null;
 					}
-//					String value = KEYVALUESTORE.get(commandField[1]);
-//					if (value == null) {
-//						return "NIL";
-//					}
+					
 					return new GetRequest(commandField[1]);
+					
 				case "set":
 					if (commandField.length < SET_ARGUMENTS) {
-//						return "-ERR wrong number of arguments for 'set' command";
 						return null;
 					}
-//					KEYVALUESTORE.put(commandField[1], commandField[2]);
-//					return "STORED";
+
 					Value<?> value = null;
+					
 					if (isInteger(commandField[2])) {
 						value = new ValueInteger(Integer.valueOf(commandField[2]));
 					} else {
@@ -53,10 +48,8 @@ public class CommandParser {
 					return new SetRequest(commandField[1], value);
 				case "quit":
 				case "":
-//					return "";
 				default:
 			}
-//			return "-ERR unknown command '" + commandField[0] + "'";
 			return null;
 		}
 	}
