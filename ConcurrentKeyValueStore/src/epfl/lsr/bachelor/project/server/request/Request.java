@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import epfl.lsr.bachelor.project.server.Connection;
 import epfl.lsr.bachelor.project.store.KeyValueStore;
+import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
@@ -19,13 +20,25 @@ abstract public class Request {
 	private Connection mConnection;
 
 	@SuppressWarnings("unchecked")
+	// The static reference to the KeyValueStore
 	protected static final KeyValueStore<String, Value<?>> KEY_VALUE_STORE =
 		(KeyValueStore<String, Value<?>>) KeyValueStore.getInstance();
 
+	/**
+	 * Default constructor
+	 * 
+	 * @param key the key to reference the value stored
+	 */
 	public Request(String key) {
 		mKey = key;
 	}
 
+	/**
+	 * Constructor to simplify the construction of a {@link SetRequest}
+	 * 
+	 * @param key the key to reference the value stored
+	 * @param value the value to be stored
+	 */
 	public Request(String key, Value<?> value) {
 		mKey = key;
 		mValue = value;
@@ -40,41 +53,70 @@ abstract public class Request {
 	abstract public void perform() throws CloneNotSupportedException;
 
 	/**
-	 * Call to respond
+	 * Enables to give an answer back after performing a request
 	 */
 	public void respond() throws IOException {
 		mConnection.getDataOutputStream().writeChars(mMessageToReturn + "\n");
 	}
 	
+	/**
+	 * Enables to know if the request can be performed
+	 * 
+	 * @return true or false depending on if it can be performed
+	 */
 	public boolean canBePerformed() {
 		return true;
 	}
 
+	/**
+	 * Enables to return the key associated with this request
+	 * 
+	 * @return the key associated with this request
+	 */
 	public String getKey() {
 		return mKey;
 	}
 
+	/**
+	 * Enables to return the value associated with this request
+	 * 
+	 * @return the value associated with this request
+	 */
 	public Value<?> getValue() {
 		return mValue;
 	}
 
-	protected void setValue(Value<?> value) {
-		mValue = value;
-	}
-
+	/**
+	 * Enables to set the connection associated with this request
+	 * 
+	 * @param connection the connection associated with this request
+	 */
 	public void setConnection(Connection connection) {
 		mConnection = connection;
 	}
 
-	public Connection getConnection() {
-		return mConnection;
-	}
-
-	public String getMessageToReturn() {
-		return mMessageToReturn;
-	}
-
+	/**
+	 * Enables to set the message to return after performing this request
+	 * 
+	 * @param messageToReturn the message to be returned
+	 */
 	public void setMessageToReturn(String messageToReturn) {
 		mMessageToReturn = messageToReturn;
+	}
+	
+	/**
+	 * Enables to notify the thread in waiting-mode that the request has been performed.
+	 * This must be called after performing the request
+	 */
+	public void notifyRequestPerformed() {
+		mConnection.notifyThatRequestIsPerformed();
+	}
+	
+	/**
+	 * Enables to know if the the message to be returned after performing the request is empty
+	 * @return is the message empty or not
+	 */
+	public boolean isMessageEmpty() {
+		return mMessageToReturn.equals(Constants.EMPTY_STRING);
 	}
 }

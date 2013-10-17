@@ -8,6 +8,7 @@ import java.net.Socket;
 
 import epfl.lsr.bachelor.project.server.request.Request;
 import epfl.lsr.bachelor.project.util.CommandParser;
+import epfl.lsr.bachelor.project.util.Constants;
 
 /**
  * Encapsulates a connection opened
@@ -21,8 +22,6 @@ public final class Connection implements Runnable {
 	private DataOutputStream mDataOutputStream;
 	private CommandParser mCommandParser;
 	private RequestBuffer mRequestBuffer;
-
-	private final static String QUIT_COMMAND = "quit";
 
 	public Connection(Socket socket, RequestBuffer requestBuffer) throws IOException {
 		mSocket = socket;
@@ -39,21 +38,24 @@ public final class Connection implements Runnable {
 	public void run() {
 		String command = "";
 
-		while (!command.equals(QUIT_COMMAND)) {
+		while (command != null && !command.equals(Constants.QUIT_COMMAND)) {
 			try {
 				mDataOutputStream.writeChars("ConcurrentKeyValueStore > ");
 				command = mBufferedReader.readLine();
 
-				if (!command.equals(QUIT_COMMAND)) {
+				if (command != null && !command.equals(Constants.QUIT_COMMAND)) {
 					Request request = mCommandParser.parse(command);
 					request.setConnection(this);
-					
+
 					if (request.canBePerformed()) {
 						mRequestBuffer.add(request);
 						waitUntilRequestIsPerformed();
-					} 
-					
-					request.respond();
+					}
+					if (!request.isMessageEmpty()) {
+						request.respond();
+					} else {
+						mDataOutputStream.writeChars(Constants.EMPTY_STRING);
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

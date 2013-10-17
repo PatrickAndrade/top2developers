@@ -19,28 +19,22 @@ import epfl.lsr.bachelor.project.values.ValueString;
  */
 public class CommandParser {
 
-	private final static int GET_ARGUMENTS = 2;
-	private final static int SET_ARGUMENTS = 3;
-	private static final int DEL_ARGUMENTS = 2;
-	private static final int INCR_DECR_ARGUMENTS = 2;
-	private static final int HINCR_HDECR_ARGUMENTS = 3;
-
 	public Request parse(String command) {
 		String[] commandField = command.split(" ");
 
 		if (commandField.length < 1) {
-			return null;
+			return new ErrRequest("");
 		} else {
 			switch (commandField[0]) {
-				case "get":
-					if (commandField.length < GET_ARGUMENTS) {
+				case Constants.GET_COMMAND:
+					if (commandField.length < Constants.GET_ARGUMENTS) {
 						return new ErrRequest("-Err get request one argument");
 					}
 					
 					return new GetRequest(commandField[1]);
 					
-				case "set":
-					if (commandField.length < SET_ARGUMENTS) {
+				case Constants.SET_COMMAND:
+					if (commandField.length < Constants.SET_ARGUMENTS) {
 						return new ErrRequest("-Err set request two arguments");
 					}
 
@@ -54,41 +48,44 @@ public class CommandParser {
 					
 					return new SetRequest(commandField[1], value);
 				
-				case "del":
-					if (commandField.length < DEL_ARGUMENTS) {
+				case Constants.DEL_COMMAND:
+					if (commandField.length < Constants.DEL_ARGUMENTS) {
 						return new ErrRequest("-Err del request one argument");
 					}
 					
 					return new DelRequest(commandField[1]);
 					
-				case "incr":
-				case "decr":
-					if (commandField.length < INCR_DECR_ARGUMENTS) {
-						return new ErrRequest("-Err incr/decr request one argument");
+				case Constants.INCR_COMMAND:
+				case Constants.DECR_COMMAND:
+					if (commandField.length < Constants.INCR_DECR_ARGUMENTS) {
+						return new ErrRequest("-Err " + Constants.INCR_COMMAND + "/" +
+								Constants.DECR_COMMAND + " request one argument");
 					}
 					
-					if (commandField[0].equals("incr")) {
+					if (commandField[0].equals(Constants.INCR_COMMAND)) {
 						return new IncrRequest(commandField[1], 1);
 					} else {
 						return new DecrRequest(commandField[1], 1);
 					}
-				case "hincr":
-				case "hdecr":
-					if (commandField.length < HINCR_HDECR_ARGUMENTS) {
-						return new ErrRequest("-Err hincr/hdecr request one argument");
+				case Constants.HINCR_COMMAND:
+				case Constants.HDECR_COMMAND:
+					if (commandField.length < Constants.HINCR_HDECR_ARGUMENTS) {
+						return new ErrRequest("-Err " + Constants.HINCR_COMMAND + "/" +
+								Constants.HDECR_COMMAND + " request one argument");
 					}
 					
 					if (!isInteger(commandField[2])) {
-						return new ErrRequest("-Err hincr/decr need an integer as argument");
+						return new ErrRequest("-Err " + Constants.HINCR_COMMAND + "/" +
+								Constants.HDECR_COMMAND + " need an integer as argument");
 					}
 					
-					if (commandField[0].equals("hincr")) {
+					if (commandField[0].equals(Constants.HINCR_COMMAND)) {
 						return new IncrRequest(commandField[1], Integer.valueOf(commandField[2]));
 					} else {
 						return new DecrRequest(commandField[1], Integer.valueOf(commandField[2]));
 					}
-				case "quit":
-				case "":
+				case Constants.EMPTY_STRING:
+					return new ErrRequest("");
 				default:
 			}
 

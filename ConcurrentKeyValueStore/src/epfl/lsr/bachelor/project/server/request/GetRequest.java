@@ -22,6 +22,6 @@ public class GetRequest extends Request {
 		} else {
 			setMessageToReturn("NIL");
 		}
-		getConnection().notifyThatRequestIsPerformed();
+		notifyRequestPerformed();
 	}
 }

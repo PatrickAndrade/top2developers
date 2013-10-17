@@ -21,6 +21,6 @@ public class SetRequest extends Request {
 		} else {
 			setMessageToReturn("REPLACED");
 		}
-		getConnection().notifyThatRequestIsPerformed();
+		notifyRequestPerformed();
 	}
 }

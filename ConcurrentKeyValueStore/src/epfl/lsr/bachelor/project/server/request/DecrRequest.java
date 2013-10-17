@@ -32,7 +32,7 @@ public class DecrRequest extends Request {
 				setMessageToReturn("-Err not supported for this value");
 			}
 		}
-		getConnection().notifyThatRequestIsPerformed();
+		notifyRequestPerformed();
 	}
 
 }

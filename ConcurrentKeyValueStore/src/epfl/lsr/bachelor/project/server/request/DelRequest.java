@@ -20,6 +20,6 @@ public class DelRequest extends Request {
 		} else {
 			setMessageToReturn("DELETED");
 		}
-		getConnection().notifyThatRequestIsPerformed();
+		notifyRequestPerformed();
 	}
 }
