@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.4" icons="true" automaticImage="JPEG" always-add-relationships="false" 
   generalizations="true" realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
-  <class id="1" language="java" name="epfl.lsr.bachelor.project.server.TelnetServer" project="ConcurrentKeyValueStore" 
-    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/TelnetServer.java" binary="false" 
+  <class id="1" language="java" name="epfl.lsr.bachelor.project.server.Server" project="ConcurrentKeyValueStore" 
+    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/Server.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="170" y="129"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 

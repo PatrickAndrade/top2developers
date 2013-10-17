@@ -22,8 +22,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="epfl.lsr.bachelor.project.server.TelnetServer" project="ConcurrentKeyValueStore" 
-    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/TelnetServer.java" binary="false" 
+  <class id="3" language="java" name="epfl.lsr.bachelor.project.server.Server" project="ConcurrentKeyValueStore" 
+    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/Server.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="214" width="471" x="-32" y="31"/>    
     <display autosize="false" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 

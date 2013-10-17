@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import epfl.lsr.bachelor.project.server.request.Request;
 
 /**
- * This is the buffer between the Key-Value store and the Telnet-server
+ * This is the buffer between the Key-Value store and the server containing {@link Request}s
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 

@@ -1,7 +1,7 @@
 package epfl.lsr.bachelor.project.util;
 
 /**
- * Wrap in one class all this constants needed
+ * Wrap in one class all the constants needed
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -11,8 +11,9 @@ public final class Constants {
 	public static final int NUMBER_OF_PIPELINED_CONNECTIONS = 10;
 	
 	public static final String EMPTY_STRING = "";
-	public static final String WELCOME = "TelnetServer 1.0.1 (developed in JAVA)" + "\n\n" +
+	public static final String WELCOME = "Server 1.0.1 (developed in JAVA)" + "\n\n" +
 			"Running in standard mode" + "\n" + "Port: " + PORT + "\n";
+	public static final String FATAL_ERROR = "The server encoured some unexpected error ! Please restart !";
 	
 	public static final int GET_ARGUMENTS = 2;
 	public static final int SET_ARGUMENTS = 3;
