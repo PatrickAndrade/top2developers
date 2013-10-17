@@ -62,6 +62,7 @@ public class Client {
 
 		try {
 			mDataOutputStream.writeChars("get " + key + "\0");
+			mDataOutputStream.flush();
 			return mBufferedReader.readLine();
 		} catch (IOException e) {
 			return null;
@@ -143,13 +144,6 @@ public class Client {
 			return mBufferedReader.readLine();
 		} catch (IOException e) {
 			return null;
-		}
-	}
-
-	public void emptyInput() {
-		try {
-			while (mBufferedReader.readLine() != null) {	}
-		} catch (IOException e) {
 		}
 	}
 }

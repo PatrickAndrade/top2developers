@@ -27,8 +27,9 @@ public class AClientShould {
 	@Before
 	public void init() throws UnknownHostException {
 		mClient = new Client(InetAddress.getLocalHost(), Constants.PORT);
-		mClient.connect();
-		mClient.emptyInput();
+		if (mClient.connect()) {
+			System.out.println("Connected");
+		}
 	}
 	
 	@After
