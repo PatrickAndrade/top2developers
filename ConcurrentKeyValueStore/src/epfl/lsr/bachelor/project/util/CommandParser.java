@@ -22,6 +22,7 @@ public class CommandParser {
 	private final static int SET_ARGUMENTS = 3;
 	private static final int DEL_ARGUMENTS = 2;
 	private static final int INCR_DECR_ARGUMENTS = 2;
+	private static final int HINCR_HDECR_ARGUMENTS = 3;
 
 	public Request parse(String command) {
 		String[] commandField = command.split(" ");
@@ -66,9 +67,24 @@ public class CommandParser {
 					}
 					
 					if (commandField[0].equals("incr")) {
-						return new IncrRequest(commandField[1]);
+						return new IncrRequest(commandField[1], 1);
 					} else {
-						return new DecrRequest(commandField[1]);
+						return new DecrRequest(commandField[1], 1);
+					}
+				case "hincr":
+				case "hdecr":
+					if (commandField.length < HINCR_HDECR_ARGUMENTS) {
+						return null;
+					}
+					
+					if (!isInteger(commandField[2])) {
+						return null;
+					}
+					
+					if (commandField[0].equals("hincr")) {
+						return new IncrRequest(commandField[1], Integer.valueOf(commandField[2]));
+					} else {
+						return new DecrRequest(commandField[1], Integer.valueOf(commandField[2]));
 					}
 				case "quit":
 				case "":

@@ -10,20 +10,23 @@ import epfl.lsr.bachelor.project.values.ValueInteger;
  * 
  */
 public class DecrRequest extends Request {
-
-	public DecrRequest(String key) {
+	
+	private int mDecrement;
+	
+	public DecrRequest(String key, int decrement) {
 		super(key);
+		mDecrement = decrement;
 	}
 
 	@Override
 	public void perform() throws CloneNotSupportedException {
 		Value<?> valueStored = KEY_VALUE_STORE.get(getKey());
 		if (valueStored == null) {
-			KEY_VALUE_STORE.put(getKey(), new ValueInteger(-1));
-			setMessageToReturn("(integer) -1");
+			KEY_VALUE_STORE.put(getKey(), new ValueInteger(-mDecrement));
+			setMessageToReturn("(integer) " + -mDecrement);
 		} else {
 			if (valueStored.supportIncrementDecrement()) {
-				valueStored.decrement(1);
+				valueStored.decrement(mDecrement);
 				setMessageToReturn("(integer) " + valueStored);
 			} else {
 				setMessageToReturn("-Err not supported for this value");

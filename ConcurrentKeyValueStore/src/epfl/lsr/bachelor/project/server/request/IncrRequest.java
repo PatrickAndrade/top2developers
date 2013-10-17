@@ -11,19 +11,22 @@ import epfl.lsr.bachelor.project.values.ValueInteger;
  */
 public class IncrRequest extends Request {
 		
-	public IncrRequest(String key) {
+	private int mIncrement;
+	
+	public IncrRequest(String key, int increment) {
 		super(key);
+		mIncrement = increment;
 	}
 
 	@Override
 	public void perform() throws CloneNotSupportedException {
 		Value<?> valueStored = KEY_VALUE_STORE.get(getKey());
 		if (valueStored == null) {
-			KEY_VALUE_STORE.put(getKey(), new ValueInteger(1));
-			setMessageToReturn("(integer) 1");
+			KEY_VALUE_STORE.put(getKey(), new ValueInteger(mIncrement));
+			setMessageToReturn("(integer) " + mIncrement);
 		} else {
 			if (valueStored.supportIncrementDecrement()) {
-				valueStored.increment(1);
+				valueStored.increment(mIncrement);
 				setMessageToReturn("(integer) " + valueStored);
 			} else {
 				setMessageToReturn("-Err not supported for this value");
