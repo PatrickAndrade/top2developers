@@ -45,6 +45,10 @@ public final class Server {
 			System.out.println(Constants.FATAL_ERROR);
 		}
 
+		stop();
+	}
+	
+	public static void stop() {
 		mThreadPool.shutdown();
 
 		// We wait until all the clients have got their answers
