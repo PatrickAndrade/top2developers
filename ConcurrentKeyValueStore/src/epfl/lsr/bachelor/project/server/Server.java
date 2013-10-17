@@ -15,14 +15,14 @@ import epfl.lsr.bachelor.project.util.Constants;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class TelnetServer {
+public final class Server {
 
 	private static ServerSocket mServerSocket;
 	private static ExecutorService mThreadPool = 
 			Executors.newFixedThreadPool(Constants.NUMBER_OF_PIPELINED_CONNECTIONS);
 	private static RequestBuffer mRequestBuffer = new RequestBuffer();
-
-	public static void main(String[] args) {
+	
+	public static void start() {
 		try {
 			// We launch the server
 			mServerSocket = new ServerSocket(Constants.PORT);
@@ -42,7 +42,7 @@ public class TelnetServer {
 
 			}
 		} catch (IOException e) {
-			System.out.println("Telnet server encoured some unexpected error ! Please restart !");
+			System.out.println(Constants.FATAL_ERROR);
 		}
 
 		mThreadPool.shutdown();
@@ -55,7 +55,6 @@ public class TelnetServer {
 			try {
 				mServerSocket.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}
