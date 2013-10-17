@@ -2,6 +2,7 @@ package epfl.lsr.bachelor.project.util;
 
 import epfl.lsr.bachelor.project.server.request.DecrRequest;
 import epfl.lsr.bachelor.project.server.request.DelRequest;
+import epfl.lsr.bachelor.project.server.request.ErrRequest;
 import epfl.lsr.bachelor.project.server.request.GetRequest;
 import epfl.lsr.bachelor.project.server.request.IncrRequest;
 import epfl.lsr.bachelor.project.server.request.Request;
@@ -33,14 +34,14 @@ public class CommandParser {
 			switch (commandField[0]) {
 				case "get":
 					if (commandField.length < GET_ARGUMENTS) {
-						return null;
+						return new ErrRequest("-Err get request one argument");
 					}
 					
 					return new GetRequest(commandField[1]);
 					
 				case "set":
 					if (commandField.length < SET_ARGUMENTS) {
-						return null;
+						return new ErrRequest("-Err set request two arguments");
 					}
 
 					Value<?> value = null;
@@ -55,7 +56,7 @@ public class CommandParser {
 				
 				case "del":
 					if (commandField.length < DEL_ARGUMENTS) {
-						return null;
+						return new ErrRequest("-Err del request one argument");
 					}
 					
 					return new DelRequest(commandField[1]);
@@ -63,7 +64,7 @@ public class CommandParser {
 				case "incr":
 				case "decr":
 					if (commandField.length < INCR_DECR_ARGUMENTS) {
-						return null;
+						return new ErrRequest("-Err incr/decr request one argument");
 					}
 					
 					if (commandField[0].equals("incr")) {
@@ -74,11 +75,11 @@ public class CommandParser {
 				case "hincr":
 				case "hdecr":
 					if (commandField.length < HINCR_HDECR_ARGUMENTS) {
-						return null;
+						return new ErrRequest("-Err hincr/hdecr request one argument");
 					}
 					
 					if (!isInteger(commandField[2])) {
-						return null;
+						return new ErrRequest("-Err hincr/decr need an integer as argument");
 					}
 					
 					if (commandField[0].equals("hincr")) {
@@ -90,7 +91,8 @@ public class CommandParser {
 				case "":
 				default:
 			}
-			return null;
+
+			return new ErrRequest("-Err unable to execute command '" + commandField[0] + "'");
 		}
 	}
 	

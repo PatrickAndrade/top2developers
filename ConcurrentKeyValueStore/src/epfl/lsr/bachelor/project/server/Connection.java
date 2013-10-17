@@ -46,17 +46,14 @@ public final class Connection implements Runnable {
 
 				if (!command.equals(QUIT_COMMAND)) {
 					Request request = mCommandParser.parse(command);
-
-					if (request != null) {
-						request.setConnection(this);
+					request.setConnection(this);
+					
+					if (request.canBePerformed()) {
 						mRequestBuffer.add(request);
 						waitUntilRequestIsPerformed();
-						request.respond();
-					} else {
-						mDataOutputStream
-								.writeChars("-Err unable to execute command '"
-										+ command + "'\n");
-					}
+					} 
+					
+					request.respond();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

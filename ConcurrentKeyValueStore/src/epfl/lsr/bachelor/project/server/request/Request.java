@@ -45,6 +45,10 @@ abstract public class Request {
 	public void respond() throws IOException {
 		mConnection.getDataOutputStream().writeChars(mMessageToReturn + "\n");
 	}
+	
+	public boolean canBePerformed() {
+		return true;
+	}
 
 	public String getKey() {
 		return mKey;
