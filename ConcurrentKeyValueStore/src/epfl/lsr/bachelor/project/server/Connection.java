@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import java.net.Socket;
 
 import epfl.lsr.bachelor.project.server.request.Request;
@@ -26,26 +25,30 @@ public final class Connection implements Runnable {
 
 	public Connection(Socket socket, RequestBuffer requestBuffer) throws IOException {
 		mSocket = socket;
-		mBufferedReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
+		mBufferedReader = new BufferedReader(new InputStreamReader(
+				mSocket.getInputStream()));
 		mDataOutputStream = new DataOutputStream(mSocket.getOutputStream());
 		mCommandParser = new CommandParser();
 		mRequestBuffer = requestBuffer;
 
-		System.out.println("  -> Started connection with " + mSocket.getInetAddress());
+		System.out.println("  -> Started connection with "
+				+ mSocket.getInetAddress());
 	}
 
 	public void run() {
 		String command = Constants.EMPTY_STRING;
 
-		while (command != null && !command.equals(Constants.QUIT_COMMAND)) {
-			try {
-				mDataOutputStream.writeChars("ConcurrentKeyValueStore:" + Constants.PORT + " > ");
-				
+		try {
+			while (command != null && !command.equals(Constants.QUIT_COMMAND)) {
+				mDataOutputStream.writeChars("ConcurrentKeyValueStore:"
+						+ Constants.PORT + " > ");
+
 				// It gets the command asked by the client
 				command = mBufferedReader.readLine();
 
 				if (command != null && !command.equals(Constants.QUIT_COMMAND)) {
-					// We parse the command to encapsulate it in a more specific request
+					// We parse the command to encapsulate it in a more specific
+					// request
 					Request request = mCommandParser.parse(command);
 					request.setConnection(this);
 
@@ -54,18 +57,19 @@ public final class Connection implements Runnable {
 						mRequestBuffer.add(request);
 						waitUntilRequestIsPerformed();
 					}
-					
-					// If the answer to the client is not empty we respond him 
+
+					// If the answer to the client is not empty we respond him
 					if (!request.isMessageEmpty()) {
 						request.respond();
 					} else {
 						mDataOutputStream.writeChars(Constants.EMPTY_STRING);
 					}
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
+		} catch (IOException e) {
+			System.err.println("  -> Error of connection with " + mSocket.getInetAddress());
 		}
+		
 		try {
 			closeConnection(mSocket);
 		} catch (IOException e) {
@@ -108,6 +112,7 @@ public final class Connection implements Runnable {
 	 */
 	private void closeConnection(Socket socket) throws IOException {
 		socket.close();
-		System.err.println("   -> Connection with " + mSocket.getInetAddress() + " aborted !");
+		System.err.println(" -> Connection with " + mSocket.getInetAddress()
+				+ " aborted !");
 	}
 }
