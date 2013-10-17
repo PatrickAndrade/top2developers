@@ -10,6 +10,11 @@ import epfl.lsr.bachelor.project.values.Value;
  */
 public class GetRequest extends Request {
 
+	/**
+	 * Construct the get-request with the key that maps the wanted value
+	 * 
+	 * @param key the key that maps the wanted value
+	 */
 	public GetRequest(String key) {
 		super(key);
 	}
@@ -17,6 +22,7 @@ public class GetRequest extends Request {
 	@Override
 	public void perform() throws CloneNotSupportedException {
 		Value<?> value = KEY_VALUE_STORE.get(getKey());
+		// If there exists a value mapped by this key we return it otherwise we return NIL
 		if (value != null) {
 			setMessageToReturn(value.toString());
 		} else {

@@ -1,4 +1,5 @@
 package epfl.lsr.bachelor.project.server.request;
+
 /**
  * Represent an error of command requested
  * 
@@ -7,6 +8,11 @@ package epfl.lsr.bachelor.project.server.request;
  */
 public class ErrRequest extends Request {
 	
+	/**
+	 * Construct an error request that will simply contain an error-message
+	 * 
+	 * @param errorMessage the error-message to send to the client
+	 */
 	public ErrRequest(String errorMessage) {
 		super(null);
 		setMessageToReturn(errorMessage);

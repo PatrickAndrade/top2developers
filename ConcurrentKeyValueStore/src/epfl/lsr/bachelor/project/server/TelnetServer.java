@@ -7,35 +7,36 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import epfl.lsr.bachelor.project.pipe.SingleThreadPipe;
+import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * First implementation of the Telnet server accepting the connections on port 22122
+ * The Telnet server accepting the connections on port 22122
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
 public class TelnetServer {
-	public final static int PORT = 22122;
-	private static final int NUMBER_CURRENT_CONNECTION = 100;
-	
+
 	private static ServerSocket mServerSocket;
-	
-	private static ExecutorService mThreadPool = Executors.newFixedThreadPool(NUMBER_CURRENT_CONNECTION);
-	
+	private static ExecutorService mThreadPool = 
+			Executors.newFixedThreadPool(Constants.NUMBER_OF_PIPELINED_CONNECTIONS);
 	private static RequestBuffer mRequestBuffer = new RequestBuffer();
 
 	public static void main(String[] args) {
 		try {
-			mServerSocket = new ServerSocket(PORT);
-			
-			new Thread(SingleThreadPipe.create(mRequestBuffer)).start();
+			// We launch the server
+			mServerSocket = new ServerSocket(Constants.PORT);
 
-			init();
+			// We launch the thread that handles the requests
+			new Thread(SingleThreadPipe.getInstance(mRequestBuffer)).start();
 
+			System.out.println(Constants.WELCOME);
+
+			// We accept connections and give it to the next stage
 			while (true) {
 
 				Socket socket = mServerSocket.accept();
-				
+
 				Connection connection = new Connection(socket, mRequestBuffer);
 				mThreadPool.execute(connection);
 
@@ -43,11 +44,13 @@ public class TelnetServer {
 		} catch (IOException e) {
 			System.out.println("Telnet server encoured some unexpected error ! Please restart !");
 		}
+
 		mThreadPool.shutdown();
-		
-		//attendre que l'on ait satisfait les derniers clients
-		while (!mThreadPool.isTerminated()) { }
-		
+
+		// We wait until all the clients have got their answers
+		while (!mThreadPool.isTerminated()) {
+		}
+
 		if (mServerSocket != null) {
 			try {
 				mServerSocket.close();
@@ -55,13 +58,5 @@ public class TelnetServer {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	private static void init() {
-		System.out.println("TelnetServer 1.0.1 (developed in JAVA)");
-		System.out.println();
-		System.out.println("Running in standard mode");
-		System.out.println("Port: " + PORT);
-		System.out.println();
 	}
 }

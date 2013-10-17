@@ -6,20 +6,21 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * First implementation of the key value store. Use simply the existing map.
+ * Implementation of the key value store. Use simply the existing map.
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
- * @param <K>
- *            The key type
- * @param <V>
- *            The value type
+ * @param <K> The key type
+ * @param <V> The value type
  */
 public final class KeyValueStore<K, V> implements Map<K, V> {
 
 	private static final KeyValueStore<?, ?> INSTANCE = new KeyValueStore<>();
 	private Map<K, V> mMap;
 
+	/**
+	 * Default constructor that instantiate the {@link HashMap} encapsulated by this class
+	 */
 	private KeyValueStore() {
 		if (INSTANCE != null) {
 			throw new IllegalStateException("Already instantiated");
@@ -28,6 +29,11 @@ public final class KeyValueStore<K, V> implements Map<K, V> {
 		mMap = new HashMap<K, V>();
 	}
 
+	/**
+	 * Enables to get the unique instance of the Key-Value store
+	 * 
+	 * @return the Key-Value store instance
+	 */
 	public static KeyValueStore<?, ?> getInstance() {
 		return INSTANCE;
 	}

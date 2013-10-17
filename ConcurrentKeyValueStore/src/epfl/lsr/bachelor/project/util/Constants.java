@@ -1,4 +1,5 @@
 package epfl.lsr.bachelor.project.util;
+
 /**
  * Wrap in one class all this constants needed
  * 
@@ -6,7 +7,12 @@ package epfl.lsr.bachelor.project.util;
  * 
  */
 public final class Constants {
+	public static final int PORT = 22122;
+	public static final int NUMBER_OF_PIPELINED_CONNECTIONS = 10;
+	
 	public static final String EMPTY_STRING = "";
+	public static final String WELCOME = "TelnetServer 1.0.1 (developed in JAVA)" + "\n\n" +
+			"Running in standard mode" + "\n" + "Port: " + PORT + "\n";
 	
 	public static final int GET_ARGUMENTS = 2;
 	public static final int SET_ARGUMENTS = 3;
@@ -22,6 +28,13 @@ public final class Constants {
 	public static final String HINCR_COMMAND = "hincr";
 	public static final String HDECR_COMMAND = "hdecr";
 	public static final String QUIT_COMMAND = "quit";
+	
+	public static final String STORED = "STORED";
+	public static final String REPLACED = "REPLACED";
+	public static final String DELETED = "DELETED";
+	public static final String INTEGER = "(integer)";
+	public static final String NO_SUCH_VALUE = "-Err no such value";
+	public static final String NOT_SUPPORTED = "-Err not supported for this value";
 	
 }
 

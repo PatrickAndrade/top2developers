@@ -23,16 +23,14 @@ public class AValueShould {
 	public void enableToBeInitializedAsValueString() {
 		final String value = "testValue";
 		mValue = new ValueString(value);
-		assertTrue("The value has not been stored correctly",
-				value == (String) mValue.getValue());
+		assertEquals(value, (String) mValue.getValue());
 	}
 
 	@Test
 	public void enableToBeInitializedAsValueInteger() {
 		final int value = 1;
 		mValue = new ValueInteger(value);
-		assertTrue("The value has not been stored correctly",
-				value == (Integer) mValue.getValue());
+		assertEquals(value, ((Integer) mValue.getValue()).intValue());
 	}
 
 	@Test
