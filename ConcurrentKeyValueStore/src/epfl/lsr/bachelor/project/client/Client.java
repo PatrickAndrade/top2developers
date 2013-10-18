@@ -8,6 +8,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import epfl.lsr.bachelor.project.util.Constants;
+
 /**
  * The client that send the request to the server
  * 
@@ -29,7 +31,7 @@ public class Client {
 		if (isConnected()) {
 			return true;
 		}
-		
+
 		try {
 			mSocket = new Socket(mIpPort.getAddress(), mIpPort.getPort());
 			mBufferedReader = new BufferedReader(new InputStreamReader(
@@ -38,10 +40,10 @@ public class Client {
 		} catch (IOException e) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	public boolean isConnected() {
 		return (mSocket != null) && mSocket.isConnected();
 	}
@@ -56,98 +58,41 @@ public class Client {
 	}
 
 	public String get(String key) {
-		if (key == null) {
-			return null;
-		}
-
-		try {
-			write("get " + key);
-			return mBufferedReader.readLine();
-		} catch (IOException e) {
-			return null;
-		}
+		return (key == null) ? null : sendAndGetAnswer(Constants.GET_COMMAND + " " + key);
 	}
 
 	public String set(String key, String value) {
-		if ((key == null) || (value == null)) {
-			return null;
-		}
-
-		try {
-			write("set " + key + " " + value);
-			return mBufferedReader.readLine();
-		} catch (IOException e) {
-			return null;
-		}
+		return ((key == null) || (value == null)) ? null : 
+			sendAndGetAnswer(Constants.SET_COMMAND + " " + key + " " + value);
 	}
 
 	public String delete(String key) {
-		if (key == null) {
-			return null;
-		}
-
-		try {
-			write("del " + key);
-			return mBufferedReader.readLine();
-		} catch (IOException e) {
-			return null;
-		}
+		return (key == null) ? null : sendAndGetAnswer(Constants.DEL_COMMAND + " " + key);
 	}
 
 	public String increment(String key) {
-		if (key == null) {
-			return null;
-		}
-
-		try {
-			write("incr " + key);
-			return mBufferedReader.readLine();
-		} catch (IOException e) {
-			return null;
-		}
+		return (key == null) ? null : sendAndGetAnswer(Constants.INCR_COMMAND + " " + key);
 	}
 
 	public String increment(String key, int value) {
-		if (key == null) {
-			return null;
-		}
-
-		try {
-			write("hincr " + key + value);
-			return mBufferedReader.readLine();
-		} catch (IOException e) {
-			return null;
-		}
+		return (key == null) ? null : sendAndGetAnswer(Constants.HINCR_COMMAND + " " + key + value);
 	}
 
 	public String decrement(String key) {
-		if (key == null) {
-			return null;
-		}
-
-		try {
-			write("decr " + key);
-			return mBufferedReader.readLine();
-		} catch (IOException e) {
-			return null;
-		}
+		return (key == null) ? null : sendAndGetAnswer(Constants.DECR_COMMAND + " " + key);
 	}
 
 	public String decrement(String key, int value) {
-		if (key == null) {
-			return null;
-		}
+		return (key == null) ? null : sendAndGetAnswer(Constants.HDECR_COMMAND + " " + key + value);
+	}
 
+	private String sendAndGetAnswer(String toBeWritten) {
 		try {
-			write("hdecr " + key + value);
+			mDataOutputStream.writeBytes(toBeWritten + "\n");
+			mDataOutputStream.flush();
 			return mBufferedReader.readLine();
 		} catch (IOException e) {
 			return null;
 		}
-	}
-	
-	private void write(String toBeWritten) throws IOException {
-		mDataOutputStream.writeBytes(toBeWritten + "\n");
-		mDataOutputStream.flush();
 	}
 }
