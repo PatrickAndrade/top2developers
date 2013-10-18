@@ -40,8 +40,7 @@ public final class Connection implements Runnable {
 
 		try {
 			while (command != null && !command.equals(Constants.QUIT_COMMAND)) {
-				mDataOutputStream.writeChars("ConcurrentKeyValueStore:"
-						+ Constants.PORT + " > ");
+				mDataOutputStream.writeBytes(Constants.PROGRAMM_NAME);
 
 				// It gets the command asked by the client
 				command = mBufferedReader.readLine();
@@ -62,12 +61,13 @@ public final class Connection implements Runnable {
 					if (!request.isMessageEmpty()) {
 						request.respond();
 					} else {
-						mDataOutputStream.writeChars(Constants.EMPTY_STRING);
+						mDataOutputStream.writeBytes(Constants.EMPTY_STRING);
+						mDataOutputStream.flush();
 					}
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("  -> Error of connection with " + mSocket.getInetAddress());
+			//System.err.println("  -> Error of connection with " + mSocket.getInetAddress());
 		}
 		
 		try {

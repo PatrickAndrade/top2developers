@@ -61,8 +61,7 @@ public class Client {
 		}
 
 		try {
-			mDataOutputStream.writeChars("get " + key + "\0");
-			mDataOutputStream.flush();
+			write("get " + key);
 			return mBufferedReader.readLine();
 		} catch (IOException e) {
 			return null;
@@ -75,7 +74,7 @@ public class Client {
 		}
 
 		try {
-			mDataOutputStream.writeChars("set " + key + " " + value);
+			write("set " + key + " " + value);
 			return mBufferedReader.readLine();
 		} catch (IOException e) {
 			return null;
@@ -88,7 +87,7 @@ public class Client {
 		}
 
 		try {
-			mDataOutputStream.writeChars("del " + key);
+			write("del " + key);
 			return mBufferedReader.readLine();
 		} catch (IOException e) {
 			return null;
@@ -101,7 +100,7 @@ public class Client {
 		}
 
 		try {
-			mDataOutputStream.writeChars("incr " + key);
+			write("incr " + key);
 			return mBufferedReader.readLine();
 		} catch (IOException e) {
 			return null;
@@ -114,7 +113,7 @@ public class Client {
 		}
 
 		try {
-			mDataOutputStream.writeChars("hincr " + key + value);
+			write("hincr " + key + value);
 			return mBufferedReader.readLine();
 		} catch (IOException e) {
 			return null;
@@ -127,7 +126,7 @@ public class Client {
 		}
 
 		try {
-			mDataOutputStream.writeChars("decr " + key);
+			write("decr " + key);
 			return mBufferedReader.readLine();
 		} catch (IOException e) {
 			return null;
@@ -140,10 +139,15 @@ public class Client {
 		}
 
 		try {
-			mDataOutputStream.writeChars("hdecr " + key + value);
+			write("hdecr " + key + value);
 			return mBufferedReader.readLine();
 		} catch (IOException e) {
 			return null;
 		}
+	}
+	
+	private void write(String toBeWritten) throws IOException {
+		mDataOutputStream.writeBytes(toBeWritten + "\n");
+		mDataOutputStream.flush();
 	}
 }

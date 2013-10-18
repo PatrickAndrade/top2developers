@@ -1,5 +1,6 @@
 package epfl.lsr.bachelor.project.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.net.InetAddress;
@@ -10,11 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import epfl.lsr.bachelor.project.client.Client;
-import epfl.lsr.bachelor.project.server.Server;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * TODO: Comment this class
+ * Tests of the client
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -45,9 +45,24 @@ public class AClientShould {
 	}
 	
 	@Test
-	public void enableToGetAValue() {
-		String value = mClient.get("Key");
-		assertTrue("Can't send a get request!", value != null);
+	public void enableToGetNILIfAKeyDoesNotExistInMemory() {
+		assertEquals(Constants.PROGRAMM_NAME + "NIL", mClient.get("NILKey"));
+	}
+	
+	@Test
+	public void enableToSetAndGetAValue() {
+		String value = "someValue";
+		String key = "someKey";
+		mClient.set(key, value);
+		assertEquals(Constants.PROGRAMM_NAME + value, mClient.get(key));
+	}
+	
+	@Test
+	public void enableToSetAndDeleteAValue() {
+		String value = "deleteValue";
+		String key = "deleteKey";
+		mClient.set(key, value);
+		assertEquals(Constants.PROGRAMM_NAME + "DELETED", mClient.delete(key));
 	}
 	
 }
