@@ -25,16 +25,9 @@ public class ValueString extends Value<String> {
 	}
 
 	@Override
-	
 	//This method has no effect since Strings cannot be decremented
 	public void decrement(int k) {
 		return;
-	}
-
-	@Override
-	// This will return a clone of the ValueString
-	public Value<String> clone() throws CloneNotSupportedException {
-		return new ValueString(getValue());
 	}
 
 	@Override

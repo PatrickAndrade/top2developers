@@ -33,9 +33,6 @@ public abstract class Value<K> implements Cloneable {
 		this.mValue = newValue;
 	}
 	
-	@Override
-	public abstract Value<K> clone() throws CloneNotSupportedException;
-	
 	/**
 	 * This enables to know if this kind of value support the commands Incr/Decr
 	 * @return true or false depending on the value itself
