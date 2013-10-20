@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 
 import epfl.lsr.bachelor.project.pipe.SingleThreadPipe;
 import epfl.lsr.bachelor.project.util.Constants;
@@ -38,7 +39,12 @@ public final class Server {
 				Socket socket = mServerSocket.accept();
 
 				Connection connection = new Connection(socket, mRequestBuffer);
-				mThreadPool.execute(connection);
+				
+				try {
+					mThreadPool.execute(connection);
+				} catch (RejectedExecutionException e) {
+					connection.closeConnection();
+				}
 
 			}
 		} catch (IOException e) {

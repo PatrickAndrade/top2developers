@@ -71,7 +71,7 @@ public final class Connection implements Runnable {
 		}
 		
 		try {
-			closeConnection(mSocket);
+			closeConnection();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -110,9 +110,11 @@ public final class Connection implements Runnable {
 	 * @param socket
 	 * @throws IOException
 	 */
-	private void closeConnection(Socket socket) throws IOException {
-		socket.close();
-		System.err.println(" -> Connection with " + mSocket.getInetAddress()
-				+ " aborted !");
+	public void closeConnection() throws IOException {
+		if (mSocket != null) {
+			mSocket.close();
+			System.err.println(" -> Connection with " + mSocket.getInetAddress()
+					+ " aborted !");
+		}
 	}
 }
