@@ -42,7 +42,7 @@ public final class Server {
 
 			}
 		} catch (IOException e) {
-			System.out.println(Constants.FATAL_ERROR);
+			System.out.println(Constants.SERVER_CLOSED);
 		}
 
 		stop();

@@ -7,10 +7,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epfl.lsr.bachelor.project.client.Client;
+import epfl.lsr.bachelor.project.server.Server;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
@@ -22,8 +25,23 @@ import epfl.lsr.bachelor.project.util.Constants;
 public class AClientShould {
 
 	private Client mClient;
+
+	@BeforeClass
+	public static void doFirst() {
+		new Thread(new Runnable() {
+
+			public void run() {
+				Server.start();
+
+			}
+		}).start();
+	}
 	
-	
+	@AfterClass
+	public static void doLast() {
+		Server.stop();
+	}
+
 	@Before
 	public void init() throws UnknownHostException {
 		mClient = new Client(InetAddress.getLocalHost(), Constants.PORT);
@@ -31,24 +49,24 @@ public class AClientShould {
 			System.out.println("Connected");
 		}
 	}
-	
+
 	@After
 	public void after() {
 		if (mClient.isConnected()) {
 			mClient.disconnect();
 		}
 	}
-	
+
 	@Test
 	public void enableToConnectWithTheServer() {
 		assertTrue("Can't connect the server!", mClient.isConnected());
 	}
-	
+
 	@Test
 	public void enableToGetNILIfAKeyDoesNotExistInMemory() {
 		assertEquals(Constants.PROGRAMM_NAME + "NIL", mClient.get("NILKey"));
 	}
-	
+
 	@Test
 	public void enableToSetAndGetAValue() {
 		String value = "someValue";
@@ -56,7 +74,7 @@ public class AClientShould {
 		mClient.set(key, value);
 		assertEquals(Constants.PROGRAMM_NAME + value, mClient.get(key));
 	}
-	
+
 	@Test
 	public void enableToSetAndDeleteAValue() {
 		String value = "deleteValue";
@@ -64,5 +82,5 @@ public class AClientShould {
 		mClient.set(key, value);
 		assertEquals(Constants.PROGRAMM_NAME + "DELETED", mClient.delete(key));
 	}
-	
+
 }
