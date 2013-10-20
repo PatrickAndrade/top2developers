@@ -1,7 +1,6 @@
 package epfl.lsr.bachelor.project.benchmarks;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.InetSocketAddress;
 
 import epfl.lsr.bachelor.project.client.Client;
 import epfl.lsr.bachelor.project.server.Server;
@@ -14,7 +13,7 @@ import epfl.lsr.bachelor.project.util.Constants;
  * 
  */
 public class KeyValueStoreBenchmark {
-	private static final int SIZE = 100;
+	private static final int SIZE = 10;
 
 	public static void main(String[] args) {
 	//	initServer();
@@ -45,47 +44,41 @@ public class KeyValueStoreBenchmark {
 class TestingCode implements Runnable {
 
 	private static final long TEN_POWER_NINE = (long) Math.pow(10, 9);
-	// private static final long TEN_POWER_SIX = (long) Math.pow(10, 6);
-	private static final long TEN_POWER_THREE = (long) Math.pow(10, 3);
-	private static final long ITERATION = (long) Math.pow(10, 4);
+	private static final long TEN_POWER_SIX = (long) Math.pow(10, 6);
+	//private static final long TEN_POWER_THREE = (long) Math.pow(10, 3);
+	private static final long ITERATION = (long) Math.pow(10, 2);
 
 	@Override
 	public void run() {
-		try {
-			Client client = new Client(InetAddress.getLocalHost(),
-					Constants.PORT);
-			client.connect();
+		Client client = new Client(new InetSocketAddress("192.168.1.42", Constants.PORT));
+		client.connect();
 
-			client.set("a", "10");
+		client.set("b", "10");
 
-			long totalTime = 0;
-			long initTime = System.nanoTime();
-			long forLoopInitTime = initTime;
-			long finishedLoopTime = 0;
-			for (long i = 0; i < ITERATION; i++) {
+		long totalTime = 0;
+		long initTime = System.nanoTime();
+		long forLoopInitTime = initTime;
+		long finishedLoopTime = 0;
+		for (long i = 0; i < ITERATION; i++) {
 
-				client.get("a");
+			client.get("a");
 
-				finishedLoopTime = System.nanoTime();
-				totalTime += finishedLoopTime - forLoopInitTime;
+			finishedLoopTime = System.nanoTime();
+			totalTime += finishedLoopTime - forLoopInitTime;
 
-				forLoopInitTime = finishedLoopTime;
+			forLoopInitTime = finishedLoopTime;
 
-			}
-			long finishedTime = System.nanoTime();
-
-			System.out
-					.println(" -> Elapsed total time: "
-							+ ((finishedTime - initTime) / TEN_POWER_NINE)
-							+ " seconds");
-			System.out.println(" -> Average total time: " + totalTime
-					/ TEN_POWER_THREE / ITERATION + " microseconds");
-
-			client.disconnect();
-
-		} catch (UnknownHostException e) {
-			System.err.println("Unable to solve the host ! Please restart !");
 		}
+		long finishedTime = System.nanoTime();
+
+		System.out
+				.println(" -> Elapsed total time: "
+						+ ((finishedTime - initTime) / TEN_POWER_NINE)
+						+ " seconds");
+		System.out.println(" -> Average total time: " + totalTime
+				/ TEN_POWER_SIX / ITERATION + " milliseconds");
+
+		client.disconnect();
 
 	}
 

@@ -27,6 +27,10 @@ public class Client {
 		mIpPort = new InetSocketAddress(inetaddress, port);
 	}
 
+	public Client(InetSocketAddress inetSocketAddress) {
+		mIpPort = inetSocketAddress;
+	}
+
 	public boolean connect() {
 		if (isConnected()) {
 			return true;
