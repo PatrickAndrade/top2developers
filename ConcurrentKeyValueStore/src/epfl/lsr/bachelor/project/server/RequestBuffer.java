@@ -1,6 +1,7 @@
 package epfl.lsr.bachelor.project.server;
 
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import epfl.lsr.bachelor.project.server.request.Request;
 
@@ -13,6 +14,11 @@ import epfl.lsr.bachelor.project.server.request.Request;
 public class RequestBuffer {
 	// The list of the requests to be performed
 	private LinkedList<Request> mRequestList = new LinkedList<Request>();
+	private AtomicBoolean closed = new AtomicBoolean();
+	
+	public RequestBuffer() {
+		closed.set(false);
+	}
 	
 	/**
 	 * Add a request to be performed later on
@@ -39,6 +45,16 @@ public class RequestBuffer {
 				e.printStackTrace();
 			}
 		}
-		return mRequestList.removeFirst();
+		return (!closed.get()) ? mRequestList.removeFirst() : null;
+		//return mRequestList.removeFirst();
+	}
+	
+	/**
+	 * Enables to notify all the threads that are currently waiting for request.
+	 * This method also make that all waiting-take() calls will return <code>null</code>
+	 */
+	public synchronized void notifyAllThreadsToStopWaiting() {
+		closed.set(true);
+		notifyAll();
 	}
 }
