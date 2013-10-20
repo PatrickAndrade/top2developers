@@ -36,12 +36,6 @@ public class ValueInteger extends Value<Integer> {
 	}
 
 	@Override
-	// This will return a clone of the ValueInteger
-	public Value<Integer> clone() throws CloneNotSupportedException {
-		return new ValueInteger(getValue());
-	}
-
-	@Override
 	public String toString() {
 		return getValue().toString();
 	}

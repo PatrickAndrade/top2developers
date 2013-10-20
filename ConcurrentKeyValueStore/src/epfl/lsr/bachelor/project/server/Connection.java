@@ -48,6 +48,7 @@ public final class Connection implements Runnable {
 				if (command != null && !command.equals(Constants.QUIT_COMMAND)) {
 					// We parse the command to encapsulate it in a more specific
 					// request
+					System.out.println("command :" + command + "<-");
 					Request request = mCommandParser.parse(command);
 					request.setConnection(this);
 
@@ -61,7 +62,7 @@ public final class Connection implements Runnable {
 					if (!request.isMessageEmpty()) {
 						request.respond();
 					} else {
-						mDataOutputStream.writeBytes(Constants.EMPTY_STRING);
+						mDataOutputStream.writeBytes(Constants.EMPTY_STRING + "\n");
 						mDataOutputStream.flush();
 					}
 				}

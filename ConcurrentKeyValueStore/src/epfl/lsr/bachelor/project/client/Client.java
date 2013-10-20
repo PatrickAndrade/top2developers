@@ -57,6 +57,10 @@ public class Client {
 		}
 	}
 
+	public String fakeCommand(String command) {
+		return sendAndGetAnswer(command);
+	}
+	
 	public String get(String key) {
 		return (key == null) ? null : sendAndGetAnswer(Constants.GET_COMMAND + " " + key);
 	}
@@ -75,7 +79,7 @@ public class Client {
 	}
 
 	public String increment(String key, int value) {
-		return (key == null) ? null : sendAndGetAnswer(Constants.HINCR_COMMAND + " " + key + value);
+		return (key == null) ? null : sendAndGetAnswer(Constants.HINCR_COMMAND + " " + key + " " + value);
 	}
 
 	public String decrement(String key) {
@@ -83,7 +87,11 @@ public class Client {
 	}
 
 	public String decrement(String key, int value) {
-		return (key == null) ? null : sendAndGetAnswer(Constants.HDECR_COMMAND + " " + key + value);
+		return (key == null) ? null : sendAndGetAnswer(Constants.HDECR_COMMAND + " " + key + " " + value);
+	}
+	
+	public String quit() {
+		return sendAndGetAnswer("quit");
 	}
 
 	private String sendAndGetAnswer(String toBeWritten) {

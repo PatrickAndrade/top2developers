@@ -39,6 +39,14 @@ public class AValueShould {
 		assertFalse(
 				"The ValueString should not support increment/decrement command",
 				mValue.supportIncrementDecrement());
+		mValue.increment(1);
+		assertEquals(
+				"The ValueString should not support increment/decrement command",
+				"testValue", mValue.getValue());
+		mValue.decrement(1);
+		assertEquals(
+				"The ValueString should not support increment/decrement command",
+				"testValue", mValue.getValue());
 	}
 
 	@Test
@@ -58,7 +66,7 @@ public class AValueShould {
 		mValue.increment(increment);
 		assertEquals(maxValue, ((Integer) mValue.getValue()).intValue());
 	}
-	
+
 	@Test
 	public void notBeIncrementedIfItHasAMaxIntegerValueUsingDecrementWithANegativeNumber() {
 		final int maxValue = Integer.MAX_VALUE;
@@ -67,7 +75,7 @@ public class AValueShould {
 		mValue.decrement(decrement);
 		assertEquals(maxValue, ((Integer) mValue.getValue()).intValue());
 	}
-	
+
 	@Test
 	public void notBeDecrementedIfItHasAMinIntegerValue() {
 		final int minValue = Integer.MIN_VALUE;
@@ -76,7 +84,7 @@ public class AValueShould {
 		mValue.decrement(decrement);
 		assertEquals(minValue, ((Integer) mValue.getValue()).intValue());
 	}
-	
+
 	@Test
 	public void notBeDecrementedIfItHasAMinIntegerValueUsingIncrementWithANegativeNumber() {
 		final int minValue = Integer.MIN_VALUE;
@@ -85,6 +93,4 @@ public class AValueShould {
 		mValue.increment(increment);
 		assertEquals(minValue, ((Integer) mValue.getValue()).intValue());
 	}
-	
-	
 }

@@ -20,12 +20,18 @@ import epfl.lsr.bachelor.project.values.ValueString;
 public class CommandParser {
 
 	public Request parse(String command) {
-		// We first split the line-command
-		String[] commandField = command.split(" ");
-
-		if (commandField.length < 1) {
+		
+		if (command == null) {
 			return new ErrRequest("");
 		} else {
+			
+			// We first split the line-command
+			String[] commandField = command.split(" ");
+			
+			if ((commandField.length > 1) && (commandField[1].equals(Constants.EMPTY_STRING))) {
+				return new ErrRequest("-Err '" + Constants.EMPTY_STRING + "' can't be a key");
+			}
+			
 			// We handle the command
 			switch (commandField[0]) {
 			
@@ -95,7 +101,7 @@ public class CommandParser {
 				// Handle the unknown-commands
 				default:
 			}
-
+	
 			return new ErrRequest("-Err unable to execute command '" + commandField[0] + "'");
 		}
 	}
