@@ -49,7 +49,7 @@ public class Client {
 	}
 
 	public boolean isConnected() {
-		return (mSocket != null) && mSocket.isConnected();
+		return (mSocket != null) && mSocket.isConnected() && !mSocket.isClosed();
 	}
 
 	public void disconnect() {
