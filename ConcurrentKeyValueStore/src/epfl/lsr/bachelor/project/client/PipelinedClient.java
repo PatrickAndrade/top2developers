@@ -17,7 +17,8 @@ import java.util.concurrent.Future;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * The client that send the request to the server in pipelined waay
+ * A client that send requests to the server a in pipelined way without waiting
+ * for the requests to be performed (non-blocking requests)
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -39,6 +40,12 @@ public class PipelinedClient {
         mIpPort = inetSocketAddress;
     }
 
+    /**
+     * Enables to connect to the server. This MUST be called before executing
+     * any request
+     * 
+     * @return
+     */
     public boolean connect() {
         if (isConnected()) {
             return true;
@@ -51,8 +58,6 @@ public class PipelinedClient {
             mBufferedReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
             mDataOutputStream = new DataOutputStream(mSocket.getOutputStream());
 
-           // new Thread(RequestReader.getInstance(mServerAnswers)).start();
-
         } catch (IOException e) {
             return false;
         }
@@ -60,10 +65,19 @@ public class PipelinedClient {
         return true;
     }
 
+    /**
+     * Enables to know if we are connected to the server
+     * 
+     * @return if we are connected
+     */
     public boolean isConnected() {
         return (mSocket != null) && mSocket.isConnected();
     }
 
+    /**
+     * Enables to disconnect the client, should always be called when we are
+     * done with the server
+     */
     public void disconnect() {
         try {
             mThreadPool.shutdownNow();
@@ -74,86 +88,180 @@ public class PipelinedClient {
         }
     }
 
-    /*
-     * public String fakeCommand(String command) { return
-     * sendAndGetAnswer(command); }
+    /**
+     * Enables to execute a fake command
+     * 
      */
-    
-    
+    public void fakeCommand(String command) {
+        if (isConnected()) {
+            if (command != null) {
+                writeCommandAndSubmitToRequestReader(command);
+            } else {
+                throw new IllegalArgumentException("command was null at fakeCommand-method !");
+            }
+        }
+    }
+
+    /**
+     * Enables to execute a get command over the specified key
+     * 
+     * @param key
+     */
     public void get(String key) {
-        if (key != null) {
-            String command = Constants.GET_COMMAND + " " + key;
-            try {
-                mDataOutputStream.writeBytes(command + "\n");
-                mDataOutputStream.flush();
-
-                mServerAnswers.add(mThreadPool.submit(new RequestSender(mBufferedReader)));
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (isConnected()) {
+            if (key != null) {
+                writeCommandAndSubmitToRequestReader(Constants.GET_COMMAND + " " + key);
+            } else {
+                throw new IllegalArgumentException("key was null at get-method !");
             }
-        } else {
-            throw new IllegalArgumentException("key was null at get-method !");
         }
     }
 
+    /**
+     * Enables to execute a set command over the specified key with the
+     * specified value
+     * 
+     * @param key
+     * @param value
+     */
     public void set(String key, String value) {
-        if (key != null && value != null) {
-            String command = Constants.SET_COMMAND + " " + key + " " + value;
-            try {
-                mDataOutputStream.writeBytes(command + "\n");
-                mDataOutputStream.flush();
-
-                mServerAnswers.add(mThreadPool.submit(new RequestSender(mBufferedReader)));
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (isConnected()) {
+            if (key != null && value != null) {
+                writeCommandAndSubmitToRequestReader(Constants.SET_COMMAND + " " + key + " " + value);
+            } else {
+                throw new IllegalArgumentException("key or value was null at set-method !");
             }
-        } else {
-            throw new IllegalArgumentException("key or value was null at set-method !");
         }
     }
 
-    public String getNextAnswerFromServer() {        
+    /**
+     * Enables to execute a delete command over the specified key
+     * 
+     * @param key
+     */
+    public void delete(String key) {
+        if (isConnected()) {
+            if (key != null) {
+                writeCommandAndSubmitToRequestReader(Constants.DEL_COMMAND + " " + key);
+            } else {
+                throw new IllegalArgumentException("key or value was null at delete-method !");
+            }
+        }
+    }
+
+    /**
+     * Enables to execute an increment command over the specified key
+     * 
+     * @param key
+     */
+    public void increment(String key) {
+        if (isConnected()) {
+            if (key != null) {
+                writeCommandAndSubmitToRequestReader(Constants.INCR_COMMAND + " " + key);
+            } else {
+                throw new IllegalArgumentException("key was null at increment-method !");
+            }
+        }
+    }
+
+    /**
+     * Enables to execute an hincrement command over the specified key with the
+     * specified increment
+     * 
+     * @param key
+     * @param value
+     */
+    public void increment(String key, int value) {
+        if (isConnected()) {
+            if (key != null) {
+                writeCommandAndSubmitToRequestReader(Constants.HINCR_COMMAND + " " + key + " " + value);
+            } else {
+                throw new IllegalArgumentException("key was null at increment-method !");
+            }
+        }
+    }
+
+    /**
+     * Enables to execute a decrement command over the specified key
+     * 
+     * @param key
+     */
+    public void decrement(String key) {
+        if (isConnected()) {
+            if (key != null) {
+                writeCommandAndSubmitToRequestReader(Constants.DECR_COMMAND + " " + key);
+            } else {
+                throw new IllegalArgumentException("key was null at decrement-method !");
+            }
+        }
+    }
+
+    /**
+     * Enables to execute a decrement command over the specified key with the
+     * specified decrement
+     * 
+     * @param key
+     * @param value
+     */
+    public void decrement(String key, int value) {
+        if (isConnected()) {
+            if (key != null) {
+                writeCommandAndSubmitToRequestReader(Constants.HDECR_COMMAND + " " + key + " " + value);
+            } else {
+                throw new IllegalArgumentException("key was null at decrement-method !");
+            }
+        }
+    }
+
+    /**
+     * Enables to execute a quit command should be executed before a call to the
+     * method disconnect
+     * 
+     * @param key
+     */
+    public void quit() {
+        if (isConnected()) {
+            writeCommandAndSubmitToRequestReader(Constants.QUIT_COMMAND);
+        }
+    }
+
+    /**
+     * Enables to get the answers from the server
+     * 
+     * @return the next answer not yet picked up by the client,
+     *         <code>null</code> if there is no answer to be picked
+     */
+    public String getNextAnswerFromServer() {
+        if (isConnected() && mServerAnswers.size() > 0) {
+            try {
+                return mServerAnswers.remove(0).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return null;
+
+    }
+
+    private void writeCommandAndSubmitToRequestReader(String command) {
         try {
-            return mServerAnswers.remove(0).get();
-        } catch (InterruptedException | ExecutionException e) {
+            mDataOutputStream.writeBytes(command + "\n");
+            mDataOutputStream.flush();
+
+            mServerAnswers.add(mThreadPool.submit(new RequestReader(mBufferedReader)));
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return null;
     }
-        
-    /*
-     * public String delete(String key) { return (key == null) ? null :
-     * sendAndGetAnswer(Constants.DEL_COMMAND + " " + key); }
-     * 
-     * public String increment(String key) { return (key == null) ? null :
-     * sendAndGetAnswer(Constants.INCR_COMMAND + " " + key); }
-     * 
-     * public String increment(String key, int value) { return (key == null) ?
-     * null : sendAndGetAnswer(Constants.HINCR_COMMAND + " " + key + " " +
-     * value); }
-     * 
-     * public String decrement(String key) { return (key == null) ? null :
-     * sendAndGetAnswer(Constants.DECR_COMMAND + " " + key); }
-     * 
-     * public String decrement(String key, int value) { return (key == null) ?
-     * null : sendAndGetAnswer(Constants.HDECR_COMMAND + " " + key + " " +
-     * value); }
-     * 
-     * public String quit() { return sendAndGetAnswer("quit"); }
-     * 
-     * private String sendAndGetAnswer(String toBeWritten) { try {
-     * mDataOutputStream.writeBytes(toBeWritten + "\n");
-     * mDataOutputStream.flush(); return mBufferedReader.readLine(); } catch
-     * (IOException e) { return null; } }
-     */
 }
 
-final class RequestSender implements Callable<String> {
+final class RequestReader implements Callable<String> {
 
     private final BufferedReader mBufferedReader;
 
-    public RequestSender(BufferedReader bufferedReader) {
+    public RequestReader(BufferedReader bufferedReader) {
         mBufferedReader = bufferedReader;
     }
 
@@ -165,26 +273,4 @@ final class RequestSender implements Callable<String> {
             return null;
         }
     }
-
 }
-/*
-final class RequestReader implements Runnable {
-    private ArrayList<Future<String>> mServerAnswers;
-    private static RequestReader mInstanceReader = null;
-
-    private RequestReader(ArrayList<Future<String>> serverAnswers) {
-        mServerAnswers = serverAnswers;
-    }
-
-    public static RequestReader getInstance(ArrayList<Future<String>> serverAnswers) {
-        if (mInstanceReader == null) {
-            mInstanceReader = new RequestReader(serverAnswers);
-        }
-        return mInstanceReader;
-    }
-
-    @Override
-    public void run() {
-
-    }
-}*/

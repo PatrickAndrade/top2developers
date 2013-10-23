@@ -1,6 +1,7 @@
 package epfl.lsr.bachelor.project.benchmarks;
 
 import java.net.InetSocketAddress;
+import java.util.NoSuchElementException;
 
 import epfl.lsr.bachelor.project.client.PipelinedClient;
 import epfl.lsr.bachelor.project.util.Constants;
@@ -12,7 +13,7 @@ import epfl.lsr.bachelor.project.util.Constants;
  * 
  */
 public class KeyValueStoreBenchmark {
-    private static final int SIZE = 1;
+    private static final int SIZE = 5;
 
     public static void main(String[] args) {
 
@@ -34,7 +35,7 @@ class TestingCode implements Runnable {
     private static final long TEN_POWER_NINE = (long) Math.pow(10, 9);
     private static final long TEN_POWER_SIX = (long) Math.pow(10, 6);
     // private static final long TEN_POWER_THREE = (long) Math.pow(10, 3);
-    private static final long ITERATION = (long) Math.pow(10, 3);
+    private static final long ITERATION = (long) Math.pow(10, 5);
 
     @Override
     public void run() {
@@ -42,7 +43,7 @@ class TestingCode implements Runnable {
         client.connect();
 
         // Set a first value
-        client.set("a", "1000000");
+        client.set("a", "2");
         System.out.println(client.getNextAnswerFromServer());
 
         long totalTime = 0;
@@ -53,16 +54,21 @@ class TestingCode implements Runnable {
             client.get("a");
         }
 
-        long finishedTime = System.nanoTime();
-        totalTime = finishedTime - initTime;
-        
-        System.out.println(" -> Elapsed total time: " + totalTime / TEN_POWER_NINE + " seconds");
-        System.out.println(" -> Average total time: " + totalTime / TEN_POWER_SIX / ITERATION + " milliseconds");
-        
         // Read answers
         for (long i = 0; i < ITERATION; i++) {
-            System.out.println(client.getNextAnswerFromServer());
+            try {
+                System.out.println(client.getNextAnswerFromServer());
+            } catch (NoSuchElementException e) {
+                e.printStackTrace();
+            }
         }
+
+        long finishedTime = System.nanoTime();
+        totalTime = finishedTime - initTime;
+
+        System.out.println(" -> Elapsed total time: " + (double) totalTime / (double) TEN_POWER_SIX + " milliconds");
+        System.out.println(" -> Average total time: " + (double) totalTime / (double) (TEN_POWER_NINE * ITERATION)
+                + " nanoseconds");
 
         client.disconnect();
 
