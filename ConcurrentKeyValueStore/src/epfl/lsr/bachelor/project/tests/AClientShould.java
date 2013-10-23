@@ -7,13 +7,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epfl.lsr.bachelor.project.client.Client;
-import epfl.lsr.bachelor.project.server.Server;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
