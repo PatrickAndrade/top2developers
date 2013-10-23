@@ -13,7 +13,7 @@ import epfl.lsr.bachelor.project.util.Constants;
  * 
  */
 public class KeyValueStoreBenchmark {
-    private static final int SIZE = 5;
+    private static final int SIZE = 100;
 
     public static void main(String[] args) {
 
@@ -35,7 +35,7 @@ class TestingCode implements Runnable {
     private static final long TEN_POWER_NINE = (long) Math.pow(10, 9);
     private static final long TEN_POWER_SIX = (long) Math.pow(10, 6);
     // private static final long TEN_POWER_THREE = (long) Math.pow(10, 3);
-    private static final long ITERATION = (long) Math.pow(10, 5);
+    private static final long ITERATION = (long) Math.pow(10, 4);
 
     @Override
     public void run() {
