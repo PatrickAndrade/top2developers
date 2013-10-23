@@ -94,6 +94,14 @@ public class Client {
 		return (key == null) ? null : sendAndGetAnswer(Constants.HDECR_COMMAND + " " + key + " " + value);
 	}
 	
+	public String append(String key, String value) {
+		return (key == null) ? null : sendAndGetAnswer(Constants.APPEND_COMMAND + " " + key + " " + value);
+	}
+	
+	public String ping() {
+		return sendAndGetAnswer(Constants.PING_COMMAND);
+	}
+	
 	public String quit() {
 		return sendAndGetAnswer("quit");
 	}
