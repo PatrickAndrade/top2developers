@@ -48,14 +48,12 @@ public final class Connection implements Runnable {
 				if (command != null && !command.equals(Constants.QUIT_COMMAND)) {
 					// We parse the command to encapsulate it in a more specific
 					// request
-					System.out.println("command :" + command + "<-");
 					Request request = mCommandParser.parse(command);
 					request.setConnection(this);
 
 					// If the request can be performed, we put it in the buffer
 					if (request.canBePerformed()) {
-						mRequestBuffer.add(request);
-						waitUntilRequestIsPerformed();
+						addRequestAndWait(request);
 					}
 
 					// If the answer to the client is not empty we respond him
@@ -81,8 +79,9 @@ public final class Connection implements Runnable {
 	/**
 	 * Enables to call a wait
 	 */
-	public synchronized void waitUntilRequestIsPerformed() {
+	public synchronized void addRequestAndWait(Request request) {
 		try {
+			mRequestBuffer.add(request);
 			wait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
