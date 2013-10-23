@@ -2,84 +2,70 @@ package epfl.lsr.bachelor.project.benchmarks;
 
 import java.net.InetSocketAddress;
 
-import epfl.lsr.bachelor.project.client.Client;
-import epfl.lsr.bachelor.project.server.Server;
+import epfl.lsr.bachelor.project.client.PipelinedClient;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
  * This is the first benchmark of you KeyValueStore
  * 
- * @author Patrick Andrade
+ * @author Gregory Maitre & Patrick Andrade
  * 
  */
 public class KeyValueStoreBenchmark {
-	private static final int SIZE = 10;
+    private static final int SIZE = 1;
 
-	public static void main(String[] args) {
-	//	initServer();
-		
-		Thread[] myThreads = new Thread[SIZE];
-		for (int i = 0; i < myThreads.length; i++) {
-			myThreads[i] = new Thread(new TestingCode());
-		}
-		
-		for (Thread thread : myThreads) {
-			thread.start();
-		}
+    public static void main(String[] args) {
 
-		//Server.stop();
-	}
+        Thread[] myThreads = new Thread[SIZE];
+        for (int i = 0; i < myThreads.length; i++) {
+            myThreads[i] = new Thread(new TestingCode());
+        }
 
-	private static void initServer() {
-		new Thread(new Runnable() {
+        for (Thread thread : myThreads) {
+            thread.start();
+        }
 
-			public void run() {
-				Server.start();
-			}
-		}).start();
-	}
+    }
 
 }
 
 class TestingCode implements Runnable {
 
-	private static final long TEN_POWER_NINE = (long) Math.pow(10, 9);
-	private static final long TEN_POWER_SIX = (long) Math.pow(10, 6);
-	//private static final long TEN_POWER_THREE = (long) Math.pow(10, 3);
-	private static final long ITERATION = (long) Math.pow(10, 2);
+    private static final long TEN_POWER_NINE = (long) Math.pow(10, 9);
+    private static final long TEN_POWER_SIX = (long) Math.pow(10, 6);
+    // private static final long TEN_POWER_THREE = (long) Math.pow(10, 3);
+    private static final long ITERATION = (long) Math.pow(10, 3);
 
-	@Override
-	public void run() {
-		Client client = new Client(new InetSocketAddress("192.168.1.42", Constants.PORT));
-		client.connect();
+    @Override
+    public void run() {
+        PipelinedClient client = new PipelinedClient(new InetSocketAddress("192.168.1.42", Constants.PORT));
+        client.connect();
 
-		client.set("b", "10");
+        // Set a first value
+        client.set("a", "1000000");
+        System.out.println(client.getNextAnswerFromServer());
 
-		long totalTime = 0;
-		long initTime = System.nanoTime();
-		long forLoopInitTime = initTime;
-		long finishedLoopTime = 0;
-		for (long i = 0; i < ITERATION; i++) {
+        long totalTime = 0;
+        long initTime = System.nanoTime();
 
-			client.get("a");
+        // Send pipelined requests
+        for (long i = 0; i < ITERATION; i++) {
+            client.get("a");
+        }
 
-			finishedLoopTime = System.nanoTime();
-			totalTime += finishedLoopTime - forLoopInitTime;
+        long finishedTime = System.nanoTime();
+        totalTime = finishedTime - initTime;
+        
+        System.out.println(" -> Elapsed total time: " + totalTime / TEN_POWER_NINE + " seconds");
+        System.out.println(" -> Average total time: " + totalTime / TEN_POWER_SIX / ITERATION + " milliseconds");
+        
+        // Read answers
+        for (long i = 0; i < ITERATION; i++) {
+            System.out.println(client.getNextAnswerFromServer());
+        }
 
-			forLoopInitTime = finishedLoopTime;
+        client.disconnect();
 
-		}
-		long finishedTime = System.nanoTime();
-
-		System.out
-				.println(" -> Elapsed total time: "
-						+ ((finishedTime - initTime) / TEN_POWER_NINE)
-						+ " seconds");
-		System.out.println(" -> Average total time: " + totalTime
-				/ TEN_POWER_SIX / ITERATION + " milliseconds");
-
-		client.disconnect();
-
-	}
+    }
 
 }
