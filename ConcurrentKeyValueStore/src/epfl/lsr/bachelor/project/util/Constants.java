@@ -31,6 +31,7 @@ public final class Constants {
 	public static final String HINCR_COMMAND = "hincr";
 	public static final String HDECR_COMMAND = "hdecr";
 	public static final String APPEND_COMMAND = "append";
+	public static final String PING_COMMAND = "ping";
 	public static final String QUIT_COMMAND = "quit";
 	
 	public static final String STORED = "STORED";

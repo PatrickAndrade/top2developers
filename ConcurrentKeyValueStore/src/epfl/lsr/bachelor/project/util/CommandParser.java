@@ -6,6 +6,7 @@ import epfl.lsr.bachelor.project.server.request.DelRequest;
 import epfl.lsr.bachelor.project.server.request.ErrRequest;
 import epfl.lsr.bachelor.project.server.request.GetRequest;
 import epfl.lsr.bachelor.project.server.request.IncrRequest;
+import epfl.lsr.bachelor.project.server.request.PingRequest;
 import epfl.lsr.bachelor.project.server.request.Request;
 import epfl.lsr.bachelor.project.server.request.SetRequest;
 import epfl.lsr.bachelor.project.values.Value;
@@ -106,6 +107,9 @@ public class CommandParser {
 						appendValue = new ValueString(commandField[2]);
 					}
 					return new AppendRequest(commandField[1], appendValue);
+					
+				case Constants.PING_COMMAND:
+					return new PingRequest();
 					
 				// Handle the "empty"-command
 				case Constants.EMPTY_STRING:
