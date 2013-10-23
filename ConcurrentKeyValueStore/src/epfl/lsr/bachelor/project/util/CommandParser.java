@@ -1,5 +1,6 @@
 package epfl.lsr.bachelor.project.util;
 
+import epfl.lsr.bachelor.project.server.request.AppendRequest;
 import epfl.lsr.bachelor.project.server.request.DecrRequest;
 import epfl.lsr.bachelor.project.server.request.DelRequest;
 import epfl.lsr.bachelor.project.server.request.ErrRequest;
@@ -47,13 +48,13 @@ public class CommandParser {
 					if (commandField.length < Constants.SET_ARGUMENTS) {
 						return new ErrRequest("-Err " + Constants.SET_COMMAND + " request two arguments");
 					}
-					Value<?> value = null;
-					if (isInteger(commandField[2])) {
-						value = new ValueInteger(Integer.valueOf(commandField[2]));
+					Value<?> setValue = null;
+					if (Utilities.isInteger(commandField[2])) {
+						setValue = new ValueInteger(Integer.valueOf(commandField[2]));
 					} else {
-						value = new ValueString(commandField[2]);
+						setValue = new ValueString(commandField[2]);
 					}
-					return new SetRequest(commandField[1], value);
+					return new SetRequest(commandField[1], setValue);
 				
 				// Handle del-command
 				case Constants.DEL_COMMAND:
@@ -84,7 +85,7 @@ public class CommandParser {
 					}
 					// If the increment/decrement is not an integer we simply tell the client that
 					// we cannot perform the request
-					if (!isInteger(commandField[2])) {
+					if (!Utilities.isInteger(commandField[2])) {
 						return new ErrRequest("-Err " + Constants.HINCR_COMMAND + "/" +
 								Constants.HDECR_COMMAND + " need an integer as argument");
 					}
@@ -94,6 +95,18 @@ public class CommandParser {
 						return new DecrRequest(commandField[1], Integer.valueOf(commandField[2]));
 					}
 				
+				case Constants.APPEND_COMMAND:
+					if (commandField.length < Constants.APPEND_ARGUMENTS) {
+						return new ErrRequest("-Err " + Constants.APPEND_COMMAND + " request two arguments");
+					}
+					Value<?> appendValue = null;
+					if (Utilities.isInteger(commandField[2])) {
+						appendValue = new ValueInteger(Integer.valueOf(commandField[2]));
+					} else {
+						appendValue = new ValueString(commandField[2]);
+					}
+					return new AppendRequest(commandField[1], appendValue);
+					
 				// Handle the "empty"-command
 				case Constants.EMPTY_STRING:
 					return new ErrRequest("");
@@ -104,20 +117,5 @@ public class CommandParser {
 	
 			return new ErrRequest("-Err unable to execute command '" + commandField[0] + "'");
 		}
-	}
-	
-	/**
-	 * Enables to know if a string represents an integer value
-	 * 
-	 * @param string the string to test
-	 * @return does this string correspond to a number
-	 */
-	private boolean isInteger(String string) {
-		try {
-			Integer.valueOf(string);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		return true;
 	}
 }

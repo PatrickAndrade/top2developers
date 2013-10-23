@@ -1,5 +1,7 @@
 package epfl.lsr.bachelor.project.values;
 
+import epfl.lsr.bachelor.project.util.Utilities;
+
 /**
  * Abstract Value contained in the Key-Value store
  * 
@@ -52,6 +54,14 @@ public abstract class Value<K> implements Cloneable {
 	 * @param k the number of decrement
 	 */
 	public abstract void decrement(int k);
+	
+	public Value<?> append(Value<?> value) {
+		Value<?> newValue = new ValueString(String.valueOf(getValue()) + value.getValue());
+		if (Utilities.isInteger((String) newValue.getValue())) {
+			newValue = new ValueInteger(Integer.valueOf((String) newValue.getValue()));
+		}
+		return newValue;
+	}
 	
 	/**
 	 * Enables to print in a readable way the value

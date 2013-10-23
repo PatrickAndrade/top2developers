@@ -93,4 +93,12 @@ public class AValueShould {
 		mValue.increment(increment);
 		assertEquals(minValue, ((Integer) mValue.getValue()).intValue());
 	}
+	
+	@Test
+	public void canAppendAValueStringWithAValueInteger() {
+		mValue = new ValueString("String");
+		final int number = 3;
+		Value<Integer> value = new ValueInteger(number);
+		assertEquals("Can't union two value!", "String3", mValue.append(value).getValue());
+	}
 }

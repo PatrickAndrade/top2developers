@@ -34,7 +34,7 @@ public class ValueInteger extends Value<Integer> {
 	public void decrement(int k) {
 		increment(-k);
 	}
-
+	
 	@Override
 	public String toString() {
 		return getValue().toString();

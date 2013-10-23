@@ -21,6 +21,7 @@ public final class Constants {
 	public static final int DEL_ARGUMENTS = 2;
 	public static final int INCR_DECR_ARGUMENTS = 2;
 	public static final int HINCR_HDECR_ARGUMENTS = 3;
+	public static final int APPEND_ARGUMENTS = 3;
 	
 	public static final String GET_COMMAND = "get";
 	public static final String SET_COMMAND = "set";
@@ -29,6 +30,7 @@ public final class Constants {
 	public static final String DECR_COMMAND = "decr";
 	public static final String HINCR_COMMAND = "hincr";
 	public static final String HDECR_COMMAND = "hdecr";
+	public static final String APPEND_COMMAND = "append";
 	public static final String QUIT_COMMAND = "quit";
 	
 	public static final String STORED = "STORED";

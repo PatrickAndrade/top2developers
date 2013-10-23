@@ -1,5 +1,7 @@
 package epfl.lsr.bachelor.project.values;
 
+import epfl.lsr.bachelor.project.util.Utilities;
+
 /**
  * String Value
  * 
