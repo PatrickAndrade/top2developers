@@ -25,6 +25,13 @@ public abstract class Connection implements Runnable {
     private CommandParser mCommandParser;
     private RequestBuffer mRequestBuffer;
 
+    /**
+     * Default constructor
+     * 
+     * @param socket the socket related to the connection
+     * @param requestBuffer the buffer of requests
+     * @throws IOException
+     */
     public Connection(Socket socket, RequestBuffer requestBuffer) throws IOException {
         mSocket = socket;
         mBufferedReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
@@ -87,9 +94,5 @@ public abstract class Connection implements Runnable {
      */
     protected CommandParser getCommandParser() {
         return mCommandParser;
-    }
-    
-    protected Socket getSocket() {
-    	return mSocket;
     }
 }

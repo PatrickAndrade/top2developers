@@ -23,29 +23,11 @@ public class APipelinedClientShould {
 
 	private PipelinedClient mClient;
 
-	// @BeforeClass
-	// public static void doFirst() {
-	// new Thread(new Runnable() {
-	//
-	// public void run() {
-	// Server.start();
-	//
-	// }
-	// }).start();
-	// }
-	//
-	// @AfterClass
-	// public static void doLast() {
-	// Server.stop();
-	// }
-
 	@Before
 	public void init() throws UnknownHostException {
 		mClient = new PipelinedClient(InetAddress.getLocalHost(),
 				Constants.PORT);
-		if (mClient.connect()) {
-			System.out.println("Connected");
-		}
+		mClient.connect();
 	}
 
 	@After

@@ -60,7 +60,6 @@ abstract public class Request {
      * Enables to give an answer back after performing a request
      */
     public void respond() throws IOException {
-    	System.out.println("gonna write : " + mMessageToReturn);//TODO
         mConnection.getDataOutputStream().writeBytes(mMessageToReturn + "\n");
         mConnection.getDataOutputStream().flush();
     }

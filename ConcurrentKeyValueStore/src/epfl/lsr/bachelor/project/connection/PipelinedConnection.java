@@ -13,8 +13,8 @@ import epfl.lsr.bachelor.project.server.request.RequestsComparator;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * Encapsulates a non-blocking connection that avoid blocking over a
- * readLine()-call
+ * Encapsulates a pipelined-connection that allow pipelined
+ * requests performing
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -26,6 +26,13 @@ public final class PipelinedConnection extends Connection {
 	private AtomicLong mNextRequestToBeSend;
 	private AtomicLong mNextRequestID;
 
+    /**
+     * Default constructor
+     * 
+     * @param socket the socket related to the connection
+     * @param requestBuffer the buffer of requests
+     * @throws IOException
+     */
 	public PipelinedConnection(Socket socket, RequestBuffer requestBuffer) throws IOException {
 		super(socket, requestBuffer);
 		mRequestToSend = new PriorityBlockingQueue<>(
@@ -36,13 +43,17 @@ public final class PipelinedConnection extends Connection {
 		mClosed = new AtomicBoolean();
 	}
 
+	@Override
 	public void run() {
 		
+		// Create the reader
 		new Thread(new Reader()).start();
 		
 		try {
 			while (!mClosed.get()) {
 				
+				// We first check if the queue has some element and if so,
+				// we take it and ensure that it's the next request to be answered
 				while ((mRequestToSend.peek() != null)
 						&& (mNextRequestToBeSend.get() == mRequestToSend.peek()
 								.getID())) {
@@ -51,27 +62,28 @@ public final class PipelinedConnection extends Connection {
 				}
 			}
 		} catch (IOException e) {
-			// System.err.println("  -> Error of connection with " +
-			// mSocket.getInetAddress());
 		}
 
 		try {
 			closeConnection();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	
+	@Override
 	public synchronized void closeConnection() throws IOException {
 		super.closeConnection();
-		mClosed.set(false);
+		mClosed.set(true);
 	}
 
+	@Override
 	public void notifyThatRequestIsPerformed(Request request) {
 		mRequestToSend.add(request);
 	}
 
 	private class Reader implements Runnable {
+		
+		@Override
 		public void run() {
 			try {
 				String command = Constants.EMPTY_STRING;
@@ -79,7 +91,7 @@ public final class PipelinedConnection extends Connection {
 						&& !command.equals(Constants.QUIT_COMMAND)) {
 					// It gets the command asked by the client
 					command = getBufferedReader().readLine();
-
+					
 					if (command != null
 							&& !command.equals(Constants.QUIT_COMMAND)) {
 						// We parse the command to encapsulate it in a more
@@ -106,14 +118,11 @@ public final class PipelinedConnection extends Connection {
 					}
 				}
 			} catch (IOException e) {
-				// System.err.println("  -> Error of connection with " +
-				// mSocket.getInetAddress());
-				try {
-					closeConnection();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+			}
+			
+			try {
+				closeConnection();
+			} catch (IOException e1) {
 			}
 		}
 	}

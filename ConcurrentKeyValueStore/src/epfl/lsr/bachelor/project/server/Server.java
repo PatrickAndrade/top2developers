@@ -13,7 +13,7 @@ import epfl.lsr.bachelor.project.pipe.SingleThreadPipe;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * The Telnet server accepting the connections on port 22122
+ * The server accepting the connections on port 22122
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -56,6 +56,9 @@ public final class Server {
 		stop();
 	}
 	
+	/**
+	 * Enables to stop the server
+	 */
 	public static void stop() {
 		mThreadPool.shutdown();
 

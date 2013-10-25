@@ -274,28 +274,22 @@ public class PipelinedClient {
             mDataOutputStream.writeBytes(command + "\n");
             mDataOutputStream.flush();
 
-            mServerAnswers.add(mThreadPool.submit(new RequestReader(mBufferedReader)));
+            mServerAnswers.add(mThreadPool.submit(new RequestReader()));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-}
+    
+    private final class RequestReader implements Callable<String> {
 
-final class RequestReader implements Callable<String> {
-
-    private final BufferedReader mBufferedReader;
-
-    public RequestReader(BufferedReader bufferedReader) {
-        mBufferedReader = bufferedReader;
-    }
-
-    @Override
-    public String call() throws Exception {
-        try {
-            return mBufferedReader.readLine();
-        } catch (IOException e) {
-            return null;
+        @Override
+        public String call() throws Exception {
+            try {
+                return mBufferedReader.readLine();
+            } catch (IOException e) {
+                return null;
+            }
         }
     }
 }

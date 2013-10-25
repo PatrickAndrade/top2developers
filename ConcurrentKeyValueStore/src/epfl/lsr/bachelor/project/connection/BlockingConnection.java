@@ -15,10 +15,18 @@ import epfl.lsr.bachelor.project.util.Constants;
  */
 public final class BlockingConnection extends Connection {
 
+    /**
+     * Default constructor
+     * 
+     * @param socket the socket related to the connection
+     * @param requestBuffer the buffer of requests
+     * @throws IOException
+     */
 	public BlockingConnection(Socket socket, RequestBuffer requestBuffer) throws IOException {
 		super(socket, requestBuffer);
 	}
 
+	@Override
 	public void run() {
 		String command = Constants.EMPTY_STRING;
 
@@ -49,13 +57,11 @@ public final class BlockingConnection extends Connection {
 				}
 			}
 		} catch (IOException e) {
-			//System.err.println("  -> Error of connection with " + mSocket.getInetAddress());
 		}
 		
 		try {
 			closeConnection();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -67,7 +73,6 @@ public final class BlockingConnection extends Connection {
 		    getRequestBuffer().add(request);
 			wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -77,5 +82,4 @@ public final class BlockingConnection extends Connection {
 	public synchronized void notifyThatRequestIsPerformed(Request request) {
 		notify();
 	}
-
 }
