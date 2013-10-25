@@ -18,7 +18,7 @@ abstract public class Request {
     private String mMessageToReturn = "";
     private Value<?> mValue;
     private Connection mConnection;
-    private int mID = 0; // Default value, should be changed calling setID()
+    private long mID = 0; // Default value, should be changed calling setID()
 
     @SuppressWarnings("unchecked")
     // The static reference to the KeyValueStore
@@ -60,6 +60,11 @@ abstract public class Request {
      * Enables to give an answer back after performing a request
      */
     public void respond() throws IOException {
+//    	System.err.println("here : " + mMessageToReturn);
+//    	if (mConnection == null)
+//    		System.out.println("null0");
+//    	else if (mConnection.getDataOutputStream() == null)
+//    		System.out.println("null1");
         mConnection.getDataOutputStream().writeBytes(mMessageToReturn + "\n");
         mConnection.getDataOutputStream().flush();
     }
@@ -96,18 +101,18 @@ abstract public class Request {
      * 
      * @return the ID
      */
-    public int getID() {
+    public long getID() {
         return mID;
     }
 
     /**
      * Enables to set the ID of this request
      * 
-     * @param id
+     * @param mNextRequestID
      *            the ID of the request
      */
-    public void setID(int id) {
-        mID = id;
+    public void setID(long mNextRequestID) {
+        mID = mNextRequestID;
     }
 
     /**
@@ -134,8 +139,8 @@ abstract public class Request {
      * Enables to notify the thread in waiting-mode that the request has been
      * performed. This must be called after performing the request
      */
-    public void notifyRequestPerformed() {
-        mConnection.notifyThatRequestIsPerformed();
+    public void notifyRequestPerformed(Request request) {
+        mConnection.notifyThatRequestIsPerformed(request);
     }
 
     /**

@@ -24,7 +24,6 @@ public final class BlockingConnection extends Connection {
 
 		try {
 			while (command != null && !command.equals(Constants.QUIT_COMMAND)) {
-			    getDataOutputStream().writeBytes(Constants.PROGRAMM_NAME);
 
 				// It gets the command asked by the client
 				command = getBufferedReader().readLine();
@@ -75,7 +74,7 @@ public final class BlockingConnection extends Connection {
 	/**
 	 * Enables to notify a previous waitUntilRequestIsPerformed()-call
 	 */
-	public synchronized void notifyThatRequestIsPerformed() {
+	public synchronized void notifyThatRequestIsPerformed(Request request) {
 		notify();
 	}
 

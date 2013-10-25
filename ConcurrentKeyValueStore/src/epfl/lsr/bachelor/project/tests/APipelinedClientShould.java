@@ -7,13 +7,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epfl.lsr.bachelor.project.client.PipelinedClient;
-import epfl.lsr.bachelor.project.server.Server;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
@@ -26,21 +23,21 @@ public class APipelinedClientShould {
 
 	private PipelinedClient mClient;
 
-//	@BeforeClass
-//	public static void doFirst() {
-//		new Thread(new Runnable() {
-//
-//			public void run() {
-//				Server.start();
-//
-//			}
-//		}).start();
-//	}
-//
-//	@AfterClass
-//	public static void doLast() {
-//		Server.stop();
-//	}
+	// @BeforeClass
+	// public static void doFirst() {
+	// new Thread(new Runnable() {
+	//
+	// public void run() {
+	// Server.start();
+	//
+	// }
+	// }).start();
+	// }
+	//
+	// @AfterClass
+	// public static void doLast() {
+	// Server.stop();
+	// }
 
 	@Before
 	public void init() throws UnknownHostException {
@@ -74,8 +71,7 @@ public class APipelinedClientShould {
 	@Test
 	public void enableToGetNILIfAKeyDoesNotExistInMemory() {
 		mClient.get("NILKey");
-		assertEquals("Unable to get a key with no value",
-				Constants.PROGRAMM_NAME + "NIL",
+		assertEquals("Unable to get a key with no value", "NIL",
 				mClient.getNextAnswerFromServer());
 	}
 
@@ -84,8 +80,7 @@ public class APipelinedClientShould {
 		String key = "setKey";
 		String value = "setValue";
 		mClient.set(key, value);
-		assertEquals("Unable to set a key with a value",
-				Constants.PROGRAMM_NAME + "STORED",
+		assertEquals("Unable to set a key with a value", "STORED",
 				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
@@ -96,8 +91,7 @@ public class APipelinedClientShould {
 		String key = "setKey";
 		String value = "4";
 		mClient.set(key, value);
-		assertEquals("Unable to set a key with a value",
-				Constants.PROGRAMM_NAME + "STORED",
+		assertEquals("Unable to set a key with a value", "STORED",
 				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
@@ -110,8 +104,7 @@ public class APipelinedClientShould {
 		mClient.set(key, value);
 		mClient.getNextAnswerFromServer();
 		mClient.get(key);
-		assertEquals("Unable to set a key with a value and get it",
-				Constants.PROGRAMM_NAME + value,
+		assertEquals("Unable to set a key with a value and get it", value,
 				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
@@ -124,16 +117,14 @@ public class APipelinedClientShould {
 		mClient.set(key, value);
 		mClient.getNextAnswerFromServer();
 		mClient.get(key);
-		assertEquals("Unable to set a key with a value and get it",
-				Constants.PROGRAMM_NAME + value,
+		assertEquals("Unable to set a key with a value and get it", value,
 				mClient.getNextAnswerFromServer());
 		String newValue = "setNewValue";
 		mClient.set(key, newValue);
 		mClient.getNextAnswerFromServer();
 		mClient.get(key);
 		assertEquals("Unable to set a key (with a value) with a new value",
-				Constants.PROGRAMM_NAME + newValue,
-				mClient.getNextAnswerFromServer());
+				newValue, mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
 	}
@@ -143,8 +134,7 @@ public class APipelinedClientShould {
 		String key = "deleteValue";
 		mClient.delete(key);
 		assertEquals("Enable to delete a key with no value",
-				Constants.PROGRAMM_NAME + "-Err no such value",
-				mClient.getNextAnswerFromServer());
+				"-Err no such value", mClient.getNextAnswerFromServer());
 	}
 
 	@Test
@@ -154,16 +144,15 @@ public class APipelinedClientShould {
 		mClient.set(key, value);
 		mClient.getNextAnswerFromServer();
 		mClient.delete(key);
-		assertEquals("Unable to delete a key", Constants.PROGRAMM_NAME
-				+ "DELETED", mClient.getNextAnswerFromServer());
+		assertEquals("Unable to delete a key", "DELETED",
+				mClient.getNextAnswerFromServer());
 	}
 
 	@Test
 	public void enableToIncrementANonExistingValue() {
 		String key = "incrValue";
 		mClient.increment(key);
-		assertEquals("Unable to increment a non existing key",
-				Constants.PROGRAMM_NAME + "(integer) 1",
+		assertEquals("Unable to increment a non existing key", "(integer) 1",
 				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
@@ -175,8 +164,7 @@ public class APipelinedClientShould {
 		mClient.increment(key);
 		mClient.getNextAnswerFromServer();
 		mClient.increment(key);
-		assertEquals("Unable to increment an existing key",
-				Constants.PROGRAMM_NAME + "(integer) 2",
+		assertEquals("Unable to increment an existing key", "(integer) 2",
 				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
@@ -189,8 +177,7 @@ public class APipelinedClientShould {
 		mClient.increment(key, value);
 		assertEquals(
 				"Unable to increment an existing key with a specific value",
-				Constants.PROGRAMM_NAME + "(integer) 4",
-				mClient.getNextAnswerFromServer());
+				"(integer) 4", mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
 	}
@@ -201,8 +188,7 @@ public class APipelinedClientShould {
 		mClient.increment(key);
 		mClient.getNextAnswerFromServer();
 		mClient.increment(key, Integer.MAX_VALUE);
-		assertEquals("Enable to do an overflow with Increment",
-				Constants.PROGRAMM_NAME + "(integer) 1",
+		assertEquals("Enable to do an overflow with Increment", "(integer) 1",
 				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
@@ -215,8 +201,9 @@ public class APipelinedClientShould {
 		mClient.set(key, value);
 		mClient.getNextAnswerFromServer();
 		mClient.increment(key);
-		assertEquals("Enable to increment a string", Constants.PROGRAMM_NAME
-				+ "-Err not supported for this value", mClient.getNextAnswerFromServer());
+		assertEquals("Enable to increment a string",
+				"-Err not supported for this value",
+				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
 	}
@@ -226,8 +213,7 @@ public class APipelinedClientShould {
 		String key = "decrValue";
 		mClient.decrement(key);
 		assertEquals("Unenable to decrement a non existing key",
-				Constants.PROGRAMM_NAME + "(integer) -1",
-				mClient.getNextAnswerFromServer());
+				"(integer) -1", mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
 	}
@@ -238,8 +224,7 @@ public class APipelinedClientShould {
 		mClient.decrement(key);
 		mClient.getNextAnswerFromServer();
 		mClient.decrement(key);
-		assertEquals("Unable to decrement an existing key",
-				Constants.PROGRAMM_NAME + "(integer) -2",
+		assertEquals("Unable to decrement an existing key", "(integer) -2",
 				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
@@ -252,8 +237,7 @@ public class APipelinedClientShould {
 		mClient.decrement(key, value);
 		assertEquals(
 				"Unable to decrement an existing key with a specific value",
-				Constants.PROGRAMM_NAME + "(integer) -4",
-				mClient.getNextAnswerFromServer());
+				"(integer) -4", mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
 	}
@@ -264,8 +248,7 @@ public class APipelinedClientShould {
 		mClient.decrement(key);
 		mClient.getNextAnswerFromServer();
 		mClient.decrement(key, Integer.MIN_VALUE);
-		assertEquals("Enable to do an overflow with Decrement",
-				Constants.PROGRAMM_NAME + "(integer) -1",
+		assertEquals("Enable to do an overflow with Decrement", "(integer) -1",
 				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
@@ -278,8 +261,9 @@ public class APipelinedClientShould {
 		mClient.set(key, value);
 		mClient.getNextAnswerFromServer();
 		mClient.decrement(key);
-		assertEquals("Enable to decrement a string", Constants.PROGRAMM_NAME
-				+ "-Err not supported for this value", mClient.getNextAnswerFromServer());
+		assertEquals("Enable to decrement a string",
+				"-Err not supported for this value",
+				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
 	}
@@ -290,23 +274,23 @@ public class APipelinedClientShould {
 		final int value = 4;
 
 		mClient.set(key, String.valueOf(value));
-		assertEquals("Enable to set an empty key", Constants.PROGRAMM_NAME
-				+ "-Err '" + Constants.EMPTY_STRING + "' can't be a key",
+		assertEquals("Enable to set an empty key", "-Err '"
+				+ Constants.EMPTY_STRING + "' can't be a key",
 				mClient.getNextAnswerFromServer());
 		mClient.increment(key, value);
-		assertEquals("Enable to set an empty key", Constants.PROGRAMM_NAME
-				+ "-Err '" + Constants.EMPTY_STRING + "' can't be a key",
+		assertEquals("Enable to set an empty key", "-Err '"
+				+ Constants.EMPTY_STRING + "' can't be a key",
 				mClient.getNextAnswerFromServer());
 		mClient.decrement(key, value);
-		assertEquals("Enable to set an empty key", Constants.PROGRAMM_NAME
-				+ "-Err '" + Constants.EMPTY_STRING + "' can't be a key",
+		assertEquals("Enable to set an empty key", "-Err '"
+				+ Constants.EMPTY_STRING + "' can't be a key",
 				mClient.getNextAnswerFromServer());
 	}
 
 	@Test
 	public void enableToPingTheServer() {
 		mClient.ping();
-		assertEquals("Can't ping the server", Constants.PROGRAMM_NAME + "pong",
+		assertEquals("Can't ping the server", "pong",
 				mClient.getNextAnswerFromServer());
 	}
 
@@ -316,11 +300,11 @@ public class APipelinedClientShould {
 		String value = "valueAppend";
 		mClient.append(key, value);
 		assertEquals("Can't append a key with no value",
-				Constants.PROGRAMM_NAME + "(integer) " + value.length(),
+				"(integer) " + value.length(),
 				mClient.getNextAnswerFromServer());
 		mClient.get(key);
-		assertEquals("Can't append a key with no value",
-				Constants.PROGRAMM_NAME + value, mClient.getNextAnswerFromServer());
+		assertEquals("Can't append a key with no value", value,
+				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
 	}
@@ -331,19 +315,20 @@ public class APipelinedClientShould {
 		String value1 = "value";
 		String value2 = "Append";
 		mClient.append(key, value1);
-		assertEquals("Can't append a key with a value", Constants.PROGRAMM_NAME
-				+ "(integer) " + value1.length(), mClient.getNextAnswerFromServer());
-		mClient.get(key);
-		assertEquals("Can't append a key with a value", Constants.PROGRAMM_NAME
-				+ value1, mClient.getNextAnswerFromServer());
-
-		mClient.append(key, value2);
-		assertEquals("Can't append a key with a value", Constants.PROGRAMM_NAME
-				+ "(integer) " + (value1.length() + value2.length()),
+		assertEquals("Can't append a key with a value",
+				"(integer) " + value1.length(),
 				mClient.getNextAnswerFromServer());
 		mClient.get(key);
-		assertEquals("Can't append a key with a value", Constants.PROGRAMM_NAME
-				+ value1 + value2, mClient.getNextAnswerFromServer());
+		assertEquals("Can't append a key with a value", value1,
+				mClient.getNextAnswerFromServer());
+
+		mClient.append(key, value2);
+		assertEquals("Can't append a key with a value",
+				"(integer) " + (value1.length() + value2.length()),
+				mClient.getNextAnswerFromServer());
+		mClient.get(key);
+		assertEquals("Can't append a key with a value", value1 + value2,
+				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
 	}
@@ -354,8 +339,7 @@ public class APipelinedClientShould {
 		mClient.fakeCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				Constants.PROGRAMM_NAME
-						+ "-Err unable to execute command 'fake'",
+				"-Err unable to execute command 'fake'",
 				mClient.getNextAnswerFromServer());
 	}
 
@@ -364,7 +348,7 @@ public class APipelinedClientShould {
 		String command = "";
 		mClient.fakeCommand(command);
 		assertEquals("Receive an error when the client send nothing",
-				Constants.PROGRAMM_NAME, mClient.getNextAnswerFromServer());
+				Constants.EMPTY_STRING, mClient.getNextAnswerFromServer());
 	}
 
 	@Test
@@ -373,7 +357,7 @@ public class APipelinedClientShould {
 		mClient.get(key);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				Constants.PROGRAMM_NAME + "-Err get request one argument",
+				"-Err get request one argument",
 				mClient.getNextAnswerFromServer());
 		mClient.delete(key);
 		mClient.getNextAnswerFromServer();
@@ -385,7 +369,7 @@ public class APipelinedClientShould {
 		mClient.set(keyValue, keyValue);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				Constants.PROGRAMM_NAME + "-Err set request two arguments",
+				"-Err set request two arguments",
 				mClient.getNextAnswerFromServer());
 		mClient.delete(keyValue);
 		mClient.getNextAnswerFromServer();
@@ -397,12 +381,12 @@ public class APipelinedClientShould {
 		mClient.increment(key);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				Constants.PROGRAMM_NAME + "-Err incr/decr request one argument",
+				"-Err incr/decr request one argument",
 				mClient.getNextAnswerFromServer());
 		mClient.decrement(key);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				Constants.PROGRAMM_NAME + "-Err incr/decr request one argument",
+				"-Err incr/decr request one argument",
 				mClient.getNextAnswerFromServer());
 	}
 
@@ -412,8 +396,7 @@ public class APipelinedClientShould {
 		mClient.fakeCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				Constants.PROGRAMM_NAME
-						+ "-Err hincr/hdecr request one argument",
+				"-Err hincr/hdecr request one argument",
 				mClient.getNextAnswerFromServer());
 	}
 
@@ -423,8 +406,7 @@ public class APipelinedClientShould {
 		mClient.fakeCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				Constants.PROGRAMM_NAME
-						+ "-Err hincr/hdecr request one argument",
+				"-Err hincr/hdecr request one argument",
 				mClient.getNextAnswerFromServer());
 	}
 
@@ -434,8 +416,7 @@ public class APipelinedClientShould {
 		mClient.fakeCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				Constants.PROGRAMM_NAME
-						+ "-Err hincr/hdecr need an integer as argument",
+				"-Err hincr/hdecr need an integer as argument",
 				mClient.getNextAnswerFromServer());
 	}
 
@@ -445,8 +426,7 @@ public class APipelinedClientShould {
 		mClient.fakeCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				Constants.PROGRAMM_NAME
-						+ "-Err hincr/hdecr need an integer as argument",
+				"-Err hincr/hdecr need an integer as argument",
 				mClient.getNextAnswerFromServer());
 	}
 }

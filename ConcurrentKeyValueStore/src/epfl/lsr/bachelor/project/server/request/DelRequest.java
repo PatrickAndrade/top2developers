@@ -30,6 +30,6 @@ public class DelRequest extends Request {
 		} else {
 			setMessageToReturn(Constants.DELETED);
 		}
-		notifyRequestPerformed();
+		notifyRequestPerformed(this);
 	}
 }

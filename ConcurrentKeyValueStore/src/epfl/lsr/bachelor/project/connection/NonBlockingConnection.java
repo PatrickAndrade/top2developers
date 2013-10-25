@@ -2,57 +2,86 @@ package epfl.lsr.bachelor.project.connection;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import epfl.lsr.bachelor.project.server.RequestBuffer;
+import epfl.lsr.bachelor.project.server.request.ErrRequest;
 import epfl.lsr.bachelor.project.server.request.Request;
+import epfl.lsr.bachelor.project.server.request.RequestsComparator;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * Encapsulates a non-blocking connection that avoid blocking over a readLine()-call
+ * Encapsulates a non-blocking connection that avoid blocking over a
+ * readLine()-call
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
 public final class NonBlockingConnection extends Connection {
 
-	public NonBlockingConnection(Socket socket, RequestBuffer requestBuffer) throws IOException {
+	private PriorityBlockingQueue<Request> mRequestToSend;
+	private long mNextRequestToBeSend;
+	private long mNextRequestID;
+
+	public NonBlockingConnection(Socket socket, RequestBuffer requestBuffer)
+		throws IOException {
 		super(socket, requestBuffer);
+		mRequestToSend = new PriorityBlockingQueue<>(
+				Constants.NUMBER_OF_PIPELINED_REQUESTS,
+				new RequestsComparator());
+		mNextRequestToBeSend = 0;
+		mNextRequestID = 0;
 	}
 
 	public void run() {
 		String command = Constants.EMPTY_STRING;
-
+		
 		try {
 			while (command != null && !command.equals(Constants.QUIT_COMMAND)) {
-			    getDataOutputStream().writeBytes(Constants.PROGRAMM_NAME);
 
-				// It gets the command asked by the client
-				command = getBufferedReader().readLine();
+				if (getBufferedReader().ready()) {
 
-				if (command != null && !command.equals(Constants.QUIT_COMMAND)) {
-					// We parse the command to encapsulate it in a more specific
-					// request
-					Request request = getCommandParser().parse(command);
-					request.setConnection(this);
+					// It gets the command asked by the client
+					command = getBufferedReader().readLine();
 
-					// If the request can be performed, we put it in the buffer
-					if (request.canBePerformed()) {
-						addRequestAndWait(request);
+					if (command != null
+							&& !command.equals(Constants.QUIT_COMMAND)) {
+						// We parse the command to encapsulate it in a more
+						// specific
+						// request
+						Request request = getCommandParser().parse(command);
+						request.setConnection(this);
+						request.setID(mNextRequestID);
+
+						// If the request can be performed, we put it in the
+						// buffer
+						if (request.canBePerformed()) {
+							getRequestBuffer().add(request);
+						} else {
+							if (request.isMessageEmpty()) {
+								request = new ErrRequest(Constants.EMPTY_STRING);
+								request.setConnection(this);
+								request.setID(mNextRequestID);
+							}
+							mRequestToSend.add(request);
+						}
+
+						mNextRequestID++;
 					}
+				}
 
-					// If the answer to the client is not empty we respond him
-					if (!request.isMessageEmpty()) {
-						request.respond();
-					} else {
-					    getDataOutputStream().writeBytes(Constants.EMPTY_STRING + "\n");
-					    getDataOutputStream().flush();
-					}
+				while (!mRequestToSend.isEmpty()
+						&& (mNextRequestToBeSend == mRequestToSend.peek()
+								.getID())) {
+					mRequestToSend.poll().respond();
+					mNextRequestToBeSend++;
 				}
 			}
 		} catch (IOException e) {
-			//System.err.println("  -> Error of connection with " + mSocket.getInetAddress());
+			// System.err.println("  -> Error of connection with " +
+			// mSocket.getInetAddress());
 		}
-		
+
 		try {
 			closeConnection();
 		} catch (IOException e) {
@@ -60,23 +89,7 @@ public final class NonBlockingConnection extends Connection {
 		}
 	}
 
-	/**
-	 * Enables to call a wait
-	 */
-	public synchronized void addRequestAndWait(Request request) {
-		try {
-			getRequestBuffer().add(request);
-			wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	public void notifyThatRequestIsPerformed(Request request) {
+		mRequestToSend.add(request);
 	}
-
-	/**
-	 * Enables to notify a previous waitUntilRequestIsPerformed()-call
-	 */
-	public synchronized void notifyThatRequestIsPerformed() {
-		notify();
-	}
-
 }

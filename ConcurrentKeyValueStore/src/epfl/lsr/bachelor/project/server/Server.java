@@ -7,7 +7,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
-import epfl.lsr.bachelor.project.connection.BlockingConnection;
+import epfl.lsr.bachelor.project.connection.Connection;
+import epfl.lsr.bachelor.project.connection.NonBlockingConnection;
 import epfl.lsr.bachelor.project.pipe.SingleThreadPipe;
 import epfl.lsr.bachelor.project.util.Constants;
 
@@ -39,7 +40,7 @@ public final class Server {
 
 				Socket socket = mServerSocket.accept();
 
-				BlockingConnection connection = new BlockingConnection(socket, mRequestBuffer);
+				Connection connection = new NonBlockingConnection(socket, mRequestBuffer);
 				
 				try {
 					mThreadPool.execute(connection);

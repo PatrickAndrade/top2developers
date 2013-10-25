@@ -12,7 +12,7 @@ public class RequestsComparator implements Comparator<Request> {
 
     @Override
     public int compare(Request request0, Request request1) {
-        return request1.getID() - request0.getID();
+        return (int) (request0.getID() - request1.getID());
     }
 
 }

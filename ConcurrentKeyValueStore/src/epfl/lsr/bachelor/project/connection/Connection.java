@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 import epfl.lsr.bachelor.project.server.RequestBuffer;
+import epfl.lsr.bachelor.project.server.request.Request;
 import epfl.lsr.bachelor.project.util.CommandParser;
 
 /**
@@ -37,7 +38,7 @@ public abstract class Connection implements Runnable {
     /**
      * Enables to notify a previous waitUntilRequestIsPerformed()-call
      */
-    public abstract void notifyThatRequestIsPerformed();
+    public abstract void notifyThatRequestIsPerformed(Request request);
 
     /**
      * Enables to close properly the connection (i.e. it closes the socket)

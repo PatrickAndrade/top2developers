@@ -40,7 +40,7 @@ public class DecrRequest extends Request {
 				setMessageToReturn(Constants.NOT_SUPPORTED);
 			}
 		}
-		notifyRequestPerformed();
+		notifyRequestPerformed(this);
 	}
 
 }

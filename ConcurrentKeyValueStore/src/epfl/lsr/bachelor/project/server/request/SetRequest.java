@@ -28,6 +28,6 @@ public class SetRequest extends Request {
 		} else {
 			setMessageToReturn(Constants.REPLACED);
 		}
-		notifyRequestPerformed();
+		notifyRequestPerformed(this);
 	}
 }

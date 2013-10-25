@@ -40,6 +40,6 @@ public class IncrRequest extends Request {
 				setMessageToReturn(Constants.NOT_SUPPORTED);
 			}
 		}
-		notifyRequestPerformed();
+		notifyRequestPerformed(this);
 	}
 }

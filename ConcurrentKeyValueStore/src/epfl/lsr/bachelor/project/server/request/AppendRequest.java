@@ -32,7 +32,7 @@ public class AppendRequest extends Request {
 			setMessageToReturn("(integer) " + ((String) value.getValue()).length());
 		}
 		
-		notifyRequestPerformed();
+		notifyRequestPerformed(this);
 	}
 
 }
