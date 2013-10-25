@@ -35,11 +35,11 @@ class TestingCode implements Runnable {
     private static final long TEN_POWER_NINE = (long) Math.pow(10, 9);
     private static final long TEN_POWER_SIX = (long) Math.pow(10, 6);
     // private static final long TEN_POWER_THREE = (long) Math.pow(10, 3);
-    private static final long ITERATION = (long) Math.pow(10, 5);
+    private static final long ITERATION = (long) Math.pow(10, 1);
 
     @Override
     public void run() {
-        PipelinedClient client = new PipelinedClient(new InetSocketAddress("192.168.1.42", Constants.PORT));
+        PipelinedClient client = new PipelinedClient(new InetSocketAddress("127.0.0.1", Constants.PORT));
         client.connect();
 
         // Set a first value

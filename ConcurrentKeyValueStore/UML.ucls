@@ -21,8 +21,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="epfl.lsr.bachelor.project.server.Connection" project="ConcurrentKeyValueStore" 
-    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/Connection.java" binary="false" 
+  <class id="3" language="java" name="epfl.lsr.bachelor.project.server.BlockingConnection" 
+    project="ConcurrentKeyValueStore" 
+    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/BlockingConnection.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1062" y="136"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 

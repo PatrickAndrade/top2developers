@@ -38,7 +38,7 @@ public final class Server {
 
 				Socket socket = mServerSocket.accept();
 
-				Connection connection = new Connection(socket, mRequestBuffer);
+				BlockingConnection connection = new BlockingConnection(socket, mRequestBuffer);
 				
 				try {
 					mThreadPool.execute(connection);
