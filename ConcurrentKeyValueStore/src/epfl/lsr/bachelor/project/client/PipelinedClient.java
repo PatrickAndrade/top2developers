@@ -71,7 +71,7 @@ public class PipelinedClient {
      * @return if we are connected
      */
     public boolean isConnected() {
-        return (mSocket != null) && mSocket.isConnected();
+        return (mSocket != null) && mSocket.isConnected() && !mSocket.isClosed();
     }
 
     /**
@@ -209,6 +209,32 @@ public class PipelinedClient {
                 writeCommandAndSubmitToRequestReader(Constants.HDECR_COMMAND + " " + key + " " + value);
             } else {
                 throw new IllegalArgumentException("key was null at decrement-method !");
+            }
+        }
+    }
+    
+    /**
+     * Enables to execute a ping command to the server
+     */
+    public void ping() {
+    	if (isConnected()) {
+    		writeCommandAndSubmitToRequestReader(Constants.PING_COMMAND);
+        }
+    }
+    
+    /**
+     * Enables to execute an append command over the specified key with the
+     * specified value to append
+     * 
+     * @param key
+     * @param value
+     */
+    public void append(String key, String value) {
+    	if (isConnected()) {
+            if (key != null && value != null) {
+                writeCommandAndSubmitToRequestReader(Constants.APPEND_COMMAND + " " + key + " " + value);
+            } else {
+                throw new IllegalArgumentException("key or value was null at append-method !");
             }
         }
     }
