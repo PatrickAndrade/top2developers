@@ -2,7 +2,7 @@ package epfl.lsr.bachelor.project.server.request;
 
 import java.io.IOException;
 
-import epfl.lsr.bachelor.project.server.Connection;
+import epfl.lsr.bachelor.project.connection.Connection;
 import epfl.lsr.bachelor.project.store.KeyValueStore;
 import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;

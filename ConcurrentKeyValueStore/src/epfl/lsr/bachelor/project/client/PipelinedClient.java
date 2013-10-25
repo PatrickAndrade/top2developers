@@ -44,7 +44,7 @@ public class PipelinedClient {
      * Enables to connect to the server. This MUST be called before executing
      * any request
      * 
-     * @return
+     * @return if we are connected to the server
      */
     public boolean connect() {
         if (isConnected()) {
@@ -243,7 +243,6 @@ public class PipelinedClient {
      * Enables to execute a quit command should be executed before a call to the
      * method disconnect
      * 
-     * @param key
      */
     public void quit() {
         if (isConnected()) {

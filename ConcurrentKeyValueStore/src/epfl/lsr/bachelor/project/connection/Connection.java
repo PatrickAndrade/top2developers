@@ -1,4 +1,4 @@
-package epfl.lsr.bachelor.project.server;
+package epfl.lsr.bachelor.project.connection;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.util.CommandParser;
 
 /**
@@ -39,9 +40,8 @@ public abstract class Connection implements Runnable {
     public abstract void notifyThatRequestIsPerformed();
 
     /**
-     * Enables to close properly the connection (ie it closes the socket)
+     * Enables to close properly the connection (i.e. it closes the socket)
      * 
-     * @param socket
      * @throws IOException
      */
     public void closeConnection() throws IOException {

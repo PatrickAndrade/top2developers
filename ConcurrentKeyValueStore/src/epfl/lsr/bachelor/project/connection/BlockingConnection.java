@@ -1,13 +1,14 @@
-package epfl.lsr.bachelor.project.server;
+package epfl.lsr.bachelor.project.connection;
 
 import java.io.IOException;
 import java.net.Socket;
 
+import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.request.Request;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * Encapsulates a connection opened
+ * Encapsulates a blocking connection that blocks over a readLine()-call
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
