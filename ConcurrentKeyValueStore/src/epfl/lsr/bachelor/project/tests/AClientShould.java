@@ -43,14 +43,14 @@ public class AClientShould {
 	public void init() throws UnknownHostException {
 		mClient = new Client(InetAddress.getLocalHost(), Constants.PORT);
 		if (mClient.connect()) {
-			System.out.println("Connected");
+//			System.out.println("Connected");
 		}
 	}
 
 	@After
 	public void after() {
 		if (mClient.isConnected()) {
-			System.out.println("Youhou");
+//			System.out.println("Youhou");
 			mClient.disconnect();
 		}
 	}

@@ -60,11 +60,7 @@ abstract public class Request {
      * Enables to give an answer back after performing a request
      */
     public void respond() throws IOException {
-//    	System.err.println("here : " + mMessageToReturn);
-//    	if (mConnection == null)
-//    		System.out.println("null0");
-//    	else if (mConnection.getDataOutputStream() == null)
-//    		System.out.println("null1");
+    	System.out.println("gonna write : " + mMessageToReturn);//TODO
         mConnection.getDataOutputStream().writeBytes(mMessageToReturn + "\n");
         mConnection.getDataOutputStream().flush();
     }

@@ -12,7 +12,7 @@ import epfl.lsr.bachelor.project.util.CommandParser;
 
 /**
  * Encapsulates a connection opened. This is subclassed by two classes, namely
- * {@link BlockingConnection} and {@link NonBlockingConnection}
+ * {@link BlockingConnection} and {@link PipelinedConnection}
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -49,6 +49,7 @@ public abstract class Connection implements Runnable {
         if (mSocket != null) {
             mSocket.close();
             System.err.println(" -> Connection with " + mSocket.getInetAddress() + " aborted !");
+            mSocket = null;
         }
     }
 
@@ -86,5 +87,9 @@ public abstract class Connection implements Runnable {
      */
     protected CommandParser getCommandParser() {
         return mCommandParser;
+    }
+    
+    protected Socket getSocket() {
+    	return mSocket;
     }
 }
