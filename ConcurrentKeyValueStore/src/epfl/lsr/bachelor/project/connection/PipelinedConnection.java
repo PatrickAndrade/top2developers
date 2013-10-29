@@ -49,6 +49,7 @@ public final class PipelinedConnection extends Connection {
 		// Create the reader
 		new Thread(new Reader()).start();
 		
+		// The writer code
 		try {
 			while (!mClosed.get()) {
 				
@@ -60,6 +61,8 @@ public final class PipelinedConnection extends Connection {
 					mRequestToSend.poll().respond();
 					mNextRequestToBeSend.incrementAndGet();
 				}
+				
+				waitRequestToSend();
 			}
 		} catch (IOException e) {
 		}
@@ -74,11 +77,24 @@ public final class PipelinedConnection extends Connection {
 	public synchronized void closeConnection() throws IOException {
 		super.closeConnection();
 		mClosed.set(true);
+		notifyRequestToSend();
 	}
 
 	@Override
 	public void notifyThatRequestIsPerformed(Request request) {
 		mRequestToSend.add(request);
+		notifyRequestToSend();
+	}
+	
+	private synchronized void waitRequestToSend() {
+		try {
+			wait();
+		} catch (InterruptedException e) {
+		}
+	}
+	
+	private synchronized void notifyRequestToSend() {
+		notify();
 	}
 
 	private class Reader implements Runnable {
@@ -106,12 +122,17 @@ public final class PipelinedConnection extends Connection {
 						if (request.canBePerformed()) {
 							getRequestBuffer().add(request);
 						} else {
+							
+							// The only cases in which we achieve this part is when the request is
+							// either an empty request or an error request
 							if (request.isMessageEmpty()) {
 								request = new ErrRequest(Constants.EMPTY_STRING);
 								request.setConnection(PipelinedConnection.this);
 								request.setID(mNextRequestID.get());
 							}
+							
 							mRequestToSend.add(request);
+							notifyRequestToSend();
 						}
 
 						mNextRequestID.incrementAndGet();

@@ -13,14 +13,14 @@ import epfl.lsr.bachelor.project.util.Constants;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class KeyValueStoreBenchmark {
-	public static final int SIZE = 64;
+public class KeyValueStoreBenchmarkNotPipelined {
+	public static final int SIZE = 5;
 
 	public static void main(String[] args) {
 
 		Thread[] myThreads = new Thread[SIZE];
 		for (int i = 0; i < myThreads.length; i++) {
-			myThreads[i] = new Thread(new TestingCode());
+			myThreads[i] = new Thread(new TestingCodeNotPipelined());
 		}
 
 		for (Thread thread : myThreads) {
@@ -29,18 +29,18 @@ public class KeyValueStoreBenchmark {
 
 	}
 
-}
+} 
 
-class TestingCode implements Runnable {
+class TestingCodeNotPipelined implements Runnable {
 
 	//private static final long TEN_POWER_NINE = (long) Math.pow(10, 9);
 	private static final long TEN_POWER_SIX = (long) Math.pow(10, 6);
 	private static final long TEN_POWER_THREE = (long) Math.pow(10, 3);
-	private static final long ITERATION = (long) Math.pow(10, 4);
+	private static final long ITERATION = (long) Math.pow(10, 1);
 
 	@Override
 	public void run() {
-		PipelinedClient client = new PipelinedClient(new InetSocketAddress(
+		Client client = new Client(new InetSocketAddress(
 				"128.179.146.219", Constants.PORT));
 		client.connect();
 
@@ -53,19 +53,19 @@ class TestingCode implements Runnable {
 
 		// Send pipelined requests
 		for (long i = 0; i < ITERATION; i++) {
-//			client.ping();
-			client.get("a");
+			System.out.println(client.ping());
+//			client.get("a");
 		}
 
 		// Read answers
-		for (long i = 0; i < ITERATION; i++) {
+		/*for (long i = 0; i < ITERATION; i++) {
 			try {
 //				System.out.println(client.getNextAnswerFromServer());
 				client.getNextAnswerFromServer();
 			} catch (NoSuchElementException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 
 		long finishedTime = System.nanoTime();
 		totalTime = finishedTime - initTime;

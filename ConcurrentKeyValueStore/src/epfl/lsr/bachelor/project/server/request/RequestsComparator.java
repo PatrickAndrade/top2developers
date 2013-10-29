@@ -12,7 +12,10 @@ public class RequestsComparator implements Comparator<Request> {
 
     @Override
     public int compare(Request request0, Request request1) {
-        return (int) (request0.getID() - request1.getID());
+    	final long difference = request0.getID() - request1.getID();
+    	
+    	// Avoid overflows of integers, this returns either -1, 0 or 1
+        return (int) (difference / Math.abs(difference));
     }
 
 }
