@@ -8,7 +8,7 @@ package epfl.lsr.bachelor.project.util;
  */
 public final class Constants {
 	public static final int PORT = 22122;
-	public static final int NUMBER_OF_PIPELINED_CONNECTIONS = 10;
+	public static final int NUMBER_OF_PIPELINED_CONNECTIONS = 100;
 	public static final int NUMBER_OF_PIPELINED_REQUESTS = 100;
 	
 	public static final String EMPTY_STRING = "";

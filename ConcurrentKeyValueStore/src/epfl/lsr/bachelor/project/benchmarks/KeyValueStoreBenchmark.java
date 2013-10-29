@@ -3,7 +3,6 @@ package epfl.lsr.bachelor.project.benchmarks;
 import java.net.InetSocketAddress;
 import java.util.NoSuchElementException;
 
-import epfl.lsr.bachelor.project.client.Client;
 import epfl.lsr.bachelor.project.client.PipelinedClient;
 import epfl.lsr.bachelor.project.util.Constants;
 
