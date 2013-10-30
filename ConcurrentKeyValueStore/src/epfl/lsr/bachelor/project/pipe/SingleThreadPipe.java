@@ -14,8 +14,8 @@ import epfl.lsr.bachelor.project.server.request.Request;
 final public class SingleThreadPipe implements Runnable {
 
 	private RequestBuffer mRequestBuffer;
-	private static SingleThreadPipe instance;
-	private static AtomicBoolean closed = new AtomicBoolean();
+	private static SingleThreadPipe sInstance;
+	private static AtomicBoolean sClosed = new AtomicBoolean();
 	
 	/**
 	 * Default constructor that will link the buffer of requests to the single thread
@@ -24,7 +24,7 @@ final public class SingleThreadPipe implements Runnable {
 	 */
 	private SingleThreadPipe(RequestBuffer requestBuffer) {
 		mRequestBuffer = requestBuffer;
-		closed.set(false);
+		sClosed.set(false);
 	}
 	
 	/**
@@ -34,20 +34,20 @@ final public class SingleThreadPipe implements Runnable {
 	 * @return the instance of the single thread
 	 */
 	public static SingleThreadPipe getInstance(RequestBuffer requestBuffer) {
-		if (instance == null) {
-			instance = new SingleThreadPipe(requestBuffer);
+		if (sInstance == null) {
+			sInstance = new SingleThreadPipe(requestBuffer);
 		}
-		return instance;
+		return sInstance;
 	}
 	
 	@Override
 	public void run() {
 		// The work of the thread is simply to perform all the requests sent by the clients
-		while (!closed.get()) {
+		while (!sClosed.get()) {
 			// It gets a request in the buffer
 			Request request = mRequestBuffer.take();
 			//It executes the request if the thread has not been already closed
-			if (!closed.get()) {
+			if (!sClosed.get()) {
 				try {
 					request.perform();
 				} catch (CloneNotSupportedException e) {
@@ -61,7 +61,7 @@ final public class SingleThreadPipe implements Runnable {
 	 * Enables to close properly the thread attached to this {@link Runnable} object
 	 */
 	public void close() {
-		closed.set(true);
+		sClosed.set(true);
 		mRequestBuffer.notifyAllThreadsToStopWaiting();
 	}
 }

@@ -61,12 +61,12 @@ public final class Server {
 	 */
 	public static void stop() {
 		mThreadPool.shutdown();
-
-		SingleThreadPipe.getInstance(mRequestBuffer).close();
 		
 		// We wait until all the clients have got their answers
 		while (!mThreadPool.isTerminated()) {
 		}
+		
+		SingleThreadPipe.getInstance(mRequestBuffer).close();
 
 		if (mServerSocket != null) {
 			try {
