@@ -64,6 +64,7 @@ public final class PipelinedConnection extends Connection {
 	public synchronized void closeConnection() throws IOException {
 		super.closeConnection();
 		mClosed.set(true);
+		mPriorityBlockingGenericQueue.close();
 	}
 
 	@Override
