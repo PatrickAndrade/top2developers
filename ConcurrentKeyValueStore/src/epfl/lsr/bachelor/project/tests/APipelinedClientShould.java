@@ -3,7 +3,7 @@ package epfl.lsr.bachelor.project.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
 import org.junit.After;
@@ -25,8 +25,7 @@ public class APipelinedClientShould {
 
 	@Before
 	public void init() throws UnknownHostException {
-		mClient = new PipelinedClient(InetAddress.getLocalHost(),
-				Constants.PORT);
+        mClient = new PipelinedClient(new InetSocketAddress("127.0.0.1", Constants.PORT));
 		mClient.connect();
 	}
 

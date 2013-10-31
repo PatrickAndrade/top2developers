@@ -64,7 +64,7 @@ public class PriorityWaitingRequestQueue<T extends Request> {
 	public synchronized void add(T request) {
 		mRequestToSend.add(request);
 
-		if (request.getID() == mRequestToSend.peek().getID()) {
+		if (request.getID() == mNextItem) {
 			notify();
 		}
 	}
