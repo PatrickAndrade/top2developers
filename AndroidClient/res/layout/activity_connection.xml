@@ -9,24 +9,35 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ConnectionActivity" >
 
-    <EditText
-        android:id="@+id/edit_ip_address"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/ip_address" />
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_port"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/port" />
+        <EditText
+            android:id="@+id/edit_ip_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:hint="@string/ip_address" 
+            android:gravity="center_horizontal"/>
+
+        <EditText
+            android:id="@+id/edit_port"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:hint="@string/port"
+            android:gravity="center_horizontal"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/connection_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="connectToClient"
         android:layout_gravity="bottom"
+        android:onClick="connectToClient"
         android:text="@string/buttonConnect" />
 
 </LinearLayout>

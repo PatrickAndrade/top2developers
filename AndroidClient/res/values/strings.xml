@@ -12,6 +12,7 @@
     <!-- CommunicationActivity resources -->
     <string name="title_activity_communication">Communicate with the server</string>
 	<string name="request_hint">Type a request</string>
-    <string name="button_send_request">Send request!</string>
+    <string name="button_send_request">Send request</string>
+    <string name="button_clear">Clear</string>
     
 </resources>

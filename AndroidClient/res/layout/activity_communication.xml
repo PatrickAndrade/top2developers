@@ -9,19 +9,41 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".CommunicationActivity" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/answer_text_view" />
+    <ListView
+        android:id="@+id/items_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:transcriptMode="alwaysScroll" >
+    </ListView>
 
-    <EditText 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <EditText
         android:id="@+id/request_edit_text"
-        android:hint="@string/request_hint"/>
-    <Button 
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_send_request" 
-        android:onClick="sendRequest"/>
+        android:layout_weight="0.1"
+        android:gravity="center_horizontal"
+        android:hint="@string/request_hint" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:onClick="sendRequest"
+            android:text="@string/button_send_request" />
+        
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:onClick="clearConsole"
+            android:text="@string/button_clear" />
+    </LinearLayout>
+
 </LinearLayout>
