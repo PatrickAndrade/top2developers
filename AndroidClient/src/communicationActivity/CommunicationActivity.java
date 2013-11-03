@@ -71,6 +71,7 @@ public class CommunicationActivity extends Activity {
         adapter.add(new ArrayAdapterItem(request));
         
         if (request.equals("") || request == null) {
+            progressDialog.dismiss();
             return;
         }
         
