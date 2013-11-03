@@ -7,9 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.client.Client;
+import client.Client;
+import client.ConnectingClientTask;
+
 import com.example.client.R;
-import com.example.client.ConnectingClientTask;
 import communicationActivity.CommunicationActivity;
 
 public class ConnectionActivity extends Activity {
