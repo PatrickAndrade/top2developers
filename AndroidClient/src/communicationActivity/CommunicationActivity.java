@@ -67,14 +67,14 @@ public class CommunicationActivity extends Activity {
                 "Currently sending a request to the server...", true);
         
         String request = requestView.getText().toString();
-        
-        adapter.add(new ArrayAdapterItem(request));
-        
+
         if (request.equals("") || request == null) {
             progressDialog.dismiss();
             return;
         }
         
+        adapter.add(new ArrayAdapterItem(request));
+       
         new SendingRequestTask() {
             
             @Override
