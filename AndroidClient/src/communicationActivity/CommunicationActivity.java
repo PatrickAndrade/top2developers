@@ -9,10 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import app.entry.ConnectionActivity;
+import app.entry.R;
 
-import com.example.client.R;
-
-import entry.ConnectionActivity;
 
 public class CommunicationActivity extends Activity {
 

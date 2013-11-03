@@ -2,7 +2,7 @@ package communicationActivity;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import entry.ConnectionActivity;
+import app.entry.ConnectionActivity;
 
 public abstract class SendingRequestTask extends AsyncTask<Object, Void, String> {
 

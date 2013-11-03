@@ -1,4 +1,4 @@
-package entry;
+package app.entry;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
 import client.Client;
 import client.ConnectingClientTask;
 
-import com.example.client.R;
 import communicationActivity.CommunicationActivity;
 
 public class ConnectionActivity extends Activity {
