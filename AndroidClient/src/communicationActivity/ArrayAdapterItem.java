@@ -3,26 +3,18 @@ package communicationActivity;
 
 public class ArrayAdapterItem {
 
-    private String mAnswer;
+    private String mItem;
 
     public ArrayAdapterItem(String item) {
-        mAnswer = item;
+        mItem = item;
     }
     
-    /**
-     * returns the answer
-     * @return mAnswer
-     */
     public String getAnswer() {
-        return mAnswer;
+        return mItem;
     }
 
-    /**
-     * set a new answer
-     * @param answer
-     */
-    public void setAnswer(String answer) {
-        mAnswer = answer;
+    public void setItem(String item) {
+        mItem = item;
     }
 
 }
