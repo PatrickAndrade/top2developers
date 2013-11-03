@@ -3,10 +3,14 @@
 
     <string name="app_name">AndroidClient</string>
     <string name="action_settings">Settings</string>
+    
+    <!-- ConnectionActivity resources -->
     <string name="ip_address">Server\'s IP address</string>
     <string name="port">Server\'s port</string>
     <string name="buttonConnect">Connect</string>
-    <string name="title_activity_communication">CommunicationActivity</string>
+    
+    <!-- CommunicationActivity resources -->
+    <string name="title_activity_communication">Communicate with the server</string>
 	<string name="request_hint">Type a request</string>
     <string name="button_send_request">Send request!</string>
     
