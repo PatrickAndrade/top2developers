@@ -41,7 +41,7 @@ public class ConnectionActivity extends Activity {
                     Toast.makeText(ConnectionActivity.this, "Could not connect to the server specified!", Toast.LENGTH_SHORT).show();
                 }
             }
-        }.execute("192.168.0.18");
+        }.execute("192.168.1.38");
 
     }
 }
