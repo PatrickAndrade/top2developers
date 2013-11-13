@@ -3,7 +3,7 @@ package epfl.lsr.bachelor.project.server.request;
 import java.io.IOException;
 
 import epfl.lsr.bachelor.project.connection.Connection;
-import epfl.lsr.bachelor.project.store.KeyValueStore;
+import epfl.lsr.bachelor.project.store.NormalKeyValueStore;
 import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
 
@@ -22,8 +22,8 @@ abstract public class Request {
 
     @SuppressWarnings("unchecked")
     // The static reference to the KeyValueStore
-    protected static final KeyValueStore<String, Value<?>> KEY_VALUE_STORE =
-        (KeyValueStore<String, Value<?>>) KeyValueStore.getInstance();
+    protected static final NormalKeyValueStore<String, Value<?>> KEY_VALUE_STORE =
+        (NormalKeyValueStore<String, Value<?>>) NormalKeyValueStore.getInstance();
 
     /**
      * Default constructor

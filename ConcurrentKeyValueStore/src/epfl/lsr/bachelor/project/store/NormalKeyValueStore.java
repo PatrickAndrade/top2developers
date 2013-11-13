@@ -13,15 +13,15 @@ import java.util.Set;
  * @param <K> The key type
  * @param <V> The value type
  */
-public final class KeyValueStore<K, V> implements Map<K, V> {
+public final class NormalKeyValueStore<K, V> implements Map<K, V> {
 
-	private static final KeyValueStore<?, ?> INSTANCE = new KeyValueStore<>();
+	private static final NormalKeyValueStore<?, ?> INSTANCE = new NormalKeyValueStore<>();
 	private Map<K, V> mMap;
 
 	/**
 	 * Default constructor that instantiate the {@link HashMap} encapsulated by this class
 	 */
-	private KeyValueStore() {
+	private NormalKeyValueStore() {
 		if (INSTANCE != null) {
 			throw new IllegalStateException("Already instantiated");
 		}
@@ -34,7 +34,7 @@ public final class KeyValueStore<K, V> implements Map<K, V> {
 	 * 
 	 * @return the Key-Value store instance
 	 */
-	public static KeyValueStore<?, ?> getInstance() {
+	public static NormalKeyValueStore<?, ?> getInstance() {
 		return INSTANCE;
 	}
 
