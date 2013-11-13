@@ -10,10 +10,13 @@ public final class Constants {
 	public static final int PORT = 22122;
 	public static final int NUMBER_OF_PIPELINED_CONNECTIONS = 100;
 	public static final int NUMBER_OF_PIPELINED_REQUESTS = 100;
+	public static final int READ_BUFFER_NIO = 9216;
 	
 	public static final String EMPTY_STRING = "";
-	public static final String WELCOME = "Server 1.0.1 (developed in JAVA)" + "\n\n" +
+	public static final String WELCOME_STANDARD = "Server 1.0.1 (developed in JAVA)" + "\n\n" +
 			"Running in standard mode" + "\n" + "Port: " + PORT + "\n";
+	public static final String WELCOME_NIO = "Server 1.0.1 (developed in JAVA)" + "\n\n" +
+			"Running in NIO mode" + "\n" + "Port: " + PORT + "\n";
 	public static final String SERVER_CLOSED = "The server has been closed !";
 //	public static final String PROGRAMM_NAME = "ConcurrentKeyValueStore:" + Constants.PORT + " > ";
 	

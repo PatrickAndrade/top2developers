@@ -18,14 +18,14 @@ import epfl.lsr.bachelor.project.util.Constants;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public final class Server {
+public final class Server implements ServerInterface {
 
 	private static ServerSocket mServerSocket;
 	private static ExecutorService mThreadPool = 
 			Executors.newFixedThreadPool(Constants.NUMBER_OF_PIPELINED_CONNECTIONS);
 	private static RequestBuffer mRequestBuffer = new RequestBuffer();
 	
-	public static void start() {
+	public void start() {
 		try {
 			// We launch the server
 			mServerSocket = new ServerSocket(Constants.PORT);
@@ -33,7 +33,7 @@ public final class Server {
 			// We launch the thread that handles the requests
 			new Thread(SingleThreadPipe.getInstance(mRequestBuffer)).start();
 
-			System.out.println(Constants.WELCOME);
+			System.out.println(Constants.WELCOME_STANDARD);
 
 			// We accept connections and give it to the next stage
 			while (true) {
