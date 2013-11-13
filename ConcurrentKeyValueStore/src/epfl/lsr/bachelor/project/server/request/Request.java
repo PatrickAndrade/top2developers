@@ -3,6 +3,7 @@ package epfl.lsr.bachelor.project.server.request;
 import java.io.IOException;
 
 import epfl.lsr.bachelor.project.connection.Connection;
+import epfl.lsr.bachelor.project.store.KeyValueStore;
 import epfl.lsr.bachelor.project.store.NormalKeyValueStore;
 import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
@@ -20,10 +21,8 @@ abstract public class Request {
     private Connection mConnection;
     private long mID = 0; // Default value, should be changed calling setID()
 
-    @SuppressWarnings("unchecked")
     // The static reference to the KeyValueStore
-    protected static final NormalKeyValueStore<String, Value<?>> KEY_VALUE_STORE =
-        (NormalKeyValueStore<String, Value<?>>) NormalKeyValueStore.getInstance();
+    protected static final KeyValueStore KEY_VALUE_STORE = NormalKeyValueStore.getInstance();
 
     /**
      * Default constructor
@@ -49,7 +48,7 @@ abstract public class Request {
     }
 
     /**
-     * Call to perform the request. When we finish to peform the request, we
+     * Call to perform the request. When we finish to perform the request, we
      * must notify() the thread that wait for this monitor!
      * 
      * @throws CloneNotSupportedException

@@ -11,15 +11,11 @@ import epfl.lsr.bachelor.project.values.Value;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public final class HandMadeConcurrentKeyValueStore {
+public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
 
     private static final HandMadeConcurrentKeyValueStore INSTANCE = new HandMadeConcurrentKeyValueStore();
     private Map<String, Value<?>> mMap;
 
-    /**
-     * Default constructor that instantiate the {@link HashMap} encapsulated by
-     * this class
-     */
     private HandMadeConcurrentKeyValueStore() {
         if (INSTANCE != null) {
             throw new IllegalStateException("Already instantiated");
@@ -37,14 +33,7 @@ public final class HandMadeConcurrentKeyValueStore {
         return INSTANCE;
     }
 
-    /**
-     * Enables to retrieve some value mapped to a key
-     * 
-     * @param key
-     *            the key
-     * @return the value mapped to the key, <code>null</code> if there is no
-     *         value mapped
-     */
+    @Override
     public Value<?> get(String key) {
         Value<?> value = null;
         synchronized (key.intern()) {
@@ -53,28 +42,16 @@ public final class HandMadeConcurrentKeyValueStore {
         return value;
     }
 
-    /**
-     * Enables to associate some value to some key
-     * 
-     * @param key
-     *            the key
-     * @param value
-     *            the value to be associated to the key
-     */
-    public void put(String key, Value<?> value) {
+    @Override
+    public Value<?> put(String key, Value<?> value) {
+        Value<?> previousValue = null;
         synchronized (key.intern()) {
-            mMap.put(key, value);
+            previousValue = mMap.put(key, value);
         }
+        return previousValue;
     }
 
-    /**
-     * Enables to remove the mapping for a key
-     * 
-     * @param key
-     *            the key
-     * @return the value to which this map previously associated the key, or
-     *         <code>null</code> if the map contained no mapping for the key.
-     */
+    @Override
     public Value<?> remove(String key) {
         Value<?> value = null;
         synchronized (key.intern()) {
