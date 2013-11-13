@@ -1,100 +1,45 @@
 package epfl.lsr.bachelor.project.store;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Implementation of the key value store. Use simply the existing map.
+ * This interface enables to dynamically use different types of implementations
+ * for the Key-Value store
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
- * @param <K> The key type
- * @param <V> The value type
  */
-public final class KeyValueStore<K, V> implements Map<K, V> {
+public abstract class KeyValueStore {
 
-	private static final KeyValueStore<?, ?> INSTANCE = new KeyValueStore<>();
-	private Map<K, V> mMap;
+    /**
+     * Enables to retrieve some value mapped to a key
+     * 
+     * @param key
+     *            the key
+     * @return the value mapped to the key, <code>null</code> if there is no
+     *         value mapped
+     */
+    public abstract Value<?> get(String key);
 
-	/**
-	 * Default constructor that instantiate the {@link HashMap} encapsulated by this class
-	 */
-	private KeyValueStore() {
-		if (INSTANCE != null) {
-			throw new IllegalStateException("Already instantiated");
-		}
+    /**
+     * Enables to associate some value to some key
+     * 
+     * @param key
+     *            the key
+     * @param value
+     *            the value to be associated to the key
+     * @return the value already mapped to this key, <code>null</code> if there
+     *         was no previous mapping
+     */
+    public abstract Value<?> put(String key, Value<?> value);
 
-		mMap = new HashMap<K, V>();
-	}
-
-	/**
-	 * Enables to get the unique instance of the Key-Value store
-	 * 
-	 * @return the Key-Value store instance
-	 */
-	public static KeyValueStore<?, ?> getInstance() {
-		return INSTANCE;
-	}
-
-	@Override
-	public void clear() {
-		mMap.clear();
-	}
-
-	@Override
-	public boolean containsKey(Object key) {
-		return mMap.containsKey(key);
-	}
-
-	@Override
-	public boolean containsValue(Object value) {
-		return mMap.containsValue(value);
-	}
-
-	@Override
-	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		return mMap.entrySet();
-	}
-
-	@Override
-	public V get(Object key) {
-		return mMap.get(key);
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return mMap.isEmpty();
-	}
-
-	@Override
-	public Set<K> keySet() {
-		return mMap.keySet();
-	}
-
-	@Override
-	public V put(K key, V value) {
-		return mMap.put(key, value);
-	}
-
-	@Override
-	public void putAll(Map<? extends K, ? extends V> m) {
-		mMap.putAll(m);
-	}
-
-	@Override
-	public V remove(Object key) {
-		return mMap.remove(key);
-	}
-
-	@Override
-	public int size() {
-		return mMap.size();
-	}
-
-	@Override
-	public Collection<V> values() {
-		return mMap.values();
-	}
+    /**
+     * Enables to remove the mapping for a key
+     * 
+     * @param key
+     *            the key
+     * @return the value to which this map previously associated the key, or
+     *         <code>null</code> if the map contained no mapping for the key.
+     */
+    public abstract Value<?> remove(String key);
 }
