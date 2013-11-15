@@ -21,11 +21,15 @@ abstract public class Request {
     private String mKey;
     private String mMessageToReturn = "";
     private Value<?> mValue;
+    
     private IOConnection mConnection;
+    
     private SocketChannel mChannel;
+    private Integer mChannelID;
     private NIOConnectionWorker mWorker;
+    
     private long mID = 0; // Default value, should be changed calling setID()
-	private Integer mChannelID;
+	
 
 	// The static reference to the KeyValueStore
     protected static final KeyValueStore KEY_VALUE_STORE = NormalKeyValueStore.getInstance();
@@ -109,6 +113,15 @@ abstract public class Request {
     public long getID() {
         return mID;
     }
+    
+    /**
+     * Enables to retrieve the ID of the connection in NIO mode
+     * 
+     * @return the ID of the connection in NIO mode
+     */
+	public Integer getChannelID() {
+		return mChannelID;
+	}
 
     /**
      * Enables to set the ID of this request
@@ -151,6 +164,24 @@ abstract public class Request {
     public void setMessageToReturn(String messageToReturn) {
         mMessageToReturn = messageToReturn;
     }
+    
+    /**
+     * Enables to set the ID of the connection in NIO mode
+     * 
+     * @param channelID the ID of the connection in NIO mode
+     */
+	public void setChannelID(Integer channelID) {
+		mChannelID = channelID;
+	}
+	
+	/**
+	 * Enables to set the NIO worker that send the request
+	 * 
+	 * @param worker the NIO worker that send the request
+	 */
+	public void setWorker(NIOConnectionWorker worker) {
+		mWorker = worker;
+	}
 
     /**
      * Enables to notify the thread in waiting-mode that the request has been
@@ -173,16 +204,4 @@ abstract public class Request {
     public boolean isMessageEmpty() {
         return mMessageToReturn.equals(Constants.EMPTY_STRING);
     }
-
-	public void setChannelID(Integer id) {
-		mChannelID = id;
-	}
-	
-	public Integer getChannelID() {
-		return mChannelID;
-	}
-	
-	public void setWorker(NIOConnectionWorker worker) {
-		mWorker = worker;
-	}
 }
