@@ -1,8 +1,11 @@
 package epfl.lsr.bachelor.project.server.request;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
-import epfl.lsr.bachelor.project.connection.Connection;
+import epfl.lsr.bachelor.project.connection.IOConnection;
+import epfl.lsr.bachelor.project.serverNIO.Worker;
 import epfl.lsr.bachelor.project.store.KeyValueStore;
 import epfl.lsr.bachelor.project.store.NormalKeyValueStore;
 import epfl.lsr.bachelor.project.util.Constants;
@@ -18,10 +21,13 @@ abstract public class Request {
     private String mKey;
     private String mMessageToReturn = "";
     private Value<?> mValue;
-    private Connection mConnection;
+    private IOConnection mConnection;
+    private SocketChannel mChannel;
+    private Worker mWorker;
     private long mID = 0; // Default value, should be changed calling setID()
+	private Integer mChannelID;
 
-    // The static reference to the KeyValueStore
+	// The static reference to the KeyValueStore
     protected static final KeyValueStore KEY_VALUE_STORE = NormalKeyValueStore.getInstance();
 
     /**
@@ -59,8 +65,13 @@ abstract public class Request {
      * Enables to give an answer back after performing a request
      */
     public void respond() throws IOException {
-        mConnection.getDataOutputStream().writeBytes(mMessageToReturn + "\n");
-        mConnection.getDataOutputStream().flush();
+    	if (mConnection != null) {
+	        mConnection.getDataOutputStream().writeBytes(mMessageToReturn + "\n");
+	        mConnection.getDataOutputStream().flush();
+    	} else {
+    		mChannel.write(ByteBuffer.wrap((mMessageToReturn + "\n").getBytes()));
+    	}
+    	
     }
 
     /**
@@ -115,8 +126,20 @@ abstract public class Request {
      * @param connection
      *            the connection associated with this request
      */
-    public void setConnection(Connection connection) {
+    public void setConnection(IOConnection connection) {
         mConnection = connection;
+        mChannel = null;
+    }
+    
+    /**
+     * Enables to set the channel associated with this request (in NIO context)
+     * 
+     * @param channel
+     *            the channel associated with this request
+     */
+    public void setChannel(SocketChannel channel) {
+    	mChannel = channel;
+    	mConnection = null;
     }
 
     /**
@@ -134,7 +157,11 @@ abstract public class Request {
      * performed. This must be called after performing the request
      */
     public void notifyRequestPerformed(Request request) {
-        mConnection.notifyThatRequestIsPerformed(request);
+    	if (mConnection != null) {
+    		mConnection.notifyThatRequestIsPerformed(request);
+    	} else {
+    		mWorker.notifyThatRequestIsPerformed(request);
+    	}
     }
 
     /**
@@ -147,4 +174,15 @@ abstract public class Request {
         return mMessageToReturn.equals(Constants.EMPTY_STRING);
     }
 
+	public void setChannelID(Integer id) {
+		mChannelID = id;
+	}
+	
+	public Integer getChannelID() {
+		return mChannelID;
+	}
+	
+	public void setWorker(Worker worker) {
+		mWorker = worker;
+	}
 }

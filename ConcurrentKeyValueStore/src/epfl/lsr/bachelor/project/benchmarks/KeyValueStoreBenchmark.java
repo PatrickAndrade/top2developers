@@ -40,7 +40,7 @@ class TestingCode implements Runnable {
 	@Override
 	public void run() {
 		PipelinedClient client = new PipelinedClient(new InetSocketAddress(
-				"128.179.146.219", Constants.PORT));
+				"127.0.0.1", Constants.PORT));
 		client.connect();
 
 		// Set a first value

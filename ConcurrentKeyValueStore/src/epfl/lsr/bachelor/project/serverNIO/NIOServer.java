@@ -3,43 +3,57 @@ package epfl.lsr.bachelor.project.serverNIO;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.Channel;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
+import epfl.lsr.bachelor.project.pipe.SingleThreadPipe;
+import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.ServerInterface;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * TODO: Comment this class
+ * This class implement the NIO server
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class Server implements ServerInterface {
+public class NIOServer implements ServerInterface {
+
+	private static RequestBuffer mRequestBuffer = new RequestBuffer();
 
 	private InetSocketAddress mInetSocketAddress;
 
-	private Selector mSelector;
-	
-	private ByteBuffer mReadByteBuffer;
-	private Map<Channel, ArrayList<ByteBuffer>> mDataToSend;
+	private Map<Channel, Integer> mChannelIDsMap;
+	private Map<Channel, String> mChannelReadMap;
 
-	public Server(String hostname, int port) throws IOException {
+	private int mNextConnection;
+
+	private Worker mWorker;
+
+	private Selector mSelector;
+
+	private ByteBuffer mReadByteBuffer;
+
+	public NIOServer(String hostname, int port) throws IOException {
 		mInetSocketAddress = new InetSocketAddress(hostname, port);
 
+		mChannelIDsMap = new HashMap<Channel, Integer>();
+		mChannelReadMap = new HashMap<Channel, String>();
+
+		mNextConnection = 0;
+
 		mReadByteBuffer = ByteBuffer.allocate(Constants.READ_BUFFER_NIO);
-		mDataToSend = new HashMap<>();
+		mWorker = new Worker(mRequestBuffer);
+
+		new Thread(mWorker).start();
 
 		mSelector = initializeSelector();
 	}
@@ -66,11 +80,18 @@ public class Server implements ServerInterface {
 
 		socketChannel.register(mSelector, SelectionKey.OP_READ);
 
+		mWorker.addConnection(socketChannel, mNextConnection);
+
+		// To identify the channel
+		mChannelIDsMap.put(socketChannel, mNextConnection);
+		mChannelReadMap.put(socketChannel, "");
+		mNextConnection++;
+
 		System.out.println("  -> Started connection with "
 				+ mInetSocketAddress.getAddress());
 	}
 
-	private void read(SelectionKey key) throws ClosedChannelException {
+	private void read(SelectionKey key) throws IOException {
 		SocketChannel socketChannel = (SocketChannel) key.channel();
 
 		mReadByteBuffer.clear();
@@ -81,44 +102,59 @@ public class Server implements ServerInterface {
 			byteRead = socketChannel.read(mReadByteBuffer);
 		} catch (IOException e) {
 			// There is a problem with the connection
-			key.cancel();
-			
-			try {
-				socketChannel.close();
-			} catch (IOException e1) {
-			}
-			
+			closeChannel(key);
+
 			return;
 		}
 
 		if (byteRead < 0) {
-			
-			System.err.println(" -> Connection with "
-					+ mInetSocketAddress.getAddress() + " aborted !");
-			
-			try {
-				key.channel().close();
-			} catch (IOException e) {
-			}
-			
-			key.cancel();
-			
+
+			closeChannel(key);
 			return;
 		}
-		
-		//TODO. add the parser
+
+		String command = new String(mReadByteBuffer.array()).substring(0, mReadByteBuffer.position());
+
+		mChannelReadMap.put(socketChannel, mChannelReadMap.get(socketChannel)
+				+ command);
+		while ((mChannelReadMap.get(socketChannel) != null)
+				&& (mChannelReadMap.get(socketChannel).contains("\n"))) {
+			String[] commandArray = mChannelReadMap.get(socketChannel).split(
+					"\n");
+			
+			String commandToPerform = commandArray.length == 0 ? "" : commandArray[0];
+			mChannelReadMap.put(
+					socketChannel,
+					mChannelReadMap.get(socketChannel).replaceFirst(
+							"^" + commandToPerform + "\n", ""));
+
+			if (commandToPerform.equals(Constants.QUIT_COMMAND)) {
+				closeChannel(key);
+			} else {
+				mWorker.addRequestToPerform(commandToPerform,
+						mChannelIDsMap.get(socketChannel));
+			}
+		}
 	}
 
-	private void write(SelectionKey key) {
+	public void closeChannel(SelectionKey key) throws IOException {
+		System.err.println(" -> Connection with "
+				+ mInetSocketAddress.getAddress() + " aborted !");
+
 		SocketChannel socketChannel = (SocketChannel) key.channel();
-		
-//		for (ByteBuffer toSend : mDataToSend.get(socketChannel));
-		
+		mWorker.closeChannel(mChannelIDsMap.get(socketChannel));
+		mChannelIDsMap.remove(socketChannel);
+		mChannelReadMap.remove(socketChannel);
+		socketChannel.close();
+		key.cancel();
 	}
 
 	public void start() {
 
 		System.out.println(Constants.WELCOME_NIO);
+
+		// We launch the thread that handles the requests
+		new Thread(SingleThreadPipe.getInstance(mRequestBuffer)).start();
 
 		while (true) {
 
@@ -138,8 +174,6 @@ public class Server implements ServerInterface {
 							accept(key);
 						} else if (key.isReadable()) {
 							read(key);
-						} else if (key.isWritable()) {
-							write(key);
 						}
 					}
 				}

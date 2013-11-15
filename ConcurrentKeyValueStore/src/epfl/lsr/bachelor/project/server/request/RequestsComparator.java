@@ -15,7 +15,7 @@ public class RequestsComparator implements Comparator<Request> {
     	final long difference = request0.getID() - request1.getID();
     	
     	// Avoid overflows of integers, this returns either -1, 0 or 1
-        return (int) (difference / Math.abs(difference));
+        return difference == 0 ? 0 : (int) (difference / Math.abs(difference));
     }
 
 }

@@ -16,7 +16,7 @@ import epfl.lsr.bachelor.project.util.Constants;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public final class PipelinedConnection extends Connection {
+public final class PipelinedConnection extends IOConnection {
 
 	private PriorityWaitingRequestQueue<Request> mPriorityBlockingGenericQueue;
 	private AtomicBoolean mClosed;

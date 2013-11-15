@@ -13,7 +13,7 @@ import epfl.lsr.bachelor.project.util.Constants;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public final class BlockingConnection extends Connection {
+public final class BlockingConnection extends IOConnection {
 
     /**
      * Default constructor

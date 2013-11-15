@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
-import epfl.lsr.bachelor.project.connection.Connection;
+import epfl.lsr.bachelor.project.connection.IOConnection;
 import epfl.lsr.bachelor.project.connection.PipelinedConnection;
 import epfl.lsr.bachelor.project.pipe.SingleThreadPipe;
 import epfl.lsr.bachelor.project.util.Constants;
@@ -40,7 +40,7 @@ public final class Server implements ServerInterface {
 
 				Socket socket = mServerSocket.accept();
 
-				Connection connection = new PipelinedConnection(socket, mRequestBuffer);
+				IOConnection connection = new PipelinedConnection(socket, mRequestBuffer);
 				
 				try {
 					mThreadPool.execute(connection);
