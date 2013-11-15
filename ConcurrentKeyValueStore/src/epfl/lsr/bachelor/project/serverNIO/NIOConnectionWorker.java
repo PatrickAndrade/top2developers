@@ -16,35 +16,66 @@ import epfl.lsr.bachelor.project.connection.Connection;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class Worker implements Runnable, Connection {
+public class NIOConnectionWorker implements Runnable, Connection {
 
+	// Enable to retrieve the NIOConnection when we want to answer a request
 	private Map<Integer, NIOConnection> mIDConnectionMap;
+	
+	// Enable to know when a NIOConnection can send an answer
 	private ConcurrentLinkedQueue<Integer> mReadyChannelQueue;
+	
 	private CommandParser mCommandParser;
 	private RequestBuffer mRequestBuffer;
 
-	public Worker(RequestBuffer requestBuffer) {
+	/**
+	 * Default constructor
+	 * 
+	 * @param requestBuffer the shared request buffer
+	 */
+	public NIOConnectionWorker(RequestBuffer requestBuffer) {
 		mIDConnectionMap = new HashMap<Integer, NIOConnection>();
 		mCommandParser = new CommandParser();
 		mRequestBuffer = requestBuffer;
 		mReadyChannelQueue = new ConcurrentLinkedQueue<Integer>();
 	}
 
-	public void addRequestToPerform(String command, Integer id) {
+	/**
+	 * Add a request, to the good NIOConnection, to be parsed and perform
+	 * 
+	 * @param command the string request
+	 * @param channelID the id of the NIOConnection
+	 */
+	public void addRequestToPerform(String command, Integer channelID) {
 		Request request = mCommandParser.parse(command);
-		request.setChannelID(id);
+		request.setChannelID(channelID);
 		request.setWorker(this);
-		mIDConnectionMap.get(id).addRequestToPerform(request, mRequestBuffer);
+		mIDConnectionMap.get(channelID).addRequestToPerform(request, mRequestBuffer);
 	}
 
-	public void addConnection(SocketChannel socketChannel, int id) {
-		mIDConnectionMap.put(id, new NIOConnection(socketChannel, id, this));
+	/**
+	 * Add a new NIOConnection
+	 * 
+	 * @param socketChannel the socket with which we want to communicate
+	 * @param channelID the id of the NIOConnection
+	 */
+	public void addConnection(SocketChannel socketChannel, int channelID) {
+		mIDConnectionMap.put(channelID, new NIOConnection(socketChannel, channelID, this));
 	}
 
+	/**
+	 * Close a connection with a client
+	 * 
+	 * @param the id of the NIOConnection
+	 */
 	public void closeChannel(int channelID) {
 		mIDConnectionMap.remove(channelID);
 	}
 
+	/**
+	 * Notify the worker that he can now send an answer
+	 * 
+	 * @param request the request that he can answer
+	 */
 	@Override
 	public void notifyThatRequestIsPerformed(Request request) {
 		int channelID = request.getChannelID();

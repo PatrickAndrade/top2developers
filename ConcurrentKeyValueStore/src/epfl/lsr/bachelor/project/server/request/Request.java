@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import epfl.lsr.bachelor.project.connection.IOConnection;
-import epfl.lsr.bachelor.project.serverNIO.Worker;
+import epfl.lsr.bachelor.project.serverNIO.NIOConnectionWorker;
 import epfl.lsr.bachelor.project.store.KeyValueStore;
 import epfl.lsr.bachelor.project.store.NormalKeyValueStore;
 import epfl.lsr.bachelor.project.util.Constants;
@@ -23,7 +23,7 @@ abstract public class Request {
     private Value<?> mValue;
     private IOConnection mConnection;
     private SocketChannel mChannel;
-    private Worker mWorker;
+    private NIOConnectionWorker mWorker;
     private long mID = 0; // Default value, should be changed calling setID()
 	private Integer mChannelID;
 
@@ -182,7 +182,7 @@ abstract public class Request {
 		return mChannelID;
 	}
 	
-	public void setWorker(Worker worker) {
+	public void setWorker(NIOConnectionWorker worker) {
 		mWorker = worker;
 	}
 }

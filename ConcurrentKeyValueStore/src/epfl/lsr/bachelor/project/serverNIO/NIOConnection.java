@@ -24,9 +24,9 @@ public class NIOConnection {
 	private int mId;
 	private long mNextRequestID = 0;
 	private long mNextRequestToSend = 0;
-	private Worker mWorker;
+	private NIOConnectionWorker mWorker;
 
-	public NIOConnection(SocketChannel socketChannel, int id, Worker worker) {
+	public NIOConnection(SocketChannel socketChannel, int id, NIOConnectionWorker worker) {
 		mSocketChannel = socketChannel;
 		mWorker = worker;
 		mToSend = new PriorityBlockingQueue<>(

@@ -1,10 +1,14 @@
 package epfl.lsr.bachelor.project.server;
 /**
- * TODO: Comment this class
+ * The interface that a server must implement
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
 public interface ServerInterface {
+	
+	/**
+	 * Enable to start a server
+	 */
 	void start();
 }
