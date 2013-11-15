@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.PriorityBlockingQueue;
 
-import epfl.lsr.bachelor.project.connection.PipelinedConnection;
-import epfl.lsr.bachelor.project.connection.PriorityWaitingRequestQueue;
 import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.request.ErrRequest;
 import epfl.lsr.bachelor.project.server.request.Request;
@@ -13,28 +11,50 @@ import epfl.lsr.bachelor.project.server.request.RequestsComparator;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * TODO: Comment this class
+ * This class is a encapsulate a connection when we use NIO
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
 public class NIOConnection {
+
 	private SocketChannel mSocketChannel;
 	private PriorityBlockingQueue<Request> mToSend;
+	private NIOConnectionWorker mWorker;
+
 	private int mId;
 	private long mNextRequestID = 0;
 	private long mNextRequestToSend = 0;
-	private NIOConnectionWorker mWorker;
 
-	public NIOConnection(SocketChannel socketChannel, int id, NIOConnectionWorker worker) {
+	/**
+	 * Default constructor
+	 * 
+	 * @param socketChannel
+	 *            the socket with which we want to communicate
+	 * @param channelID
+	 *            the id of the NIOConnection
+	 * @param worker
+	 *            the worker that send and perform the request
+	 */
+	public NIOConnection(SocketChannel socketChannel, int channelID,
+			NIOConnectionWorker worker) {
 		mSocketChannel = socketChannel;
 		mWorker = worker;
 		mToSend = new PriorityBlockingQueue<>(
 				Constants.NUMBER_OF_PIPELINED_REQUESTS,
 				new RequestsComparator());
-		mId = id;
+		mId = channelID;
 	}
 
+	/**
+	 * Add a request to the request buffer if we can perform it, otherwise
+	 * notify the worker that he can send the answer of the request
+	 * 
+	 * @param request
+	 *            the request to be performed
+	 * @param requestBuffer
+	 *            the request buffer in which we add the request to be performed
+	 */
 	public void addRequestToPerform(Request request, RequestBuffer requestBuffer) {
 
 		request.setID(mNextRequestID);
@@ -63,10 +83,19 @@ public class NIOConnection {
 		mNextRequestID++;
 	}
 
+	/**
+	 * Add a request to be send
+	 * 
+	 * @param request
+	 *            the request to be send
+	 */
 	public synchronized void addRequestToSend(Request request) {
 		mToSend.add(request);
 	}
 
+	/**
+	 * Send the answers already performed in the order of when they are received
+	 */
 	public synchronized void sendAnswers() {
 		try {
 			while (isReady()) {
@@ -78,7 +107,13 @@ public class NIOConnection {
 		}
 	}
 
+	/**
+	 * Enable to know if we can send an answer
+	 * 
+	 * @return <code>true</code> if we can send an answer
+	 */
 	public synchronized boolean isReady() {
-		return (mToSend.peek() != null) && (mNextRequestToSend == mToSend.peek().getID());
+		return (mToSend.peek() != null)
+				&& (mNextRequestToSend == mToSend.peek().getID());
 	}
 }

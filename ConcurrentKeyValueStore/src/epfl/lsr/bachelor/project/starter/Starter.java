@@ -2,6 +2,7 @@ package epfl.lsr.bachelor.project.starter;
 
 import java.io.IOException;
 
+import epfl.lsr.bachelor.project.server.Server;
 import epfl.lsr.bachelor.project.server.ServerInterface;
 import epfl.lsr.bachelor.project.serverNIO.NIOServer;
 import epfl.lsr.bachelor.project.util.Constants;
@@ -13,9 +14,19 @@ import epfl.lsr.bachelor.project.util.Constants;
  * 
  */
 public final class Starter {
-
+	
+	public final static String HOST = "127.0.0.1";
+	
 	public static void main(String[] args) throws IOException {
-		ServerInterface server = new NIOServer("127.0.0.1", Constants.PORT);
+		boolean isNIO = true;
+		ServerInterface server = null;
+		
+		if (isNIO) {
+			server = new NIOServer(HOST, Constants.PORT);
+		} else {
+			server = new Server(Constants.PORT);
+		}
+		
 		server.start();
 	}
 

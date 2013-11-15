@@ -1,6 +1,7 @@
 package epfl.lsr.bachelor.project.server;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -25,10 +26,16 @@ public final class Server implements ServerInterface {
 			Executors.newFixedThreadPool(Constants.NUMBER_OF_PIPELINED_CONNECTIONS);
 	private static RequestBuffer mRequestBuffer = new RequestBuffer();
 	
+	private InetSocketAddress mInetSocketAddress;
+	
+	public Server(int port) {
+		mInetSocketAddress = new InetSocketAddress(port);
+	}
+
 	public void start() {
 		try {
 			// We launch the server
-			mServerSocket = new ServerSocket(Constants.PORT);
+			mServerSocket = new ServerSocket(mInetSocketAddress.getPort());
 
 			// We launch the thread that handles the requests
 			new Thread(SingleThreadPipe.getInstance(mRequestBuffer)).start();

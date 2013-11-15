@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.request.Request;
 import epfl.lsr.bachelor.project.util.CommandParser;
-import epfl.lsr.bachelor.project.connection.Connection;
+import epfl.lsr.bachelor.project.connection.ConnectionInterface;
 
 /**
  * The worker class that perform the request and send the answer to the client
@@ -16,7 +16,7 @@ import epfl.lsr.bachelor.project.connection.Connection;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class NIOConnectionWorker implements Runnable, Connection {
+public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 
 	// Enable to retrieve the NIOConnection when we want to answer a request
 	private Map<Integer, NIOConnection> mIDConnectionMap;
@@ -65,7 +65,7 @@ public class NIOConnectionWorker implements Runnable, Connection {
 	/**
 	 * Close a connection with a client
 	 * 
-	 * @param the id of the NIOConnection
+	 * @param channelID the id of the NIOConnection
 	 */
 	public void closeChannel(int channelID) {
 		mIDConnectionMap.remove(channelID);
