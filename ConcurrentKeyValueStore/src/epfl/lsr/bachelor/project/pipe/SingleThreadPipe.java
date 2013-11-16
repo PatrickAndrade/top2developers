@@ -1,9 +1,6 @@
 package epfl.lsr.bachelor.project.pipe;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import epfl.lsr.bachelor.project.server.RequestBuffer;
-import epfl.lsr.bachelor.project.server.request.Request;
 
 /**
  * Thread that performs the requests (it's like a pipe between RequestBuffer and KeyValueStore)
@@ -11,11 +8,10 @@ import epfl.lsr.bachelor.project.server.request.Request;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-final public class SingleThreadPipe implements Runnable {
+final public class SingleThreadPipe implements WorkerPipeInterface {
 
-	private RequestBuffer mRequestBuffer;
 	private static SingleThreadPipe sInstance;
-	private static AtomicBoolean sClosed = new AtomicBoolean();
+	private ThreadPipe mWorker;
 	
 	/**
 	 * Default constructor that will link the buffer of requests to the single thread
@@ -23,8 +19,7 @@ final public class SingleThreadPipe implements Runnable {
 	 * @param requestBuffer the buffer to be linked to
 	 */
 	private SingleThreadPipe(RequestBuffer requestBuffer) {
-		mRequestBuffer = requestBuffer;
-		sClosed.set(false);
+		mWorker = new ThreadPipe(requestBuffer);
 	}
 	
 	/**
@@ -40,28 +35,14 @@ final public class SingleThreadPipe implements Runnable {
 		return sInstance;
 	}
 	
-	@Override
-	public void run() {
-		// The work of the thread is simply to perform all the requests sent by the clients
-		while (!sClosed.get()) {
-			// It gets a request in the buffer
-			Request request = mRequestBuffer.take();
-			//It executes the request if the thread has not been already closed
-			if (!sClosed.get()) {
-				try {
-					request.perform();
-				} catch (CloneNotSupportedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	public void start() {
+		new Thread(mWorker).start();
 	}
 	
 	/**
 	 * Enables to close properly the thread attached to this {@link Runnable} object
 	 */
 	public void close() {
-		sClosed.set(true);
-		mRequestBuffer.notifyAllThreadsToStopWaiting();
+		mWorker.close();
 	}
 }

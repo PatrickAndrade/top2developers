@@ -14,10 +14,10 @@ import epfl.lsr.bachelor.project.server.request.Request;
 public class RequestBuffer {
 	// The list of the requests to be performed
 	private LinkedList<Request> mRequestList = new LinkedList<Request>();
-	private AtomicBoolean closed = new AtomicBoolean();
+	private AtomicBoolean mClosed = new AtomicBoolean();
 	
 	public RequestBuffer() {
-		closed.set(false);
+		mClosed.set(false);
 	}
 	
 	/**
@@ -38,14 +38,15 @@ public class RequestBuffer {
 	 */
 	public synchronized Request take() {
 		// If the list isn't empty we take the next request otherwise we wait
-		if (mRequestList.isEmpty()) {
+		while (!mClosed.get() && mRequestList.isEmpty()) {
+			
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		return (!closed.get()) ? mRequestList.removeFirst() : null;
+		return (!mClosed.get()) ? mRequestList.removeFirst() : null;
 		//return mRequestList.removeFirst();
 	}
 	
@@ -54,7 +55,7 @@ public class RequestBuffer {
 	 * This method also make that all waiting-take() calls will return <code>null</code>
 	 */
 	public synchronized void notifyAllThreadsToStopWaiting() {
-		closed.set(true);
+		mClosed.set(true);
 		notifyAll();
 	}
 }

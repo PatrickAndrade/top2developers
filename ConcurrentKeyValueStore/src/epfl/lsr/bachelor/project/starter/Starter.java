@@ -2,6 +2,9 @@ package epfl.lsr.bachelor.project.starter;
 
 import java.io.IOException;
 
+import epfl.lsr.bachelor.project.pipe.MultiThreadPipe;
+import epfl.lsr.bachelor.project.pipe.WorkerPipeInterface;
+import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.Server;
 import epfl.lsr.bachelor.project.server.ServerInterface;
 import epfl.lsr.bachelor.project.serverNIO.NIOServer;
@@ -20,11 +23,14 @@ public final class Starter {
 
 	public static void main(String[] args) throws IOException {
 		boolean isNIO = true;
+		RequestBuffer requestBuffer = new RequestBuffer();
+		WorkerPipeInterface worker = MultiThreadPipe
+				.getInstance(requestBuffer);
 
 		if (isNIO) {
-			server = new NIOServer(HOST, Constants.PORT);
+			server = new NIOServer(HOST, Constants.PORT, requestBuffer, worker);
 		} else {
-			server = new Server(Constants.PORT);
+			server = new Server(Constants.PORT, requestBuffer, worker);
 		}
 
 		server.start();

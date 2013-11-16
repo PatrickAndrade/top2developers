@@ -10,7 +10,7 @@ import java.util.concurrent.RejectedExecutionException;
 
 import epfl.lsr.bachelor.project.connection.IOConnection;
 import epfl.lsr.bachelor.project.connection.PipelinedConnection;
-import epfl.lsr.bachelor.project.pipe.SingleThreadPipe;
+import epfl.lsr.bachelor.project.pipe.WorkerPipeInterface;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
@@ -22,14 +22,17 @@ import epfl.lsr.bachelor.project.util.Constants;
 public final class Server implements ServerInterface {
 
 	private ServerSocket mServerSocket;
-	private ExecutorService mThreadPool = 
-			Executors.newFixedThreadPool(Constants.NUMBER_OF_PIPELINED_CONNECTIONS);
-	private RequestBuffer mRequestBuffer = new RequestBuffer();
-	
+	private ExecutorService mThreadPool = Executors
+			.newFixedThreadPool(Constants.NUMBER_OF_PIPELINED_CONNECTIONS);
+	private RequestBuffer mRequestBuffer;
+	private WorkerPipeInterface mWorkers;
+
 	private InetSocketAddress mInetSocketAddress;
-	
-	public Server(int port) {
+
+	public Server(int port, RequestBuffer requestBuffer, WorkerPipeInterface worker) {
 		mInetSocketAddress = new InetSocketAddress(port);
+		mRequestBuffer = requestBuffer;
+		mWorkers = worker;
 	}
 
 	public void start() {
@@ -38,7 +41,7 @@ public final class Server implements ServerInterface {
 			mServerSocket = new ServerSocket(mInetSocketAddress.getPort());
 
 			// We launch the thread that handles the requests
-			new Thread(SingleThreadPipe.getInstance(mRequestBuffer)).start();
+			mWorkers.start();
 
 			System.out.println(Constants.WELCOME_STANDARD);
 
@@ -47,8 +50,9 @@ public final class Server implements ServerInterface {
 
 				Socket socket = mServerSocket.accept();
 
-				IOConnection connection = new PipelinedConnection(socket, mRequestBuffer);
-				
+				IOConnection connection = new PipelinedConnection(socket,
+						mRequestBuffer);
+
 				try {
 					mThreadPool.execute(connection);
 				} catch (RejectedExecutionException e) {
@@ -62,18 +66,18 @@ public final class Server implements ServerInterface {
 
 		stop();
 	}
-	
+
 	/**
 	 * Enables to stop the server
 	 */
 	public void stop() {
 		mThreadPool.shutdown();
-		
+
 		// We wait until all the clients have got their answers
 		while (!mThreadPool.isTerminated()) {
 		}
-		
-		SingleThreadPipe.getInstance(mRequestBuffer).close();
+
+		mWorkers.close();
 
 		if (mServerSocket != null) {
 			try {

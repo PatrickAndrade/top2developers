@@ -6,8 +6,8 @@ import java.nio.channels.SocketChannel;
 
 import epfl.lsr.bachelor.project.connection.IOConnection;
 import epfl.lsr.bachelor.project.serverNIO.NIOConnectionWorker;
+import epfl.lsr.bachelor.project.store.HandMadeConcurrentKeyValueStore;
 import epfl.lsr.bachelor.project.store.KeyValueStore;
-import epfl.lsr.bachelor.project.store.NormalKeyValueStore;
 import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
 
@@ -32,7 +32,7 @@ abstract public class Request {
 	
 
 	// The static reference to the KeyValueStore
-    protected static final KeyValueStore KEY_VALUE_STORE = NormalKeyValueStore.getInstance();
+    protected static final KeyValueStore KEY_VALUE_STORE = HandMadeConcurrentKeyValueStore.getInstance();
 
     /**
      * Default constructor

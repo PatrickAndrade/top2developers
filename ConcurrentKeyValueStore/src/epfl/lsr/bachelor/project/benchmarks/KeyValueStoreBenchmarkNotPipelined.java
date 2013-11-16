@@ -39,7 +39,7 @@ class TestingCodeNotPipelined implements Runnable {
 	@Override
 	public void run() {
 		Client client = new Client(new InetSocketAddress(
-				"128.179.146.219", Constants.PORT));
+				"127.0.0.1", Constants.PORT));
 		client.connect();
 
 		// Set a first value
@@ -51,8 +51,8 @@ class TestingCodeNotPipelined implements Runnable {
 
 		// Send pipelined requests
 		for (long i = 0; i < ITERATION; i++) {
-			System.out.println(client.ping());
-//			client.get("a");
+//			System.out.println(client.ping());
+			client.get("a");
 		}
 
 		// Read answers

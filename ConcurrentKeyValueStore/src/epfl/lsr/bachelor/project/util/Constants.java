@@ -11,6 +11,7 @@ public final class Constants {
 	public static final int NUMBER_OF_PIPELINED_CONNECTIONS = 100;
 	public static final int NUMBER_OF_PIPELINED_REQUESTS = 100;
 	public static final int READ_BUFFER_NIO = 9216;
+	public static final int NUMBER_OF_PIPELINED_WORKER = 100;
 	
 	public static final String EMPTY_STRING = "";
 	public static final String WELCOME_STANDARD = "Server 1.0.1 (developed in JAVA)" + "\n\n" +
