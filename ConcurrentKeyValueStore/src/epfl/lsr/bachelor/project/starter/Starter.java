@@ -14,21 +14,19 @@ import epfl.lsr.bachelor.project.util.Constants;
  * 
  */
 public final class Starter {
-	
+
 	public final static String HOST = "127.0.0.1";
-	
+	private static ServerInterface server = null;
+
 	public static void main(String[] args) throws IOException {
 		boolean isNIO = true;
-		ServerInterface server = null;
-		
+
 		if (isNIO) {
 			server = new NIOServer(HOST, Constants.PORT);
 		} else {
 			server = new Server(Constants.PORT);
 		}
-		
+
 		server.start();
 	}
-
 }
-

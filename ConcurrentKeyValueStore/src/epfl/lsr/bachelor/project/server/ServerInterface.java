@@ -8,7 +8,12 @@ package epfl.lsr.bachelor.project.server;
 public interface ServerInterface {
 	
 	/**
-	 * Enable to start a server
+	 * Enables to start a server
 	 */
 	void start();
+	
+	/**
+	 * Enables to stop a server
+	 */
+	void stop();
 }

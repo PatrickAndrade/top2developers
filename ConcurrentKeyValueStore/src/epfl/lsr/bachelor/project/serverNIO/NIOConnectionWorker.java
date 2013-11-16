@@ -4,6 +4,7 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.request.Request;
@@ -26,6 +27,8 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 	
 	private CommandParser mCommandParser;
 	private RequestBuffer mRequestBuffer;
+	
+	private AtomicBoolean mClosed;
 
 	/**
 	 * Default constructor
@@ -37,6 +40,7 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 		mCommandParser = new CommandParser();
 		mRequestBuffer = requestBuffer;
 		mReadyChannelQueue = new ConcurrentLinkedQueue<Integer>();
+		mClosed = new AtomicBoolean();
 	}
 
 	/**
@@ -88,15 +92,22 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 			notifyToSendAnAnswer();
 		}
 	}
+	
+	public void stopWorker() {
+		mClosed.set(true);
+		notifyToSendAnAnswer();
+	}
 
 	@Override
 	public void run() {
-		while (true) {
-			while (mReadyChannelQueue.isEmpty()) {
+		while (!mClosed.get()) {
+			while (mReadyChannelQueue.isEmpty() && !mClosed.get()) {
 				waitToSendAnAnswer();
 			}
 
-			mIDConnectionMap.get(mReadyChannelQueue.poll()).sendAnswers();
+			if (!mClosed.get()) {
+				mIDConnectionMap.get(mReadyChannelQueue.poll()).sendAnswers();
+			}
 		}
 	}
 

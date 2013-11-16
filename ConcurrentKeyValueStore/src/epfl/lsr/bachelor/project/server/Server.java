@@ -21,10 +21,10 @@ import epfl.lsr.bachelor.project.util.Constants;
  */
 public final class Server implements ServerInterface {
 
-	private static ServerSocket mServerSocket;
-	private static ExecutorService mThreadPool = 
+	private ServerSocket mServerSocket;
+	private ExecutorService mThreadPool = 
 			Executors.newFixedThreadPool(Constants.NUMBER_OF_PIPELINED_CONNECTIONS);
-	private static RequestBuffer mRequestBuffer = new RequestBuffer();
+	private RequestBuffer mRequestBuffer = new RequestBuffer();
 	
 	private InetSocketAddress mInetSocketAddress;
 	
@@ -66,7 +66,7 @@ public final class Server implements ServerInterface {
 	/**
 	 * Enables to stop the server
 	 */
-	public static void stop() {
+	public void stop() {
 		mThreadPool.shutdown();
 		
 		// We wait until all the clients have got their answers

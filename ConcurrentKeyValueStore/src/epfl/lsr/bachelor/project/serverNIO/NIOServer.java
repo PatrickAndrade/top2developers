@@ -12,6 +12,7 @@ import java.nio.channels.spi.SelectorProvider;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import epfl.lsr.bachelor.project.pipe.SingleThreadPipe;
 import epfl.lsr.bachelor.project.server.RequestBuffer;
@@ -43,8 +44,12 @@ public class NIOServer implements ServerInterface {
 	private NIOConnectionWorker mWorker;
 
 	private Selector mSelector;
+	
+	private ServerSocketChannel mServerSocketChannel;
 
 	private ByteBuffer mReadByteBuffer;
+	
+	private AtomicBoolean mClosed;
 
 	/**
 	 * Default constructor
@@ -60,6 +65,8 @@ public class NIOServer implements ServerInterface {
 		mChannelReadMap = new HashMap<Channel, String>();
 
 		mNextConnection = 0;
+		
+		mClosed = new AtomicBoolean();
 
 		mReadByteBuffer = ByteBuffer.allocate(Constants.READ_BUFFER_NIO);
 		
@@ -79,12 +86,12 @@ public class NIOServer implements ServerInterface {
 	private Selector initializeSelector() throws IOException {
 		Selector selector = SelectorProvider.provider().openSelector();
 
-		ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-		serverSocketChannel.configureBlocking(false);
+		mServerSocketChannel = ServerSocketChannel.open();
+		mServerSocketChannel.configureBlocking(false);
 
 		// Bind the server socket with the IP address and the port number
-		serverSocketChannel.bind(mInetSocketAddress);
-		serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+		mServerSocketChannel.bind(mInetSocketAddress);
+		mServerSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 		return selector;
 	}
 
@@ -199,12 +206,16 @@ public class NIOServer implements ServerInterface {
 		// We launch the thread that handles the requests
 		new Thread(SingleThreadPipe.getInstance(mRequestBuffer)).start();
 
-		while (true) {
+		while (!mClosed.get()) {
 
 			try {
 				
 				// Wait for an event
 				mSelector.select();
+				
+				if (mClosed.get()) {
+					return;
+				}
 
 				Iterator<SelectionKey> keyIterator = mSelector.selectedKeys()
 						.iterator();
@@ -224,6 +235,33 @@ public class NIOServer implements ServerInterface {
 				}
 			} catch (IOException e) {
 			}
+		}
+	}
+	
+	/**
+	 * Stop the NIO server and the worker
+	 */
+	public void stop() {
+		mClosed.set(true);
+		
+		SingleThreadPipe.getInstance(mRequestBuffer).close();
+		mWorker.stopWorker();
+		try {
+			mSelector.close();
+		} catch (IOException e) {
+			
+		}
+		
+		for (Channel socketChannel : mChannelIDsMap.keySet()) {
+			try {
+				socketChannel.close();
+			} catch (IOException e) {
+			}
+		}
+		
+		try {
+			mServerSocketChannel.close();
+		} catch (IOException e) {
 		}
 	}
 }
