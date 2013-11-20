@@ -23,7 +23,6 @@ public class AClientShould {
 
 	private Client mClient;
 
-
 	@Before
 	public void init() throws UnknownHostException {
 		mClient = new Client(new InetSocketAddress("127.0.0.1", Constants.PORT));
@@ -334,5 +333,20 @@ public class AClientShould {
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err hincr/hdecr need an integer as argument",
 				mClient.fakeCommand(command));
+	}
+
+	@Test
+	public void beFreeToSendRealyBigValue() {
+		String key = "key";
+		String value = "value";
+		
+		final int nbValue = 10;
+		for (int i = 0; i < nbValue; i++) {
+			value += value;
+		}
+		
+		mClient.set(key, value);
+		assertEquals("Can't set a big value and get it", value, mClient.get(key));
+		mClient.delete(key);
 	}
 }
