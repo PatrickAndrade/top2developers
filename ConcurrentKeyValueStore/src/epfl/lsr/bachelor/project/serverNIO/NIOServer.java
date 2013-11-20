@@ -28,7 +28,7 @@ import epfl.lsr.bachelor.project.util.Constants;
 public class NIOServer implements ServerInterface {
 
 	private RequestBuffer mRequestBuffer = new RequestBuffer();
-	
+
 	private WorkerPipeInterface mWorkers;
 
 	private InetSocketAddress mInetSocketAddress;
@@ -52,7 +52,6 @@ public class NIOServer implements ServerInterface {
 	private ByteBuffer mReadByteBuffer;
 
 	private AtomicBoolean mClosed;
-
 
 	/**
 	 * Default constructor
@@ -176,21 +175,36 @@ public class NIOServer implements ServerInterface {
 		dataAlreadyRead = mChannelReadMap.get(socketChannel);
 
 		// if there are '\n' char, we can perform the request
-		while ((dataAlreadyRead != null) && (dataAlreadyRead.contains("\n"))) {
+		if ((dataAlreadyRead != null) && (dataAlreadyRead.contains("\n"))) {
 			String[] dataAlreadyReadArray = dataAlreadyRead.split("\n");
-			String commandToPerform = dataAlreadyReadArray.length == 0 ? ""
-					: dataAlreadyReadArray[0];
 
-			// remove the data that we want to perform
-			dataAlreadyRead = dataAlreadyRead.replaceFirst("^"
-					+ commandToPerform + "\n", "");
-			mChannelReadMap.put(socketChannel, dataAlreadyRead);
-
-			if (commandToPerform.equals(Constants.QUIT_COMMAND)) {
-				closeChannel(key);
-			} else {
-				mNIOCOnnectionWorker.addRequestToPerform(commandToPerform,
+			if (dataAlreadyReadArray.length == 0) {
+				mNIOCOnnectionWorker.addRequestToPerform("",
 						mChannelIDsMap.get(socketChannel));
+			} else {
+
+				int lastCommandToPerformIndex = (dataAlreadyRead.lastIndexOf('\n') == (dataAlreadyRead
+						.length() - 1)) ? dataAlreadyReadArray.length
+						: dataAlreadyReadArray.length - 1;
+				
+				for (int i = 0; i < lastCommandToPerformIndex; i++) {
+					if (dataAlreadyReadArray[i].equals(Constants.QUIT_COMMAND)) {
+						closeChannel(key);
+						return;
+					} else {
+						mNIOCOnnectionWorker.addRequestToPerform(
+								dataAlreadyReadArray[i],
+								mChannelIDsMap.get(socketChannel));
+					}
+				}
+
+				if (dataAlreadyReadArray.length == lastCommandToPerformIndex) {
+					mChannelReadMap.put(socketChannel, "");
+				} else {
+					mChannelReadMap.put(socketChannel,
+							dataAlreadyReadArray[lastCommandToPerformIndex - 1]);
+				}
+
 			}
 		}
 	}
