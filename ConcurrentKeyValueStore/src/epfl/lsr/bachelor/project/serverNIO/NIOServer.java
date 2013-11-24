@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channel;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import epfl.lsr.bachelor.project.pipe.WorkerPipeInterface;
@@ -43,7 +44,7 @@ public class NIOServer implements ServerInterface {
 	// Enable to identify the next connection
 	private int mNextConnection;
 
-	private NIOConnectionWorker mNIOCOnnectionWorker;
+	private NIOConnectionWorker mNIOConnectionWorker;
 
 	private Selector mSelector;
 
@@ -52,6 +53,8 @@ public class NIOServer implements ServerInterface {
 	private ByteBuffer mReadByteBuffer;
 
 	private AtomicBoolean mClosed;
+
+	private NIOReader mReader;
 
 	/**
 	 * Default constructor
@@ -71,8 +74,8 @@ public class NIOServer implements ServerInterface {
 		mRequestBuffer = requestBuffer;
 		mWorkers = worker;
 
-		mChannelIDsMap = new HashMap<Channel, Integer>();
-		mChannelReadMap = new HashMap<Channel, String>();
+		mChannelIDsMap = new ConcurrentHashMap<Channel, Integer>();
+		mChannelReadMap = new ConcurrentHashMap<Channel, String>();
 
 		mNextConnection = 0;
 
@@ -80,8 +83,11 @@ public class NIOServer implements ServerInterface {
 
 		mReadByteBuffer = ByteBuffer.allocate(Constants.READ_BUFFER_NIO);
 
-		mNIOCOnnectionWorker = new NIOConnectionWorker(mRequestBuffer);
-		new Thread(mNIOCOnnectionWorker).start();
+		mNIOConnectionWorker = new NIOConnectionWorker(mRequestBuffer);
+		new Thread(mNIOConnectionWorker).start();
+
+		mReader = new NIOReader();
+		new Thread(mReader).start();
 
 		mSelector = initializeSelector();
 	}
@@ -124,89 +130,17 @@ public class NIOServer implements ServerInterface {
 		SocketChannel socketChannel = serverSocketChannel.accept();
 		socketChannel.configureBlocking(false);
 
-		mNIOCOnnectionWorker.addConnection(socketChannel, mNextConnection);
+		mNIOConnectionWorker.addConnection(socketChannel, mNextConnection);
 
 		// To identify the channel
 		mChannelIDsMap.put(socketChannel, mNextConnection);
 		mChannelReadMap.put(socketChannel, "");
 		mNextConnection++;
 
-		socketChannel.register(mSelector, SelectionKey.OP_READ);
+		mReader.register(socketChannel);
 
 		System.out.println("  -> Started connection with "
 				+ mInetSocketAddress.getAddress());
-	}
-
-	/**
-	 * Read the data and store it until all the command is receive
-	 * 
-	 * @param key
-	 *            the socket that we want to read
-	 * @throws IOException
-	 *             if we can't read
-	 */
-	private void read(SelectionKey key) throws IOException {
-		SocketChannel socketChannel = (SocketChannel) key.channel();
-		mReadByteBuffer.clear();
-
-		int byteRead = 0;
-
-		try {
-			byteRead = socketChannel.read(mReadByteBuffer);
-		} catch (IOException e) {
-			// There is a problem with the connection
-			closeChannel(key);
-			return;
-		}
-
-		// The client want to disconnect
-		if (byteRead < 0) {
-			closeChannel(key);
-			return;
-		}
-
-		String readData = new String(mReadByteBuffer.array()).substring(0,
-				mReadByteBuffer.position());
-
-		// Get the datas that are already stored, add the data that we just read
-		// and update the data that we have already read
-		String dataAlreadyRead = mChannelReadMap.get(socketChannel);
-		mChannelReadMap.put(socketChannel, dataAlreadyRead + readData);
-		dataAlreadyRead = mChannelReadMap.get(socketChannel);
-
-		// if there are '\n' char, we can perform the request
-		if ((dataAlreadyRead != null) && (dataAlreadyRead.contains("\n"))) {
-			String[] dataAlreadyReadArray = dataAlreadyRead.split("\n");
-
-			if (dataAlreadyReadArray.length == 0) {
-				mNIOCOnnectionWorker.addRequestToPerform("",
-						mChannelIDsMap.get(socketChannel));
-			} else {
-
-				int lastCommandToPerformIndex = (dataAlreadyRead.lastIndexOf('\n') == (dataAlreadyRead
-						.length() - 1)) ? dataAlreadyReadArray.length
-						: dataAlreadyReadArray.length - 1;
-				
-				for (int i = 0; i < lastCommandToPerformIndex; i++) {
-					if (dataAlreadyReadArray[i].equals(Constants.QUIT_COMMAND)) {
-						closeChannel(key);
-						return;
-					} else {
-						mNIOCOnnectionWorker.addRequestToPerform(
-								dataAlreadyReadArray[i],
-								mChannelIDsMap.get(socketChannel));
-					}
-				}
-
-				if (dataAlreadyReadArray.length == lastCommandToPerformIndex) {
-					mChannelReadMap.put(socketChannel, "");
-				} else {
-					mChannelReadMap.put(socketChannel,
-							dataAlreadyReadArray[lastCommandToPerformIndex - 1]);
-				}
-
-			}
-		}
 	}
 
 	/**
@@ -222,7 +156,7 @@ public class NIOServer implements ServerInterface {
 				+ mInetSocketAddress.getAddress() + " aborted !");
 
 		SocketChannel socketChannel = (SocketChannel) key.channel();
-		mNIOCOnnectionWorker.closeChannel(mChannelIDsMap.get(socketChannel));
+		mNIOConnectionWorker.closeChannel(mChannelIDsMap.get(socketChannel));
 		mChannelIDsMap.remove(socketChannel);
 		mChannelReadMap.remove(socketChannel);
 		socketChannel.close();
@@ -262,8 +196,6 @@ public class NIOServer implements ServerInterface {
 					if (key.isValid()) {
 						if (key.isAcceptable()) {
 							accept(key);
-						} else if (key.isReadable()) {
-							read(key);
 						}
 					}
 				}
@@ -279,10 +211,16 @@ public class NIOServer implements ServerInterface {
 		mClosed.set(true);
 
 		mWorkers.close();
-		mNIOCOnnectionWorker.stopWorker();
+		mNIOConnectionWorker.stopWorker();
 		try {
 			mSelector.close();
 		} catch (IOException e) {
+
+		}
+
+		try {
+			mReader.stop();
+		} catch (IOException e1) {
 
 		}
 
@@ -296,6 +234,167 @@ public class NIOServer implements ServerInterface {
 		try {
 			mServerSocketChannel.close();
 		} catch (IOException e) {
+		}
+	}
+
+	/**
+	 * Class that read the data from the sockets
+	 * 
+	 * @author Gregory Maitre
+	 * 
+	 */
+	private class NIOReader implements Runnable {
+
+		private Selector mReaderSelector;
+
+		/**
+		 * Default constructor
+		 * 
+		 * @throws IOException
+		 */
+		public NIOReader() throws IOException {
+			mReaderSelector = SelectorProvider.provider().openSelector();
+		}
+
+		/**
+		 * Read the data and store it until all the command is receive
+		 * 
+		 * @param key
+		 *            the socket that we want to read
+		 * @throws IOException
+		 *             if we can't read
+		 */
+		private void read(SelectionKey key) throws IOException {
+			SocketChannel socketChannel = (SocketChannel) key.channel();
+			mReadByteBuffer.clear();
+
+			int byteRead = 0;
+
+			try {
+				byteRead = socketChannel.read(mReadByteBuffer);
+			} catch (IOException e) {
+				// There is a problem with the connection
+				closeChannel(key);
+				return;
+			}
+
+			// The client want to disconnect
+			if (byteRead < 0) {
+				closeChannel(key);
+				return;
+			}
+
+			String readData = new String(mReadByteBuffer.array()).substring(0,
+					mReadByteBuffer.position());
+
+			// Get the datas that are already stored, add the data that we just
+			// read
+			// and update the data that we have already read
+			String dataAlreadyRead = mChannelReadMap.get(socketChannel);
+			mChannelReadMap.put(socketChannel, dataAlreadyRead + readData);
+			dataAlreadyRead = mChannelReadMap.get(socketChannel);
+
+			// if there are '\n' char, we can perform the request
+			if ((dataAlreadyRead != null) && (dataAlreadyRead.contains("\n"))) {
+				String[] dataAlreadyReadArray = dataAlreadyRead.split("\n");
+
+				if (dataAlreadyReadArray.length == 0) {
+					mNIOConnectionWorker.addRequestToPerform("",
+							mChannelIDsMap.get(socketChannel));
+				} else {
+
+					int lastCommandToPerformIndex = (dataAlreadyRead
+							.lastIndexOf('\n') == (dataAlreadyRead.length() - 1)) ? dataAlreadyReadArray.length
+							: dataAlreadyReadArray.length - 1;
+
+					for (int i = 0; i < lastCommandToPerformIndex; i++) {
+						if (dataAlreadyReadArray[i]
+								.equals(Constants.QUIT_COMMAND)) {
+							closeChannel(key);
+							return;
+						} else {
+							// If we use telnet, we must remove the last caracter
+							if (dataAlreadyReadArray[i]
+									.lastIndexOf(Constants.NIO_TELNET_LAST_CHAR) == dataAlreadyReadArray[i]
+									.length() - 1) {
+								dataAlreadyReadArray[i] = dataAlreadyReadArray[i]
+										.substring(0, dataAlreadyReadArray[i]
+												.length() - 1);
+							}
+
+							mNIOConnectionWorker.addRequestToPerform(
+									dataAlreadyReadArray[i],
+									mChannelIDsMap.get(socketChannel));
+						}
+					}
+
+					if (dataAlreadyReadArray.length == lastCommandToPerformIndex) {
+						mChannelReadMap.put(socketChannel, "");
+					} else {
+						mChannelReadMap
+								.put(socketChannel,
+										dataAlreadyReadArray[lastCommandToPerformIndex - 1]);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Register the selector
+		 * 
+		 * @param socketChannel
+		 * @throws ClosedChannelException
+		 */
+		public synchronized void register(SocketChannel socketChannel)
+				throws ClosedChannelException {
+			mReaderSelector.wakeup();
+			socketChannel.register(mReaderSelector, SelectionKey.OP_READ);
+		}
+
+		/**
+		 * Close the selector
+		 * 
+		 * @throws IOException
+		 */
+		public synchronized void stop() throws IOException {
+			mReaderSelector.close();
+		}
+
+		@Override
+		public void run() {
+			while (!mClosed.get()) {
+				try {
+
+					// Wait for an event
+					mReaderSelector.select();
+
+					// Needed to avoid a call of select if we register a channel
+					synchronized (this) {
+					}
+
+					if (mClosed.get()) {
+						return;
+					}
+
+					Iterator<SelectionKey> keyIterator = mReaderSelector
+							.selectedKeys().iterator();
+
+					while (keyIterator.hasNext()) {
+						SelectionKey key = keyIterator.next();
+						keyIterator.remove();
+
+						// When we cancel, it's possible that the key isn't
+						// already
+						// removed
+						if (key.isValid()) {
+							if (key.isReadable()) {
+								read(key);
+							}
+						}
+					}
+				} catch (IOException e) {
+				}
+			}
 		}
 	}
 }

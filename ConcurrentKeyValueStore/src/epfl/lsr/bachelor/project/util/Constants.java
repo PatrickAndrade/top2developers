@@ -13,6 +13,7 @@ public final class Constants {
 	public static final int READ_BUFFER_NIO = 9216;
 	public static final int NUMBER_OF_PIPELINED_WORKER = 100;
 	public static final int CONCURRENT_ARRAY_SIZE = 3 * NUMBER_OF_PIPELINED_WORKER;
+	public static final char NIO_TELNET_LAST_CHAR = (char) 13;
 	
 	public static final String EMPTY_STRING = "";
 	public static final String WELCOME_STANDARD = "Server 1.0.1 (developed in JAVA)" + "\n\n" +

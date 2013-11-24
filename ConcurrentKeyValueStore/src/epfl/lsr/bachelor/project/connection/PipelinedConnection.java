@@ -82,7 +82,7 @@ public final class PipelinedConnection extends IOConnection {
 						&& !command.equals(Constants.QUIT_COMMAND)) {
 					// It gets the command asked by the client
 					command = getBufferedReader().readLine();
-
+					
 					if (command != null
 							&& !command.equals(Constants.QUIT_COMMAND)) {
 						// We parse the command to encapsulate it in a more

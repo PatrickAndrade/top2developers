@@ -28,6 +28,7 @@ public class GetRequest extends Request {
 		} else {
 			setMessageToReturn("NIL");
 		}
+		
 		notifyRequestPerformed(this);
 	}
 }
