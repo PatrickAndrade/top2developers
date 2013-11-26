@@ -17,21 +17,20 @@ import epfl.lsr.bachelor.project.values.Value;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-abstract public class Request {
+abstract public class Request implements AtomicAction {
     private String mKey;
     private String mMessageToReturn = "";
     private Value<?> mValue;
-    
+
     private IOConnection mConnection;
-    
+
     private SocketChannel mChannel;
     private Integer mChannelID;
     private NIOConnectionWorker mWorker;
-    
-    private long mID = 0; // Default value, should be changed calling setID()
-	
 
-	// The static reference to the KeyValueStore
+    private long mID = 0; // Default value, should be changed calling setID()
+
+    // The static reference to the KeyValueStore
     protected static final KeyValueStore KEY_VALUE_STORE = HandMadeConcurrentKeyValueStore.getInstance();
 
     /**
@@ -61,21 +60,22 @@ abstract public class Request {
      * Call to perform the request. When we finish to perform the request, we
      * must notify() the thread that wait for this monitor!
      * 
-     * @throws CloneNotSupportedException
      */
-    abstract public void perform() throws CloneNotSupportedException;
+    public void perform() {
+        KEY_VALUE_STORE.modify(this, mKey);
+    }
 
     /**
      * Enables to give an answer back after performing a request
      */
     public void respond() throws IOException {
-    	if (mConnection != null) {
-	        mConnection.getDataOutputStream().writeBytes(mMessageToReturn + "\n");
-	        mConnection.getDataOutputStream().flush();
-    	} else {
-    		mChannel.write(ByteBuffer.wrap((mMessageToReturn + "\n").getBytes()));
-    	}
-    	
+        if (mConnection != null) {
+            mConnection.getDataOutputStream().writeBytes(mMessageToReturn + "\n");
+            mConnection.getDataOutputStream().flush();
+        } else {
+            mChannel.write(ByteBuffer.wrap((mMessageToReturn + "\n").getBytes()));
+        }
+
     }
 
     /**
@@ -113,15 +113,15 @@ abstract public class Request {
     public long getID() {
         return mID;
     }
-    
+
     /**
      * Enables to retrieve the ID of the connection in NIO mode
      * 
      * @return the ID of the connection in NIO mode
      */
-	public Integer getChannelID() {
-		return mChannelID;
-	}
+    public Integer getChannelID() {
+        return mChannelID;
+    }
 
     /**
      * Enables to set the ID of this request
@@ -143,7 +143,7 @@ abstract public class Request {
         mConnection = connection;
         mChannel = null;
     }
-    
+
     /**
      * Enables to set the channel associated with this request (in NIO context)
      * 
@@ -151,8 +151,8 @@ abstract public class Request {
      *            the channel associated with this request
      */
     public void setChannel(SocketChannel channel) {
-    	mChannel = channel;
-    	mConnection = null;
+        mChannel = channel;
+        mConnection = null;
     }
 
     /**
@@ -164,35 +164,37 @@ abstract public class Request {
     public void setMessageToReturn(String messageToReturn) {
         mMessageToReturn = messageToReturn;
     }
-    
+
     /**
      * Enables to set the ID of the connection in NIO mode
      * 
-     * @param channelID the ID of the connection in NIO mode
+     * @param channelID
+     *            the ID of the connection in NIO mode
      */
-	public void setChannelID(Integer channelID) {
-		mChannelID = channelID;
-	}
-	
-	/**
-	 * Enables to set the NIO worker that send the request
-	 * 
-	 * @param worker the NIO worker that send the request
-	 */
-	public void setWorker(NIOConnectionWorker worker) {
-		mWorker = worker;
-	}
+    public void setChannelID(Integer channelID) {
+        mChannelID = channelID;
+    }
+
+    /**
+     * Enables to set the NIO worker that send the request
+     * 
+     * @param worker
+     *            the NIO worker that send the request
+     */
+    public void setWorker(NIOConnectionWorker worker) {
+        mWorker = worker;
+    }
 
     /**
      * Enables to notify the thread in waiting-mode that the request has been
      * performed. This must be called after performing the request
      */
     public void notifyRequestPerformed(Request request) {
-    	if (mConnection != null) {
-    		mConnection.notifyThatRequestIsPerformed(request);
-    	} else {
-    		mWorker.notifyThatRequestIsPerformed(request);
-    	}
+        if (mConnection != null) {
+            mConnection.notifyThatRequestIsPerformed(request);
+        } else {
+            mWorker.notifyThatRequestIsPerformed(request);
+        }
     }
 
     /**

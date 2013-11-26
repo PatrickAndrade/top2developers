@@ -24,22 +24,22 @@ public class IncrRequest extends Request {
 		mIncrement = increment;
 	}
 
-	@Override
-	public void perform() throws CloneNotSupportedException {
-		Value<?> valueStored = KEY_VALUE_STORE.get(getKey());
-		// If there is not already a value stored we force to create it with initial value increment
-		if (valueStored == null) {
-			KEY_VALUE_STORE.put(getKey(), new ValueInteger(mIncrement));
-			setMessageToReturn(Constants.INTEGER + " " + mIncrement);
-		} else {
-			// If the value stored support to be incremented we do this otherwise we return an error message
-			if (valueStored.supportIncrementDecrement()) {
-				valueStored.increment(mIncrement);
-				setMessageToReturn(Constants.INTEGER + " " + valueStored);
-			} else {
-				setMessageToReturn(Constants.NOT_SUPPORTED);
-			}
-		}
-		notifyRequestPerformed(this);
-	}
+    @Override
+    public void performAtomicAction() {
+        Value<?> valueStored = KEY_VALUE_STORE.get(getKey());
+        // If there is not already a value stored we force to create it with initial value increment
+        if (valueStored == null) {
+            KEY_VALUE_STORE.put(getKey(), new ValueInteger(mIncrement));
+            setMessageToReturn(Constants.INTEGER + " " + mIncrement);
+        } else {
+            // If the value stored support to be incremented we do this otherwise we return an error message
+            if (valueStored.supportIncrementDecrement()) {
+                valueStored.increment(mIncrement);
+                setMessageToReturn(Constants.INTEGER + " " + valueStored);
+            } else {
+                setMessageToReturn(Constants.NOT_SUPPORTED);
+            }
+        }
+        notifyRequestPerformed(this);  
+    }
 }

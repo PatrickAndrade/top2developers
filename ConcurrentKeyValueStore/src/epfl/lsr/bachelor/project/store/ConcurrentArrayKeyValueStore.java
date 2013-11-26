@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
 
+import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
 
@@ -62,6 +64,16 @@ public final class ConcurrentArrayKeyValueStore extends KeyValueStore {
 
     private int getMapIndex(String key) {
         return key.hashCode() % Constants.CONCURRENT_ARRAY_SIZE;
+    }
+
+    @Override
+    public void modify(AtomicAction action, String key) {
+        synchronized (mHashMapsList.get(getMapIndex(key))) {
+            Lock myLock = retrieveLock(key);
+            myLock.lock();
+            action.performAtomicAction();
+            myLock.unlock();
+        }
     }
 
 }

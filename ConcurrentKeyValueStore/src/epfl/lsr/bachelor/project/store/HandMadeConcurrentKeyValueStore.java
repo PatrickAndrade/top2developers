@@ -2,7 +2,9 @@ package epfl.lsr.bachelor.project.store;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
 
+import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
@@ -58,5 +60,15 @@ public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
             value = mMap.remove(key);
         }
         return value;
+    }
+
+    @Override
+    public void modify(AtomicAction action, String key) {
+        synchronized (key.intern()) {
+            Lock myLock = retrieveLock(key);
+            myLock.lock();
+            action.performAtomicAction();
+            myLock.unlock();
+        }
     }
 }

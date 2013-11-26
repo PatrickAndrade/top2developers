@@ -22,7 +22,7 @@ public class SetRequest extends Request {
 	}
 
 	@Override
-	public void perform() {
+	public void performAtomicAction() {
 		if (KEY_VALUE_STORE.put(getKey(), getValue()) == null) {
 			setMessageToReturn(Constants.STORED);
 		} else {

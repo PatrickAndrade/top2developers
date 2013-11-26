@@ -25,7 +25,7 @@ public class DecrRequest extends Request {
 	}
 
 	@Override
-	public void perform() throws CloneNotSupportedException {
+	public void performAtomicAction() {
 		Value<?> valueStored = KEY_VALUE_STORE.get(getKey());
 		// If there is not already a value stored we force to create it with initial value -decrement
 		if (valueStored == null) {

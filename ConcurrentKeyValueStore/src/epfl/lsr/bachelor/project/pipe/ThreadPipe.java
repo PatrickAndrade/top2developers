@@ -36,11 +36,7 @@ class ThreadPipe implements Runnable {
 			Request request = mRequestBuffer.take();
 			// It executes the request if the thread has not been already closed
 			if (!sClosed.get()) {
-				try {
-					request.perform();
-				} catch (CloneNotSupportedException e) {
-					e.printStackTrace();
-				}
+				request.perform();
 			}
 		}
 	}

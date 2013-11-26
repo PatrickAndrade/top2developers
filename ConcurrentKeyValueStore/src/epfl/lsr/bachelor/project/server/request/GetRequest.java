@@ -20,7 +20,7 @@ public class GetRequest extends Request {
 	}
 
 	@Override
-	public void perform() throws CloneNotSupportedException {
+	public void performAtomicAction() {
 		Value<?> value = KEY_VALUE_STORE.get(getKey());
 		// If there exists a value mapped by this key we return it otherwise we return NIL
 		if (value != null) {

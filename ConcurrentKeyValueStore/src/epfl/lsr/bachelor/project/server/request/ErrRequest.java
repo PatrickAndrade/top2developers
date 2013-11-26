@@ -24,6 +24,6 @@ public class ErrRequest extends Request {
 	}
 	
 	@Override
-	public void perform() throws CloneNotSupportedException {
+	public void performAtomicAction() {
 	}
 }

@@ -22,7 +22,7 @@ public class DelRequest extends Request {
 	}
 
 	@Override
-	public void perform() throws CloneNotSupportedException {
+	public void performAtomicAction() {
 		// If there is a value mapped by the key we delete it otherwise we
 		// tell the client that this key doesn't contain a value mapped
 		if (KEY_VALUE_STORE.remove(getKey()) == null) {
