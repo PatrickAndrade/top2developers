@@ -54,8 +54,9 @@ public class NIOConnection {
 	 *            the request to be performed
 	 * @param requestBuffer
 	 *            the request buffer in which we add the request to be performed
+	 * @param mAnswerBuffer 
 	 */
-	public void addRequestToPerform(Request request, RequestBuffer requestBuffer) {
+	public void addRequestToPerform(Request request, RequestBuffer requestBuffer, NIOAnswerBuffer mAnswerBuffer) {
 
 		request.setID(mNextRequestID);
 		request.setChannel(mSocketChannel);
@@ -74,6 +75,7 @@ public class NIOConnection {
 				request.setID(mNextRequestID);
 				request.setChannelID(mId);
 				request.setChannel(mSocketChannel);
+				request.setNIOAnswerBuffer(mAnswerBuffer);
 				request.setWorker(mWorker);
 			}
 

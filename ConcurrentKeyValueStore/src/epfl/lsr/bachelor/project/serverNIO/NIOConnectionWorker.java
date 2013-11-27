@@ -30,16 +30,20 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 
 	private AtomicBoolean mClosed;
 
+	private NIOAnswerBuffer mAnswerBuffer;
+
 	/**
 	 * Default constructor
 	 * 
 	 * @param requestBuffer
 	 *            the shared request buffer
+	 * @param mAnswerBuffer 
 	 */
-	public NIOConnectionWorker(RequestBuffer requestBuffer) {
+	public NIOConnectionWorker(RequestBuffer requestBuffer, NIOAnswerBuffer answerBuffer) {
 		mIDConnectionMap = new ConcurrentHashMap<Integer, NIOConnection>();
 		mCommandParser = new CommandParser();
 		mRequestBuffer = requestBuffer;
+		mAnswerBuffer = answerBuffer;
 		mReadyChannelQueue = new ConcurrentLinkedQueue<Integer>();
 		mClosed = new AtomicBoolean();
 	}
@@ -56,8 +60,9 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 		Request request = mCommandParser.parse(command);
 		request.setChannelID(channelID);
 		request.setWorker(this);
+		request.setNIOAnswerBuffer(mAnswerBuffer);
 		NIOConnection connection = mIDConnectionMap.get(channelID);
-		connection.addRequestToPerform(request, mRequestBuffer);
+		connection.addRequestToPerform(request, mRequestBuffer, mAnswerBuffer);
 	}
 
 	/**

@@ -30,6 +30,8 @@ public class NIOServer implements ServerInterface {
 
 	private RequestBuffer mRequestBuffer = new RequestBuffer();
 
+	private NIOAnswerBuffer mAnswerBuffer;
+
 	private WorkerPipeInterface mWorkers;
 
 	private InetSocketAddress mInetSocketAddress;
@@ -55,6 +57,8 @@ public class NIOServer implements ServerInterface {
 	private AtomicBoolean mClosed;
 
 	private NIOReader mReader;
+
+	private NIOWriter mWriter;
 
 	/**
 	 * Default constructor
@@ -83,11 +87,15 @@ public class NIOServer implements ServerInterface {
 
 		mReadByteBuffer = ByteBuffer.allocate(Constants.READ_BUFFER_NIO);
 
-		mNIOConnectionWorker = new NIOConnectionWorker(mRequestBuffer);
-		new Thread(mNIOConnectionWorker).start();
-
 		mReader = new NIOReader();
 		new Thread(mReader).start();
+
+		mWriter = new NIOWriter();
+		new Thread(mWriter).start();
+
+		mNIOConnectionWorker = new NIOConnectionWorker(mRequestBuffer,
+				mAnswerBuffer);
+		new Thread(mNIOConnectionWorker).start();
 
 		mSelector = initializeSelector();
 	}
@@ -138,6 +146,7 @@ public class NIOServer implements ServerInterface {
 		mNextConnection++;
 
 		mReader.register(socketChannel);
+		mWriter.register(socketChannel);
 
 		System.out.println("  -> Started connection with "
 				+ mInetSocketAddress.getAddress());
@@ -152,15 +161,22 @@ public class NIOServer implements ServerInterface {
 	 *             if we can't close
 	 */
 	public void closeChannel(SelectionKey key) throws IOException {
-		System.err.println(" -> Connection with "
-				+ mInetSocketAddress.getAddress() + " aborted !");
+		
+		// We can cancel the key when we write, so we finish to write
+		synchronized (key) {
 
-		SocketChannel socketChannel = (SocketChannel) key.channel();
-		mNIOConnectionWorker.closeChannel(mChannelIDsMap.get(socketChannel));
-		mChannelIDsMap.remove(socketChannel);
-		mChannelReadMap.remove(socketChannel);
-		socketChannel.close();
-		key.cancel();
+			System.err.println(" -> Connection with "
+					+ mInetSocketAddress.getAddress() + " aborted !");
+
+			SocketChannel socketChannel = (SocketChannel) key.channel();
+			mNIOConnectionWorker
+					.closeChannel(mChannelIDsMap.get(socketChannel));
+			mChannelIDsMap.remove(socketChannel);
+			mChannelReadMap.remove(socketChannel);
+			mAnswerBuffer.remove(socketChannel);
+			socketChannel.close();
+			key.cancel();
+		}
 	}
 
 	/**
@@ -224,6 +240,12 @@ public class NIOServer implements ServerInterface {
 
 		}
 
+		try {
+			mWriter.stop();
+		} catch (IOException e1) {
+
+		}
+
 		for (Channel socketChannel : mChannelIDsMap.keySet()) {
 			try {
 				socketChannel.close();
@@ -265,11 +287,11 @@ public class NIOServer implements ServerInterface {
 		 *             if we can't read
 		 */
 		private void read(SelectionKey key) throws IOException {
-			SocketChannel socketChannel = (SocketChannel) key.channel();
+			SocketChannel socketChannel = (SocketChannel) key.channel();			
 			mReadByteBuffer.clear();
-
+			
 			int byteRead = 0;
-
+			
 			try {
 				byteRead = socketChannel.read(mReadByteBuffer);
 			} catch (IOException e) {
@@ -285,15 +307,15 @@ public class NIOServer implements ServerInterface {
 			}
 
 			String readData = new String(mReadByteBuffer.array()).substring(0,
-					mReadByteBuffer.position());
-
+					byteRead);
+						
 			// Get the datas that are already stored, add the data that we just
 			// read
 			// and update the data that we have already read
 			String dataAlreadyRead = mChannelReadMap.get(socketChannel);
-			mChannelReadMap.put(socketChannel, dataAlreadyRead + readData);
+			mChannelReadMap.put(socketChannel, dataAlreadyRead.concat(readData));
 			dataAlreadyRead = mChannelReadMap.get(socketChannel);
-
+			
 			// if there are '\n' char, we can perform the request
 			if ((dataAlreadyRead != null) && (dataAlreadyRead.contains("\n"))) {
 				String[] dataAlreadyReadArray = dataAlreadyRead.split("\n");
@@ -303,20 +325,20 @@ public class NIOServer implements ServerInterface {
 							mChannelIDsMap.get(socketChannel));
 				} else {
 
-					int lastCommandToPerformIndex = (dataAlreadyRead
-							.lastIndexOf('\n') == (dataAlreadyRead.length() - 1)) ? dataAlreadyReadArray.length
-							: dataAlreadyReadArray.length - 1;
+					int commandToPerformInArraySize = (dataAlreadyRead
+							.charAt(dataAlreadyRead.length() - 1) == '\n') ? dataAlreadyReadArray.length
+							: (dataAlreadyReadArray.length - 1);
 
-					for (int i = 0; i < lastCommandToPerformIndex; i++) {
+					for (int i = 0; i < commandToPerformInArraySize; i++) {
 						if (dataAlreadyReadArray[i]
 								.equals(Constants.QUIT_COMMAND)) {
 							closeChannel(key);
 							return;
 						} else {
-							// If we use telnet, we must remove the last caracter
+							// If we use telnet, we must remove the last
+							// caracter
 							if (dataAlreadyReadArray[i]
-									.lastIndexOf(Constants.NIO_TELNET_LAST_CHAR) == dataAlreadyReadArray[i]
-									.length() - 1) {
+									.charAt(dataAlreadyReadArray[i].length() - 1) == Constants.NIO_TELNET_LAST_CHAR) {
 								dataAlreadyReadArray[i] = dataAlreadyReadArray[i]
 										.substring(0, dataAlreadyReadArray[i]
 												.length() - 1);
@@ -328,25 +350,24 @@ public class NIOServer implements ServerInterface {
 						}
 					}
 
-					if (dataAlreadyReadArray.length == lastCommandToPerformIndex) {
+					if (dataAlreadyReadArray.length == commandToPerformInArraySize) {
 						mChannelReadMap.put(socketChannel, "");
 					} else {
 						mChannelReadMap
 								.put(socketChannel,
-										dataAlreadyReadArray[lastCommandToPerformIndex - 1]);
+										dataAlreadyReadArray[commandToPerformInArraySize]);
 					}
 				}
 			}
 		}
 
 		/**
-		 * Register the selector
+		 * Register the channel with the selector
 		 * 
 		 * @param socketChannel
 		 * @throws ClosedChannelException
 		 */
-		public synchronized void register(SocketChannel socketChannel)
-				throws ClosedChannelException {
+		public synchronized void register(SocketChannel socketChannel) throws ClosedChannelException {
 			mReaderSelector.wakeup();
 			socketChannel.register(mReaderSelector, SelectionKey.OP_READ);
 		}
@@ -395,6 +416,108 @@ public class NIOServer implements ServerInterface {
 				} catch (IOException e) {
 				}
 			}
+		}
+	}
+
+	public class NIOWriter implements Runnable {
+
+		private Selector mWriterSelector;
+
+		/**
+		 * Default constructor
+		 * 
+		 * @throws IOException
+		 */
+		public NIOWriter() throws IOException {
+			mWriterSelector = SelectorProvider.provider().openSelector();
+			mAnswerBuffer = new NIOAnswerBuffer(this);
+		}
+
+		/**
+		 * Write the data
+		 * 
+		 * @param key
+		 *            the socket that we want to write
+		 * @throws IOException
+		 *             if we can't write
+		 */
+		private void write(SelectionKey key) throws IOException {
+			SocketChannel socketChannel = (SocketChannel) key.channel();
+			ByteBuffer dataToSend = mAnswerBuffer.get(socketChannel);
+
+			if (dataToSend == null) {
+				return;
+			}
+
+			socketChannel.write(dataToSend);
+
+			// We successfull send the answer
+			if (dataToSend.remaining() == 0) {
+				mAnswerBuffer.removeAnswer(socketChannel);
+			}
+		}
+
+		/**
+		 * Register the channel with the selector
+		 * 
+		 * @param socketChannel
+		 * @throws ClosedChannelException
+		 */
+		public synchronized void register(SocketChannel socketChannel) throws ClosedChannelException {
+			mWriterSelector.wakeup();
+			socketChannel.register(mWriterSelector, SelectionKey.OP_WRITE);
+		}
+
+		/**
+		 * Close the selector
+		 * 
+		 * @throws IOException
+		 */
+		public synchronized void stop() throws IOException {
+			mWriterSelector.close();
+		}
+
+		@Override
+		public void run() {
+			while (!mClosed.get()) {
+				try {
+
+					// Wait for an event
+					mWriterSelector.select();
+
+					// Needed to avoid a call of select if we register a channel
+					synchronized (this) {
+					}
+
+					if (mClosed.get()) {
+						return;
+					}
+
+					Iterator<SelectionKey> keyIterator = mWriterSelector
+							.selectedKeys().iterator();
+
+					while (keyIterator.hasNext()) {
+						SelectionKey key = keyIterator.next();
+						keyIterator.remove();
+
+						// When we cancel, it's possible that the key isn't
+						// already
+						// removed
+						synchronized (key) {
+							if (key.isValid()) {
+								if (key.isWritable()) {
+									write(key);
+								}
+							}
+						}
+					}
+				} catch (IOException e) {
+				}
+			}
+		}
+
+		public synchronized void send(Channel channel) {
+			mWriterSelector.wakeup();
 		}
 	}
 }

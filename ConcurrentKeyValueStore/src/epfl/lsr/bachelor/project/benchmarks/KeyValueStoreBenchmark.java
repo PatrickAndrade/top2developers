@@ -13,7 +13,7 @@ import epfl.lsr.bachelor.project.util.Constants;
  * 
  */
 public class KeyValueStoreBenchmark {
-	public static final int SIZE = 64;
+	public static final int SIZE = 1;
 
 	public static void main(String[] args) {
 

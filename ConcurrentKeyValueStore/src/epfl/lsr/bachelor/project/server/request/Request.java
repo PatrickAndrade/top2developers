@@ -1,10 +1,10 @@
 package epfl.lsr.bachelor.project.server.request;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import epfl.lsr.bachelor.project.connection.IOConnection;
+import epfl.lsr.bachelor.project.serverNIO.NIOAnswerBuffer;
 import epfl.lsr.bachelor.project.serverNIO.NIOConnectionWorker;
 import epfl.lsr.bachelor.project.store.HandMadeConcurrentKeyValueStore;
 import epfl.lsr.bachelor.project.store.KeyValueStore;
@@ -24,6 +24,7 @@ abstract public class Request implements AtomicAction {
 
     private IOConnection mConnection;
 
+    private NIOAnswerBuffer mNIOAnswerBuffer;
     private SocketChannel mChannel;
     private Integer mChannelID;
     private NIOConnectionWorker mWorker;
@@ -73,9 +74,8 @@ abstract public class Request implements AtomicAction {
             mConnection.getDataOutputStream().writeBytes(mMessageToReturn + "\n");
             mConnection.getDataOutputStream().flush();
         } else {
-            mChannel.write(ByteBuffer.wrap((mMessageToReturn + "\n").getBytes()));
+            mNIOAnswerBuffer.add(mChannel, mMessageToReturn + "\n");
         }
-
     }
 
     /**
@@ -123,7 +123,7 @@ abstract public class Request implements AtomicAction {
         return mChannelID;
     }
 
-    /**
+	/**
      * Enables to set the ID of this request
      * 
      * @param mNextRequestID
@@ -153,6 +153,10 @@ abstract public class Request implements AtomicAction {
     public void setChannel(SocketChannel channel) {
         mChannel = channel;
         mConnection = null;
+    }
+    
+    public void setNIOAnswerBuffer(NIOAnswerBuffer answerBuffer) {
+    	mNIOAnswerBuffer = answerBuffer;
     }
 
     /**
