@@ -1,12 +1,10 @@
 package epfl.lsr.bachelor.project.store;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import epfl.lsr.bachelor.project.values.Value;
 import epfl.lsr.bachelor.project.server.request.AtomicAction;
+import epfl.lsr.bachelor.project.util.Constants;
+import epfl.lsr.bachelor.project.values.Value;
+import epfl.lsr.bachelor.project.values.ValueInteger;
+import epfl.lsr.bachelor.project.values.ValueString;
 
 /**
  * This interface enables to dynamically use different types of implementations
@@ -17,11 +15,15 @@ import epfl.lsr.bachelor.project.server.request.AtomicAction;
  */
 public abstract class KeyValueStore {
 
-    private Map<String, Lock> mLocksMap;
-
-    protected KeyValueStore() {
-        mLocksMap = new HashMap<String, Lock>();
-    }
+    /**
+     * Enables to perform some atomic action in the KV
+     * 
+     * @param action
+     *            the atomic action to be done
+     * @param key
+     *            the key on which we should perform the action
+     */
+    public abstract void execute(AtomicAction action, String key);
 
     /**
      * Enables to retrieve some value mapped to a key
@@ -56,28 +58,85 @@ public abstract class KeyValueStore {
     public abstract Value<?> remove(String key);
 
     /**
-     * Enables to perform some atomic action in the KV
+     * Enables to increment the mapping for a certain key
      * 
-     * @param action
-     *            the atomic action to be done
      * @param key
-     *            the key on which we should perform the action
+     *            the key
+     * @return a string containing some useful message that could be used
      */
-    public abstract void modify(AtomicAction action, String key);
-    
-    /**
-     * Enables to retrieve the lock corresponding to the specified key
-     * 
-     * @param key the key that identifies the lock
-     * 
-     * @return the lock mapped by the key
-     */
-    public synchronized Lock retrieveLock(String key) {
-        Lock mapLock = mLocksMap.get(key);
-        if (mapLock != null) {
-            return mapLock;
+    public String increment(String key, int increment) {
+        Value<?> valueStored = this.get(key);
+
+        // If there is not already a value stored we force to create it with
+        // initial value increment
+        if (valueStored == null) {
+            this.put(key, new ValueInteger(increment));
+            return Constants.INTEGER + " " + increment;
+        } else {
+
+            // If the value stored support to be incremented we do this
+            // otherwise we return an error message
+            if (valueStored.supportIncrementDecrement()) {
+                valueStored.increment(increment);
+                return Constants.INTEGER + " " + valueStored;
+            } else {
+                return Constants.NOT_SUPPORTED;
+            }
         }
-        mLocksMap.put(key, new ReentrantLock());
-        return mLocksMap.get(key);
     }
+
+    /**
+     * Enables to decrement the mapping for a certain key
+     * 
+     * @param key
+     *            the key
+     * @return a string containing some useful message that could be used
+     */
+    public String decrement(String key, int decrement) {
+        Value<?> valueStored = this.get(key);
+        
+        // If there is not already a value stored we force to create it with
+        // initial value -decrement
+        if (valueStored == null) {
+            this.put(key, new ValueInteger(-decrement));
+            return Constants.INTEGER + " " + -decrement;
+        } else {
+            
+            // If the value stored support to be decremented we do this
+            // otherwise we return an error message
+            if (valueStored.supportIncrementDecrement()) {
+                valueStored.decrement(decrement);
+                return Constants.INTEGER + " " + valueStored;
+            } else {
+                return Constants.NOT_SUPPORTED;
+            }
+        }
+    }
+
+    /**
+     * Enables to append some value to the mapping for a certain key
+     * 
+     * @param key
+     *            the key
+     * @param toAppend
+     *            the value to be append
+     * @return a string containing some useful message that could be used
+     */
+    public String append(String key, Value<?> toAppend) {
+        Value<?> value = this.get(key);
+
+        if (value == null) {
+            value = new ValueString("");
+        }
+
+        value = value.append(toAppend);
+        this.put(key, value);
+
+        if (value.supportIncrementDecrement()) {
+            return "(integer) " + value.getValue();
+        } else {
+            return "(integer) " + ((String) value.getValue()).length();
+        }
+    }
+
 }

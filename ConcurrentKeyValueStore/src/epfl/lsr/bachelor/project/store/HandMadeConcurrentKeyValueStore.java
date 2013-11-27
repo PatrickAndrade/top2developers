@@ -3,6 +3,7 @@ package epfl.lsr.bachelor.project.store;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.values.Value;
@@ -17,6 +18,7 @@ public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
 
     private static final HandMadeConcurrentKeyValueStore INSTANCE = new HandMadeConcurrentKeyValueStore();
     private Map<String, Value<?>> mMap;
+    private Map<String, Lock> mLocksMap;
 
     private HandMadeConcurrentKeyValueStore() {
         if (INSTANCE != null) {
@@ -24,6 +26,7 @@ public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
         }
 
         mMap = new HashMap<String, Value<?>>();
+        mLocksMap = new HashMap<String, Lock>();
     }
 
     /**
@@ -37,38 +40,40 @@ public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
 
     @Override
     public Value<?> get(String key) {
-        Value<?> value = null;
-        synchronized (key.intern()) {
-            value = mMap.get(key);
-        }
-        return value;
+        return mMap.get(key);
     }
 
     @Override
     public Value<?> put(String key, Value<?> value) {
-        Value<?> previousValue = null;
-        synchronized (key.intern()) {
-            previousValue = mMap.put(key, value);
-        }
-        return previousValue;
+        return mMap.put(key, value);
     }
 
     @Override
     public Value<?> remove(String key) {
-        Value<?> value = null;
-        synchronized (key.intern()) {
-            value = mMap.remove(key);
-        }
-        return value;
+        return mMap.remove(key);
     }
 
     @Override
-    public void modify(AtomicAction action, String key) {
-        synchronized (key.intern()) {
-            Lock myLock = retrieveLock(key);
-            myLock.lock();
-            action.performAtomicAction();
-            myLock.unlock();
+    public void execute(AtomicAction action, String key) {
+        Lock myLock = retrieveLock(key);
+        myLock.lock();
+        action.performAtomicAction();
+        myLock.unlock();
+    }
+    
+    /**
+     * Enables to retrieve the lock corresponding to the specified key
+     * 
+     * @param key the key that identifies the lock
+     * 
+     * @return the lock mapped by the key
+     */
+    private synchronized Lock retrieveLock(String key) {
+        Lock mapLock = mLocksMap.get(key);
+        if (mapLock != null) {
+            return mapLock;
         }
+        mLocksMap.put(key, new ReentrantLock());
+        return mLocksMap.get(key);
     }
 }
