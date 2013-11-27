@@ -62,7 +62,7 @@ abstract public class Request implements AtomicAction {
      * 
      */
     public void perform() {
-        KEY_VALUE_STORE.modify(this, mKey);
+        KEY_VALUE_STORE.execute(this, mKey);
     }
 
     /**

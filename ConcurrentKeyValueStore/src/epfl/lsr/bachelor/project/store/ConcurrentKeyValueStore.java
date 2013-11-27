@@ -2,7 +2,6 @@ package epfl.lsr.bachelor.project.store;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
 
 import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.values.Value;
@@ -36,36 +35,21 @@ public final class ConcurrentKeyValueStore extends KeyValueStore {
 	
     @Override
     public Value<?> get(String key) {
-        Lock myLock = retrieveLock(key);
-        myLock.lock();
-        Value<?> toReturn = mMap.get(key);
-        myLock.unlock();
-        return toReturn;
+        return mMap.get(key);
     }
 
     @Override
     public Value<?> put(String key, Value<?> value) {
-        Lock myLock = retrieveLock(key);
-        myLock.lock();
-        Value<?> toReturn = mMap.put(key, value);
-        myLock.unlock();
-        return toReturn;
+        return mMap.put(key, value);
     }
 
     @Override
     public Value<?> remove(String key) {
-        Lock myLock = retrieveLock(key);
-        myLock.lock();
-        Value<?> toReturn = mMap.remove(key);
-        myLock.unlock();
-        return toReturn;
+        return mMap.remove(key);
     }
 
     @Override
-    public void modify(AtomicAction action, String key) {
-        Lock myLock = retrieveLock(key);
-        myLock.lock();
+    public synchronized void execute(AtomicAction action, String key) {
         action.performAtomicAction();
-        myLock.unlock();
     }
 }
