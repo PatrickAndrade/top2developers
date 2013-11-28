@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import epfl.lsr.bachelor.project.connection.ConnectionInterface;
 import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.request.Request;
+import epfl.lsr.bachelor.project.serverNIO.NIOServer.NIOWriter;
 import epfl.lsr.bachelor.project.util.CommandParser;
 
 /**
@@ -32,6 +33,8 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 
 	private NIOAnswerBuffer mAnswerBuffer;
 
+	private NIOWriter mWriter;
+
 	/**
 	 * Default constructor
 	 * 
@@ -39,13 +42,14 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 	 *            the shared request buffer
 	 * @param mAnswerBuffer 
 	 */
-	public NIOConnectionWorker(RequestBuffer requestBuffer, NIOAnswerBuffer answerBuffer) {
+	public NIOConnectionWorker(RequestBuffer requestBuffer, NIOAnswerBuffer answerBuffer, NIOWriter writer) {
 		mIDConnectionMap = new ConcurrentHashMap<Integer, NIOConnection>();
 		mCommandParser = new CommandParser();
 		mRequestBuffer = requestBuffer;
 		mAnswerBuffer = answerBuffer;
 		mReadyChannelQueue = new ConcurrentLinkedQueue<Integer>();
 		mClosed = new AtomicBoolean();
+		mWriter = writer;
 	}
 
 	/**
@@ -130,6 +134,7 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 			// If the client disconnect when the request is performed
 			if (!mClosed.get() && (connection != null)) {
 				connection.sendAnswers();
+				mWriter.send();
 			}
 		}
 	}

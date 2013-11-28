@@ -94,7 +94,7 @@ public class NIOServer implements ServerInterface {
 		new Thread(mWriter).start();
 
 		mNIOConnectionWorker = new NIOConnectionWorker(mRequestBuffer,
-				mAnswerBuffer);
+				mAnswerBuffer, mWriter);
 		new Thread(mNIOConnectionWorker).start();
 
 		mSelector = initializeSelector();
@@ -516,7 +516,7 @@ public class NIOServer implements ServerInterface {
 			}
 		}
 
-		public synchronized void send(Channel channel) {
+		public synchronized void send() {
 			mWriterSelector.wakeup();
 		}
 	}

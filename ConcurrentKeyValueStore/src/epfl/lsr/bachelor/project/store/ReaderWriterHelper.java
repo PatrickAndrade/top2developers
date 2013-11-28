@@ -26,9 +26,11 @@ public final class ReaderWriterHelper<T> {
      *            the key
      */
     public void initRead(T key) {
+    	Semaphore readWriteSemaphore = retrieveSemaphore(key, mReaderWriterMap);
+    	Semaphore mutex = retrieveSemaphore(key, mMutex);
         try {
-            retrieveSemaphore(key, mReaderWriterMap).acquire();
-            retrieveSemaphore(key, mMutex).acquire();
+            readWriteSemaphore.acquire();
+            mutex.acquire();
             readersTotal++;
             if (readersTotal == 1) {
                 retrieveSemaphore(key, mWriterMap).acquire();
@@ -36,8 +38,8 @@ public final class ReaderWriterHelper<T> {
 
         } catch (InterruptedException e) {
         } finally {
-            retrieveSemaphore(key, mMutex).release();
-            retrieveSemaphore(key, mReaderWriterMap).release();
+            mutex.release();
+            readWriteSemaphore.release();
         }
     }
 
@@ -48,15 +50,16 @@ public final class ReaderWriterHelper<T> {
      *            the key
      */
     public void endRead(T key) {
+    	Semaphore mutex = retrieveSemaphore(key, mMutex);
         try {
-            retrieveSemaphore(key, mMutex).acquire();
+            mutex.acquire();
             readersTotal--;
             if (readersTotal == 0) {
                 retrieveSemaphore(key, mWriterMap).release();
             }
         } catch (InterruptedException e) {
         } finally {
-            retrieveSemaphore(key, mMutex).release();
+            mutex.release();
         }
     }
 

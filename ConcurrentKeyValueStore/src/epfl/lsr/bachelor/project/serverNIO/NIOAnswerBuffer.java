@@ -5,7 +5,6 @@ import java.nio.channels.Channel;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import epfl.lsr.bachelor.project.serverNIO.NIOServer.NIOWriter;
 
@@ -18,9 +17,6 @@ import epfl.lsr.bachelor.project.serverNIO.NIOServer.NIOWriter;
 public class NIOAnswerBuffer {
 
 	private Map<Channel, LinkedList<ByteBuffer>> mChannelAnswerMap;
-	private AtomicBoolean mClosed;
-
-	private NIOWriter mWriter;
 
 	/**
 	 * Default constructor
@@ -29,8 +25,6 @@ public class NIOAnswerBuffer {
 	 */
 	public NIOAnswerBuffer(NIOWriter nioWriter) {
 		mChannelAnswerMap = new HashMap<Channel, LinkedList<ByteBuffer>>();
-		mClosed = new AtomicBoolean();
-		mWriter = nioWriter;
 	}
 
 	/**
@@ -49,8 +43,6 @@ public class NIOAnswerBuffer {
 		}
 
 		byteBufferList.add(ByteBuffer.wrap(answer.getBytes()));
-		mWriter.send(channel);
-		notifyAll();
 	}
 
 	/**
@@ -65,7 +57,7 @@ public class NIOAnswerBuffer {
 
 		LinkedList<ByteBuffer> byteBufferList = mChannelAnswerMap.get(channel);
 
-		return (!mClosed.get() && (byteBufferList != null) && (!byteBufferList
+		return ((byteBufferList != null) && (!byteBufferList
 				.isEmpty())) ? byteBufferList.getFirst() : null;
 		// return mRequestList.removeFirst();
 	}
@@ -86,15 +78,5 @@ public class NIOAnswerBuffer {
 		if ((byteBufferList != null) && !byteBufferList.isEmpty()) {
 			byteBufferList.removeFirst();
 		}
-	}
-
-	/**
-	 * Enables to notify all the threads that are currently waiting for answers.
-	 * This method also make that all waiting-take() calls will return
-	 * <code>null</code>
-	 */
-	public synchronized void notifyAllThreadsToStopWaiting() {
-		mClosed.set(true);
-		notifyAll();
 	}
 }

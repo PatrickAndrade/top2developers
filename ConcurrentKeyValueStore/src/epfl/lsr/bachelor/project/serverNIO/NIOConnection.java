@@ -115,7 +115,8 @@ public class NIOConnection {
 	 * @return <code>true</code> if we can send an answer
 	 */
 	public synchronized boolean isReady() {
-		return (mToSend.peek() != null)
-				&& (mNextRequestToSend == mToSend.peek().getID());
+		Request toSend = mToSend.peek();
+		return (toSend != null)
+				&& (mNextRequestToSend == toSend.getID());
 	}
 }
