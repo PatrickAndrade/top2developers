@@ -55,6 +55,13 @@ public abstract class Value<K> implements Cloneable {
 	 */
 	public abstract void decrement(int k);
 	
+	/**
+	 * Enables to append some value
+	 * 
+	 * @param value the value to be append
+	 * 
+	 * @return the new value resulting from appending
+	 */
 	public Value<?> append(Value<?> value) {
 		Value<?> newValue = new ValueString(String.valueOf(getValue()) + value.getValue());
 		if (Utilities.isInteger((String) newValue.getValue())) {
@@ -63,8 +70,6 @@ public abstract class Value<K> implements Cloneable {
 		return newValue;
 	}
 	
-	/**
-	 * Enables to print in a readable way the value
-	 */
+	@Override
 	public abstract String toString();
 }

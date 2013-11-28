@@ -14,6 +14,13 @@ import epfl.lsr.bachelor.project.values.ValueString;
  * 
  */
 public abstract class KeyValueStore {
+    
+    /**
+     * Enables to retrieve the instance of the helper associated to this implementation of the KV
+     * 
+     * @return the helper
+     */
+    public abstract ReaderWriterHelper<?> getReaderWriterHelper();
 
     /**
      * Enables to perform some atomic action in the KV
@@ -94,14 +101,14 @@ public abstract class KeyValueStore {
      */
     public String decrement(String key, int decrement) {
         Value<?> valueStored = this.get(key);
-        
+
         // If there is not already a value stored we force to create it with
         // initial value -decrement
         if (valueStored == null) {
             this.put(key, new ValueInteger(-decrement));
             return Constants.INTEGER + " " + -decrement;
         } else {
-            
+
             // If the value stored support to be decremented we do this
             // otherwise we return an error message
             if (valueStored.supportIncrementDecrement()) {

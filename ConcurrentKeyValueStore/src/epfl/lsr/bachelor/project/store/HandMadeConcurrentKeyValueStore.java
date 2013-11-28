@@ -2,8 +2,6 @@ package epfl.lsr.bachelor.project.store;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.values.Value;
@@ -17,8 +15,9 @@ import epfl.lsr.bachelor.project.values.Value;
 public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
 
     private static final HandMadeConcurrentKeyValueStore INSTANCE = new HandMadeConcurrentKeyValueStore();
+    private static final ReaderWriterHelper<String> READER_WRITER_HELPER = new ReaderWriterHelper<String>();
+    
     private Map<String, Value<?>> mMap;
-    private Map<String, Lock> mLocksMap;
 
     private HandMadeConcurrentKeyValueStore() {
         if (INSTANCE != null) {
@@ -26,7 +25,6 @@ public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
         }
 
         mMap = new HashMap<String, Value<?>>();
-        mLocksMap = new HashMap<String, Lock>();
     }
 
     /**
@@ -36,6 +34,11 @@ public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
      */
     public static HandMadeConcurrentKeyValueStore getInstance() {
         return INSTANCE;
+    }
+    
+    @Override
+    public ReaderWriterHelper<String> getReaderWriterHelper() {
+        return READER_WRITER_HELPER;
     }
 
     @Override
@@ -55,25 +58,6 @@ public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
 
     @Override
     public void execute(AtomicAction action, String key) {
-        Lock myLock = retrieveLock(key);
-        myLock.lock();
-        action.performAtomicAction();
-        myLock.unlock();
-    }
-    
-    /**
-     * Enables to retrieve the lock corresponding to the specified key
-     * 
-     * @param key the key that identifies the lock
-     * 
-     * @return the lock mapped by the key
-     */
-    private synchronized Lock retrieveLock(String key) {
-        Lock mapLock = mLocksMap.get(key);
-        if (mapLock != null) {
-            return mapLock;
-        }
-        mLocksMap.put(key, new ReentrantLock());
-        return mLocksMap.get(key);
+        action.performAtomicAction(key);
     }
 }

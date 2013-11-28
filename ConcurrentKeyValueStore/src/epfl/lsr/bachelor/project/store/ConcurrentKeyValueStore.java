@@ -15,6 +15,8 @@ import epfl.lsr.bachelor.project.values.Value;
 public final class ConcurrentKeyValueStore extends KeyValueStore {
 
 	private static final ConcurrentKeyValueStore INSTANCE = new ConcurrentKeyValueStore();
+	private static final ReaderWriterHelper<String> READER_WRITER_HELPER = new ReaderWriterHelper<String>();
+	
 	private Map<String, Value<?>> mMap;
 
 	private ConcurrentKeyValueStore() {
@@ -34,6 +36,11 @@ public final class ConcurrentKeyValueStore extends KeyValueStore {
 	}
 	
     @Override
+    public ReaderWriterHelper<String> getReaderWriterHelper() {
+        return READER_WRITER_HELPER;
+    }
+	
+    @Override
     public Value<?> get(String key) {
         return mMap.get(key);
     }
@@ -50,6 +57,6 @@ public final class ConcurrentKeyValueStore extends KeyValueStore {
 
     @Override
     public synchronized void execute(AtomicAction action, String key) {
-        action.performAtomicAction();
+        action.performAtomicAction(key);
     }
 }

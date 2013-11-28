@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.util.Constants;
@@ -19,8 +17,9 @@ import epfl.lsr.bachelor.project.values.Value;
  */
 public final class ConcurrentArrayKeyValueStore extends KeyValueStore {
     private static final ConcurrentArrayKeyValueStore INSTANCE = new ConcurrentArrayKeyValueStore();
+    private static final ReaderWriterHelper<Integer> READER_WRITER_HELPER = new ReaderWriterHelper<Integer>();
+    
     private List<Map<String, Value<?>>> mHashMapsList;
-    private Map<Integer, Lock> mLocksMap;
 
     private ConcurrentArrayKeyValueStore() {
         if (INSTANCE != null) {
@@ -28,7 +27,6 @@ public final class ConcurrentArrayKeyValueStore extends KeyValueStore {
         }
 
         mHashMapsList = new ArrayList<Map<String, Value<?>>>();
-        mLocksMap = new HashMap<Integer, Lock>();
 
         for (int i = 0; i < Constants.CONCURRENT_ARRAY_SIZE; i++) {
             mHashMapsList.add(new HashMap<String, Value<?>>());
@@ -42,6 +40,11 @@ public final class ConcurrentArrayKeyValueStore extends KeyValueStore {
      */
     public static ConcurrentArrayKeyValueStore getInstance() {
         return INSTANCE;
+    }
+    
+    @Override
+    public ReaderWriterHelper<Integer> getReaderWriterHelper() {
+        return READER_WRITER_HELPER;
     }
 
     @Override
@@ -61,26 +64,7 @@ public final class ConcurrentArrayKeyValueStore extends KeyValueStore {
 
     @Override
     public void execute(AtomicAction action, String key) {
-        Lock myLock = retrieveLock(getMapIndex(key));
-        myLock.lock();
-        action.performAtomicAction();
-        myLock.unlock();
-    }
-
-    /**
-     * Enables to retrieve the lock associated to the given map (index)
-     * 
-     * @param index
-     * @return the lock associated with the map, if there's no mapping it
-     *         creates one
-     */
-    private synchronized Lock retrieveLock(Integer index) {
-        Lock mapLock = mLocksMap.get(index);
-        if (mapLock != null) {
-            return mapLock;
-        }
-        mLocksMap.put(index, new ReentrantLock());
-        return mLocksMap.get(index);
+        action.performAtomicAction(getMapIndex(key));
     }
 
     /**

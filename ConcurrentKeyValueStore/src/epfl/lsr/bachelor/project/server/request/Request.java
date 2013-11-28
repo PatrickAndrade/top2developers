@@ -6,8 +6,10 @@ import java.nio.channels.SocketChannel;
 import epfl.lsr.bachelor.project.connection.IOConnection;
 import epfl.lsr.bachelor.project.serverNIO.NIOAnswerBuffer;
 import epfl.lsr.bachelor.project.serverNIO.NIOConnectionWorker;
+import epfl.lsr.bachelor.project.store.ConcurrentArrayKeyValueStore;
 import epfl.lsr.bachelor.project.store.HandMadeConcurrentKeyValueStore;
 import epfl.lsr.bachelor.project.store.KeyValueStore;
+import epfl.lsr.bachelor.project.store.ReaderWriterHelper;
 import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
 
@@ -33,6 +35,14 @@ abstract public class Request implements AtomicAction {
 
     // The static reference to the KeyValueStore
     protected static final KeyValueStore KEY_VALUE_STORE = HandMadeConcurrentKeyValueStore.getInstance();
+
+    // The static reference to the ReaderWriterHelper (over keys)
+    protected static final ReaderWriterHelper<String> READER_WRITER_HELPER_OVER_KEYS = HandMadeConcurrentKeyValueStore
+            .getInstance().getReaderWriterHelper();
+
+    // The static reference to the ReaderWriterHelper (over indexes)
+    protected static final ReaderWriterHelper<Integer> READER_WRITER_HELPER_OVER_INDEXES = ConcurrentArrayKeyValueStore
+            .getInstance().getReaderWriterHelper();
 
     /**
      * Default constructor
@@ -123,7 +133,7 @@ abstract public class Request implements AtomicAction {
         return mChannelID;
     }
 
-	/**
+    /**
      * Enables to set the ID of this request
      * 
      * @param mNextRequestID
@@ -154,9 +164,9 @@ abstract public class Request implements AtomicAction {
         mChannel = channel;
         mConnection = null;
     }
-    
+
     public void setNIOAnswerBuffer(NIOAnswerBuffer answerBuffer) {
-    	mNIOAnswerBuffer = answerBuffer;
+        mNIOAnswerBuffer = answerBuffer;
     }
 
     /**
