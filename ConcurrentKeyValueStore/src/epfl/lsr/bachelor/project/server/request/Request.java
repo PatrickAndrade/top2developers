@@ -5,7 +5,7 @@ import java.nio.channels.SocketChannel;
 
 import epfl.lsr.bachelor.project.connection.IOConnection;
 import epfl.lsr.bachelor.project.serverNIO.NIOAnswerBuffer;
-import epfl.lsr.bachelor.project.serverNIO.NIOConnectionWorker;
+import epfl.lsr.bachelor.project.serverNIO.NIOWriterWorker;
 import epfl.lsr.bachelor.project.store.ConcurrentArrayKeyValueStore;
 import epfl.lsr.bachelor.project.store.HandMadeConcurrentKeyValueStore;
 import epfl.lsr.bachelor.project.store.KeyValueStore;
@@ -28,8 +28,7 @@ abstract public class Request implements AtomicAction {
 
     private NIOAnswerBuffer mNIOAnswerBuffer;
     private SocketChannel mChannel;
-    private Integer mChannelID;
-    private NIOConnectionWorker mWorker;
+    private NIOWriterWorker mWorker;
 
     private long mID = 0; // Default value, should be changed calling setID()
 
@@ -129,8 +128,8 @@ abstract public class Request implements AtomicAction {
      * 
      * @return the ID of the connection in NIO mode
      */
-    public Integer getChannelID() {
-        return mChannelID;
+    public SocketChannel getChannel() {
+        return mChannel;
     }
 
     /**
@@ -180,22 +179,12 @@ abstract public class Request implements AtomicAction {
     }
 
     /**
-     * Enables to set the ID of the connection in NIO mode
-     * 
-     * @param channelID
-     *            the ID of the connection in NIO mode
-     */
-    public void setChannelID(Integer channelID) {
-        mChannelID = channelID;
-    }
-
-    /**
      * Enables to set the NIO worker that send the request
      * 
      * @param worker
      *            the NIO worker that send the request
      */
-    public void setWorker(NIOConnectionWorker worker) {
+    public void setWorker(NIOWriterWorker worker) {
         mWorker = worker;
     }
 

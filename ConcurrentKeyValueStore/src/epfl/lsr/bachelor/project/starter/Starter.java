@@ -3,7 +3,6 @@ package epfl.lsr.bachelor.project.starter;
 import java.io.IOException;
 
 import epfl.lsr.bachelor.project.pipe.MultiThreadPipe;
-import epfl.lsr.bachelor.project.pipe.SingleThreadPipe;
 import epfl.lsr.bachelor.project.pipe.WorkerPipeInterface;
 import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.Server;

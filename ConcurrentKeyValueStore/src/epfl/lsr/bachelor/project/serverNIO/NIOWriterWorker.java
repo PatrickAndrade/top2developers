@@ -1,16 +1,15 @@
 package epfl.lsr.bachelor.project.serverNIO;
 
+import java.nio.channels.Channel;
 import java.nio.channels.SocketChannel;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import epfl.lsr.bachelor.project.connection.ConnectionInterface;
-import epfl.lsr.bachelor.project.server.RequestBuffer;
 import epfl.lsr.bachelor.project.server.request.Request;
 import epfl.lsr.bachelor.project.serverNIO.NIOServer.NIOWriter;
-import epfl.lsr.bachelor.project.util.CommandParser;
 
 /**
  * The worker class that perform the request and send the answer to the client
@@ -18,16 +17,13 @@ import epfl.lsr.bachelor.project.util.CommandParser;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class NIOConnectionWorker implements Runnable, ConnectionInterface {
+public class NIOWriterWorker implements Runnable, ConnectionInterface {
 
 	// Enable to retrieve the NIOConnection when we want to answer a request
-	private Map<Integer, NIOConnection> mIDConnectionMap;
+	private Map<Channel, NIOConnection> mChannelConnectionMap;
 
 	// Enable to know when a NIOConnection can send an answer
-	private ConcurrentLinkedQueue<Integer> mReadyChannelQueue;
-
-	private CommandParser mCommandParser;
-	private RequestBuffer mRequestBuffer;
+	private LinkedList<Channel> mReadyChannelQueue;
 
 	private AtomicBoolean mClosed;
 
@@ -40,33 +36,14 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 	 * 
 	 * @param requestBuffer
 	 *            the shared request buffer
-	 * @param mAnswerBuffer 
+	 * @param mAnswerBuffer
 	 */
-	public NIOConnectionWorker(RequestBuffer requestBuffer, NIOAnswerBuffer answerBuffer, NIOWriter writer) {
-		mIDConnectionMap = new ConcurrentHashMap<Integer, NIOConnection>();
-		mCommandParser = new CommandParser();
-		mRequestBuffer = requestBuffer;
+	public NIOWriterWorker(NIOAnswerBuffer answerBuffer, NIOWriter writer) {
+		mChannelConnectionMap = new ConcurrentHashMap<Channel, NIOConnection>();
 		mAnswerBuffer = answerBuffer;
-		mReadyChannelQueue = new ConcurrentLinkedQueue<Integer>();
+		mReadyChannelQueue = new LinkedList<Channel>();
 		mClosed = new AtomicBoolean();
 		mWriter = writer;
-	}
-
-	/**
-	 * Add a request, to the good NIOConnection, to be parsed and perform
-	 * 
-	 * @param command
-	 *            the string request
-	 * @param channelID
-	 *            the id of the NIOConnection
-	 */
-	public void addRequestToPerform(String command, Integer channelID) {
-		Request request = mCommandParser.parse(command);
-		request.setChannelID(channelID);
-		request.setWorker(this);
-		request.setNIOAnswerBuffer(mAnswerBuffer);
-		NIOConnection connection = mIDConnectionMap.get(channelID);
-		connection.addRequestToPerform(request, mRequestBuffer, mAnswerBuffer);
 	}
 
 	/**
@@ -77,9 +54,9 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 	 * @param channelID
 	 *            the id of the NIOConnection
 	 */
-	public void addConnection(SocketChannel socketChannel, int channelID) {
-		mIDConnectionMap.put(channelID, new NIOConnection(socketChannel,
-				channelID, this));
+	public void addConnection(SocketChannel socketChannel, NIOConnection connection) {
+		connection.setWriterWorker(this);
+		mChannelConnectionMap.put(socketChannel, connection);
 	}
 
 	/**
@@ -88,8 +65,8 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 	 * @param channelID
 	 *            the id of the NIOConnection
 	 */
-	public void closeChannel(int channelID) {
-		mIDConnectionMap.remove(channelID);
+	public void closeChannel(Channel channel) {
+		mChannelConnectionMap.remove(channel);
 	}
 
 	/**
@@ -100,8 +77,9 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 	 */
 	@Override
 	public void notifyThatRequestIsPerformed(Request request) {
-		int channelID = request.getChannelID();
-		NIOConnection nioConnection = mIDConnectionMap.get(channelID);
+		request.setNIOAnswerBuffer(mAnswerBuffer);
+		NIOConnection nioConnection = mChannelConnectionMap.get(request
+				.getChannel());
 
 		// Disconnected
 		if (nioConnection == null) {
@@ -111,8 +89,7 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 		nioConnection.addRequestToSend(request);
 
 		if (nioConnection.isReady()) {
-			mReadyChannelQueue.add(channelID);
-			notifyToSendAnAnswer();
+			addNextConnection(request.getChannel());
 		}
 	}
 
@@ -120,19 +97,29 @@ public class NIOConnectionWorker implements Runnable, ConnectionInterface {
 		mClosed.set(true);
 		notifyToSendAnAnswer();
 	}
+	
+	private synchronized void addNextConnection(Channel channel) {
+		mReadyChannelQueue.add(channel);
+		notifyToSendAnAnswer();
+	}
+
+	private synchronized NIOConnection takeNextConnection() {
+		while (!mClosed.get() && mReadyChannelQueue.isEmpty()) {
+			waitToSendAnAnswer();
+		}
+
+		return !mReadyChannelQueue.isEmpty() ? mChannelConnectionMap
+				.get(mReadyChannelQueue.poll()) : null;
+	}
 
 	@Override
 	public void run() {
 		while (!mClosed.get()) {
-			while (mReadyChannelQueue.isEmpty() && !mClosed.get()) {
-				waitToSendAnAnswer();
-			}
 
-			NIOConnection connection = mIDConnectionMap.get(mReadyChannelQueue
-					.poll());
-			
+			NIOConnection connection = takeNextConnection();
+
 			// If the client disconnect when the request is performed
-			if (!mClosed.get() && (connection != null)) {
+			if (connection != null) {
 				connection.sendAnswers();
 				mWriter.send();
 			}

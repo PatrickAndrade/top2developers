@@ -20,9 +20,10 @@ public class NIOConnection {
 
 	private SocketChannel mSocketChannel;
 	private PriorityBlockingQueue<Request> mToSend;
-	private NIOConnectionWorker mWorker;
+	private NIOWriterWorker mWriterWorker;
+	
+	private RequestBuffer mRequestBuffer;
 
-	private int mId;
 	private long mNextRequestID = 0;
 	private long mNextRequestToSend = 0;
 
@@ -36,14 +37,13 @@ public class NIOConnection {
 	 * @param worker
 	 *            the worker that send and perform the request
 	 */
-	public NIOConnection(SocketChannel socketChannel, int channelID,
-			NIOConnectionWorker worker) {
+	public NIOConnection(SocketChannel socketChannel, RequestBuffer requestBuffer) {
 		mSocketChannel = socketChannel;
-		mWorker = worker;
+		
 		mToSend = new PriorityBlockingQueue<>(
 				Constants.NUMBER_OF_PIPELINED_REQUESTS,
 				new RequestsComparator());
-		mId = channelID;
+		mRequestBuffer = requestBuffer;
 	}
 
 	/**
@@ -56,15 +56,15 @@ public class NIOConnection {
 	 *            the request buffer in which we add the request to be performed
 	 * @param mAnswerBuffer 
 	 */
-	public void addRequestToPerform(Request request, RequestBuffer requestBuffer, NIOAnswerBuffer mAnswerBuffer) {
-
-		request.setID(mNextRequestID);
-		request.setChannel(mSocketChannel);
+	public void addRequestToPerform(Request request) {
 
 		// If the request can be performed, we put it in the
 		// buffer
 		if (request.canBePerformed()) {
-			requestBuffer.add(request);
+			request.setID(mNextRequestID);
+			request.setChannel(mSocketChannel);
+			request.setWorker(mWriterWorker);
+			mRequestBuffer.add(request);
 		} else {
 
 			// The only cases in which we achieve this part is
@@ -72,14 +72,13 @@ public class NIOConnection {
 			// either an empty request or an error request
 			if (request.isMessageEmpty()) {
 				request = new ErrRequest(Constants.EMPTY_STRING);
-				request.setID(mNextRequestID);
-				request.setChannelID(mId);
-				request.setChannel(mSocketChannel);
-				request.setNIOAnswerBuffer(mAnswerBuffer);
-				request.setWorker(mWorker);
 			}
+			
+			request.setID(mNextRequestID);
+			request.setChannel(mSocketChannel);
+			request.setWorker(mWriterWorker);
 
-			mWorker.notifyThatRequestIsPerformed(request);
+			mWriterWorker.notifyThatRequestIsPerformed(request);
 		}
 
 		mNextRequestID++;
@@ -118,5 +117,9 @@ public class NIOConnection {
 		Request toSend = mToSend.peek();
 		return (toSend != null)
 				&& (mNextRequestToSend == toSend.getID());
+	}
+	
+	public void setWriterWorker(NIOWriterWorker writerWorker) {
+		mWriterWorker = writerWorker;
 	}
 }
