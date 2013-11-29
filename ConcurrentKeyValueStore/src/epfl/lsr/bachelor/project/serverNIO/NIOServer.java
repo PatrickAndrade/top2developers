@@ -361,8 +361,7 @@ public class NIOServer implements ServerInterface {
 		 * @param socketChannel
 		 * @throws ClosedChannelException
 		 */
-		public synchronized void register(SocketChannel socketChannel)
-				throws ClosedChannelException {
+		public synchronized void register(SocketChannel socketChannel) throws ClosedChannelException {
 			mReaderSelector.wakeup();
 			socketChannel.register(mReaderSelector, SelectionKey.OP_READ);
 		}
@@ -458,8 +457,7 @@ public class NIOServer implements ServerInterface {
 		 * @param socketChannel
 		 * @throws ClosedChannelException
 		 */
-		public synchronized void register(SocketChannel socketChannel)
-				throws ClosedChannelException {
+		public synchronized void register(SocketChannel socketChannel) throws ClosedChannelException {
 			mWriterSelector.wakeup();
 			socketChannel.register(mWriterSelector, SelectionKey.OP_WRITE);
 		}
