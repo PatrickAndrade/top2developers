@@ -67,6 +67,7 @@ public abstract class Value<K> implements Cloneable {
 		if (Utilities.isInteger((String) newValue.getValue())) {
 			newValue = new ValueInteger(Integer.valueOf((String) newValue.getValue()));
 		}
+		
 		return newValue;
 	}
 	

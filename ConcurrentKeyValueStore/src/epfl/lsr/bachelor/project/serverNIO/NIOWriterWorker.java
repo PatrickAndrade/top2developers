@@ -93,6 +93,9 @@ public class NIOWriterWorker implements Runnable, ConnectionInterface {
 		}
 	}
 
+	/**
+	 * Stop this worker
+	 */
 	public void stopWorker() {
 		mClosed.set(true);
 		notifyToSendAnAnswer();

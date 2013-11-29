@@ -119,6 +119,11 @@ public class NIOConnection {
 				&& (mNextRequestToSend == toSend.getID());
 	}
 	
+	/**
+	 * Set the writer that send answer
+	 * 
+	 * @param writerWorker the writer
+	 */
 	public void setWriterWorker(NIOWriterWorker writerWorker) {
 		mWriterWorker = writerWorker;
 	}

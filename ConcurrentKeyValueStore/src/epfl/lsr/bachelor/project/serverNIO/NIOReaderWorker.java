@@ -26,6 +26,11 @@ public class NIOReaderWorker implements Runnable {
 
 	private AtomicBoolean mClosed;
 
+	/**
+	 * Default constructor
+	 * 
+	 * @param requestBuffer
+	 */
 	public NIOReaderWorker(RequestBuffer requestBuffer) {
 		mDataToPerformList = new LinkedList<DataRead>();
 		mCommandParser = new CommandParser();
@@ -46,6 +51,11 @@ public class NIOReaderWorker implements Runnable {
 		mChannelConnectionMap.put(socketChannel, connection);
 	}
 
+	/**
+	 * Add a request to be parsed
+	 * 
+	 * @param dataRead the request and the channel
+	 */
 	public synchronized void addRequestToPerform(DataRead dataRead) {
 		mDataToPerformList.add(dataRead);
 		notify();
@@ -62,10 +72,18 @@ public class NIOReaderWorker implements Runnable {
 		return !mClosed.get() ? mDataToPerformList.removeFirst() : null;
 	}
 
+	/**
+	 * Remove a channel
+	 * 
+	 * @param socketChannel the channel
+	 */
 	public void closeChannel(SocketChannel socketChannel) {
 		mChannelConnectionMap.remove(socketChannel);
 	}
 
+	/**
+	 * Stop this worker
+	 */
 	public synchronized void stop() {
 		mClosed.set(true);
 		notify();

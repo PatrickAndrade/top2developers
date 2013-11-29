@@ -72,6 +72,11 @@ public class NIOAnswerBuffer {
 		mChannelAnswerMap.remove(channel);
 	}
 
+	/**
+	 * Remove an answer that has been send
+	 * 
+	 * @param channel
+	 */
 	public synchronized void removeAnswer(Channel channel) {
 		LinkedList<ByteBuffer> byteBufferList = mChannelAnswerMap.get(channel);
 
