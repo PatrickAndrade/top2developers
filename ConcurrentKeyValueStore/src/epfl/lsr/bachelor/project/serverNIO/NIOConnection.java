@@ -32,10 +32,7 @@ public class NIOConnection {
 	 * 
 	 * @param socketChannel
 	 *            the socket with which we want to communicate
-	 * @param channelID
-	 *            the id of the NIOConnection
-	 * @param worker
-	 *            the worker that send and perform the request
+	 * @param requestBuffer the request buffer
 	 */
 	public NIOConnection(SocketChannel socketChannel, RequestBuffer requestBuffer) {
 		mSocketChannel = socketChannel;
@@ -52,9 +49,6 @@ public class NIOConnection {
 	 * 
 	 * @param request
 	 *            the request to be performed
-	 * @param requestBuffer
-	 *            the request buffer in which we add the request to be performed
-	 * @param mAnswerBuffer 
 	 */
 	public void addRequestToPerform(Request request) {
 

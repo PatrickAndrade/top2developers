@@ -43,8 +43,6 @@ public class NIOReaderWorker implements Runnable {
 	 * 
 	 * @param socketChannel
 	 *            the socket with which we want to communicate
-	 * @param channelID
-	 *            the id of the NIOConnection
 	 */
 	public void addConnection(SocketChannel socketChannel,
 			NIOConnection connection) {

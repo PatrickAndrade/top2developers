@@ -71,8 +71,8 @@ public final class ConcurrentArrayKeyValueStore extends KeyValueStore {
      * Calculates the index of a certain key in order to find to which map it's
      * bind
      * 
-     * @param key
-     * @return
+     * @param key the key
+     * @return the index of the map
      */
     private int getMapIndex(String key) {
         return key.hashCode() % Constants.CONCURRENT_ARRAY_SIZE;

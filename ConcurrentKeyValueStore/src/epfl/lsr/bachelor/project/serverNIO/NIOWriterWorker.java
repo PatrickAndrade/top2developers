@@ -34,9 +34,8 @@ public class NIOWriterWorker implements Runnable, ConnectionInterface {
 	/**
 	 * Default constructor
 	 * 
-	 * @param requestBuffer
-	 *            the shared request buffer
-	 * @param mAnswerBuffer
+	 * @param answerBuffer the answer buffer
+	 * @param writer the nio writer
 	 */
 	public NIOWriterWorker(NIOAnswerBuffer answerBuffer, NIOWriter writer) {
 		mChannelConnectionMap = new ConcurrentHashMap<Channel, NIOConnection>();
@@ -51,8 +50,8 @@ public class NIOWriterWorker implements Runnable, ConnectionInterface {
 	 * 
 	 * @param socketChannel
 	 *            the socket with which we want to communicate
-	 * @param channelID
-	 *            the id of the NIOConnection
+	 * @param connection
+	 *            the nio connection
 	 */
 	public void addConnection(SocketChannel socketChannel, NIOConnection connection) {
 		connection.setWriterWorker(this);
@@ -62,8 +61,8 @@ public class NIOWriterWorker implements Runnable, ConnectionInterface {
 	/**
 	 * Close a connection with a client
 	 * 
-	 * @param channelID
-	 *            the id of the NIOConnection
+	 * @param channel
+	 *            the channel that used in a NIOConnection
 	 */
 	public void closeChannel(Channel channel) {
 		mChannelConnectionMap.remove(channel);
