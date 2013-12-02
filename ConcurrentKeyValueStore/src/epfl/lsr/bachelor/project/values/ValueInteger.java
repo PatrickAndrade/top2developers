@@ -1,5 +1,7 @@
 package epfl.lsr.bachelor.project.values;
 
+import epfl.lsr.bachelor.project.util.Utilities;
+
 /**
  * Integer Value
  * 
@@ -40,4 +42,15 @@ public class ValueInteger extends Value<Integer> {
 		return getValue().toString();
 	}
 
+	public Value<?> append(Value<?> value) {
+		String newValueString = String.valueOf(getValue()) + String.valueOf(value.getValue());
+		Value<?> newValue = null;
+		if (!Utilities.isInteger(newValueString)) {
+			newValue = new ValueString(newValueString);
+		} else {
+			setValue(Integer.valueOf(newValueString));
+		}
+		
+		return newValue;
+	}
 }

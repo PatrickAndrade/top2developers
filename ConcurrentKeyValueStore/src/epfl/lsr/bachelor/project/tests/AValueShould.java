@@ -99,6 +99,7 @@ public class AValueShould {
 		mValue = new ValueString("String");
 		final int number = 3;
 		Value<Integer> value = new ValueInteger(number);
-		assertEquals("Can't union two value!", "String3", mValue.append(value).getValue());
+		mValue.append(value);
+		assertEquals("Can't union two value!", "String3", mValue.getValue());
 	}
 }

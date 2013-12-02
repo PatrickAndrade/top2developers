@@ -2,6 +2,7 @@ package epfl.lsr.bachelor.project.serverNIO;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.Channel;
+import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -83,5 +84,16 @@ public class NIOAnswerBuffer {
 		if ((byteBufferList != null) && !byteBufferList.isEmpty()) {
 			byteBufferList.removeFirst();
 		}
+	}
+
+	/**
+	 * Check if the list of answer is empty for a channel
+	 * 
+	 * @param socketChannel the channel
+	 * @return <code>true</code> if the list is empty or if it's <code>null</code>
+	 */
+	public synchronized boolean isEmpty(SocketChannel socketChannel) {
+		LinkedList<ByteBuffer> byteBufferList = mChannelAnswerMap.get(socketChannel);
+		return (byteBufferList == null) || byteBufferList.isEmpty();
 	}
 }

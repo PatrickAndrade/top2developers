@@ -1,5 +1,7 @@
 package epfl.lsr.bachelor.project.values;
 
+import epfl.lsr.bachelor.project.util.Utilities;
+
 
 /**
  * String Value
@@ -35,5 +37,16 @@ public class ValueString extends Value<String> {
 	public String toString() {
 		return getValue();
 	}
-
+	
+	public Value<?> append(Value<?> value) {
+		String newValueString = String.valueOf(getValue()) + String.valueOf(value.getValue());
+		Value<?> newValue = null;
+		if (Utilities.isInteger(newValueString)) {
+			newValue = new ValueInteger(Integer.valueOf(newValueString));
+		} else {
+			setValue(newValueString);
+		}
+		
+		return newValue;
+	}
 }

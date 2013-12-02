@@ -123,7 +123,7 @@ public class NIOWriterWorker implements Runnable, ConnectionInterface {
 			// If the client disconnect when the request is performed
 			if (connection != null) {
 				connection.sendAnswers();
-				mWriter.send();
+				mWriter.send(connection.getChannel());
 			}
 		}
 	}

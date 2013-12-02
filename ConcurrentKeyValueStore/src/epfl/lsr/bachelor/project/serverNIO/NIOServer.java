@@ -140,7 +140,6 @@ public class NIOServer implements ServerInterface {
 		mChannelReadMap.put(socketChannel, "");
 
 		mReader.register(socketChannel);
-		mWriter.register(socketChannel);
 
 		System.out.println("  -> Started connection with "
 				+ mInetSocketAddress.getAddress());
@@ -324,16 +323,17 @@ public class NIOServer implements ServerInterface {
 							: (dataAlreadyReadArray.length - 1);
 
 					for (int i = 0; i < commandToPerformInArraySize; i++) {
-						
+
 						// If we use telnet, we must remove the last
 						// caracter
 						if (dataAlreadyReadArray[i]
 								.charAt(dataAlreadyReadArray[i].length() - 1) == Constants.NIO_TELNET_LAST_CHAR) {
 							dataAlreadyReadArray[i] = dataAlreadyReadArray[i]
-									.substring(0, dataAlreadyReadArray[i]
-											.length() - 1);
+									.substring(
+											0,
+											dataAlreadyReadArray[i].length() - 1);
 						}
-						
+
 						if (dataAlreadyReadArray[i]
 								.equals(Constants.QUIT_COMMAND)) {
 							closeChannel(key);
@@ -439,15 +439,22 @@ public class NIOServer implements ServerInterface {
 			SocketChannel socketChannel = (SocketChannel) key.channel();
 			ByteBuffer dataToSend = mAnswerBuffer.get(socketChannel);
 
+			// If the client disconnect suddenly
 			if (dataToSend == null) {
 				return;
 			}
 
 			socketChannel.write(dataToSend);
 
-			// We successfull send the answer
+			// We successful send the answer
 			if (dataToSend.remaining() == 0) {
 				mAnswerBuffer.removeAnswer(socketChannel);
+
+				if (mAnswerBuffer.isEmpty(socketChannel)) {
+					synchronized (this) {
+						key.interestOps(SelectionKey.OP_READ);
+					}
+				}
 			}
 		}
 
@@ -478,7 +485,7 @@ public class NIOServer implements ServerInterface {
 
 					// Wait for an event
 					mWriterSelector.select();
-
+					
 					// Needed to avoid a call of select if we register a channel
 					synchronized (this) {
 					}
@@ -510,8 +517,11 @@ public class NIOServer implements ServerInterface {
 			}
 		}
 
-		public synchronized void send() {
-			mWriterSelector.wakeup();
+		public void send(SocketChannel socketChannel) {
+			try {
+				register(socketChannel);
+			} catch (ClosedChannelException e) {
+			}
 		}
 	}
 }

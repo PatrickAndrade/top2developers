@@ -121,4 +121,8 @@ public class NIOConnection {
 	public void setWriterWorker(NIOWriterWorker writerWorker) {
 		mWriterWorker = writerWorker;
 	}
+
+	public SocketChannel getChannel() {
+		return mSocketChannel;
+	}
 }
