@@ -23,7 +23,7 @@ public class AValueShould {
 	public void enableToBeInitializedAsValueString() {
 		final String value = "testValue";
 		mValue = new ValueString(value);
-		assertEquals(value, (String) mValue.getValue());
+		assertEquals(value, ((StringBuilder) mValue.getValue()).toString());
 	}
 
 	@Test
@@ -42,11 +42,11 @@ public class AValueShould {
 		mValue.increment(1);
 		assertEquals(
 				"The ValueString should not support increment/decrement command",
-				"testValue", mValue.getValue());
+				"testValue", ((StringBuilder) mValue.getValue()).toString());
 		mValue.decrement(1);
 		assertEquals(
 				"The ValueString should not support increment/decrement command",
-				"testValue", mValue.getValue());
+				"testValue", ((StringBuilder) mValue.getValue()).toString());
 	}
 
 	@Test
@@ -93,13 +93,14 @@ public class AValueShould {
 		mValue.increment(increment);
 		assertEquals(minValue, ((Integer) mValue.getValue()).intValue());
 	}
-	
+
 	@Test
 	public void canAppendAValueStringWithAValueInteger() {
 		mValue = new ValueString("String");
 		final int number = 3;
 		Value<Integer> value = new ValueInteger(number);
 		mValue.append(value);
-		assertEquals("Can't union two value!", "String3", mValue.getValue());
+		assertEquals("Can't union two value!", "String3",
+				((StringBuilder) mValue.getValue()).toString());
 	}
 }

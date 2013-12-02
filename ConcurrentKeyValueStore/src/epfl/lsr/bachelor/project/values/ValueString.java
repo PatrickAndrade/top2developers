@@ -1,17 +1,15 @@
 package epfl.lsr.bachelor.project.values;
 
-
-
 /**
  * String Value
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class ValueString extends Value<String> {
-	
+public class ValueString extends Value<StringBuilder> {
+
 	public ValueString(String value) {
-		super(value);
+		super(new StringBuilder(value));
 	}
 
 	@Override
@@ -27,19 +25,22 @@ public class ValueString extends Value<String> {
 	}
 
 	@Override
-	//This method has no effect since Strings cannot be decremented
+	// This method has no effect since Strings cannot be decremented
 	public void decrement(int k) {
 		return;
 	}
 
 	@Override
 	public String toString() {
-		return getValue();
+		return getValue().toString();
 	}
-	
+
 	public Value<?> append(Value<?> value) {
-		String newValueString = String.valueOf(getValue()) + String.valueOf(value.getValue());
-		setValue(newValueString);
+		if (value.supportIncrementDecrement()) {
+			getValue().append(value.getValue());
+		} else {
+			getValue().append(((StringBuilder) value.getValue()).toString());
+		}
 		return null;
 	}
 }

@@ -148,7 +148,7 @@ public abstract class KeyValueStore {
 		if (value.supportIncrementDecrement()) {
 			return "(integer) " + value.getValue();
 		} else {
-			return "(integer) " + ((String) value.getValue()).length();
+			return "(integer) " + ((StringBuilder) value.getValue()).length();
 		}
 	}
 
