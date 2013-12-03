@@ -7,7 +7,9 @@ import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Implementation of the key value store. Use simply the existing map.
+ * Implementation of a K-V store that should be used with a
+ * multi-threaded architecture. This uses a lock for each key as
+ * synchronization mechanism
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 

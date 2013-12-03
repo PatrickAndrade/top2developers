@@ -7,7 +7,7 @@ import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Implementation of a simple K-V store that should be used only with a
+ * Implementation of a K-V store that should be used only with a
  * single-threaded architecture. Otherwise this will not ensure any kind of
  * synchronization
  * 

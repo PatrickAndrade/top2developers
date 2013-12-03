@@ -9,34 +9,36 @@ import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Implementation of a concurrent key value store.
+ * Implementation of a K-V store that should be used with a
+ * multi-threaded architecture. This uses a simple lock for all the keys as
+ * synchronization mechanism
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
 public final class KeyValueStoreWithGlobalLock extends KeyValueStore {
 
-	private static final KeyValueStoreWithGlobalLock INSTANCE = new KeyValueStoreWithGlobalLock();
-	private static final ReadWriteLock GLOBAL_LOCK = new ReentrantReadWriteLock();
-	
-	private Map<String, Value<?>> mMap;
+    private static final KeyValueStoreWithGlobalLock INSTANCE = new KeyValueStoreWithGlobalLock();
+    private static final ReadWriteLock GLOBAL_LOCK = new ReentrantReadWriteLock();
 
-	private KeyValueStoreWithGlobalLock() {
-		if (INSTANCE != null) {
-			throw new IllegalStateException("Already instantiated");
-		}
-		mMap = new HashMap<String, Value<?>>();
-	}
+    private Map<String, Value<?>> mMap;
 
-	/**
-	 * Enables to get the unique instance of the Key-Value store
-	 * 
-	 * @return the Key-Value store instance
-	 */
-	public static KeyValueStoreWithGlobalLock getInstance() {
-		return INSTANCE;
-	}
-	
+    private KeyValueStoreWithGlobalLock() {
+        if (INSTANCE != null) {
+            throw new IllegalStateException("Already instantiated");
+        }
+        mMap = new HashMap<String, Value<?>>();
+    }
+
+    /**
+     * Enables to get the unique instance of the Key-Value store
+     * 
+     * @return the Key-Value store instance
+     */
+    public static KeyValueStoreWithGlobalLock getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public Value<?> get(String key) {
         return mMap.get(key);

@@ -10,7 +10,9 @@ import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Implementation of the key value store. Thought as multiples HashMaps
+ * Implementation of a K-V store that should be used with a multi-threaded
+ * architecture. This uses a lock for each map where a key is binded as
+ * synchronization mechanism
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -18,7 +20,7 @@ import epfl.lsr.bachelor.project.values.Value;
 public final class KeyValueStoreWithMapLocks extends KeyValueStore {
     private static final KeyValueStoreWithMapLocks INSTANCE = new KeyValueStoreWithMapLocks();
     private static final ReaderWriterHelper<Integer> READER_WRITER_HELPER = new ReaderWriterHelper<Integer>();
-    
+
     private List<Map<String, Value<?>>> mHashMapsList;
 
     private KeyValueStoreWithMapLocks() {
@@ -67,7 +69,8 @@ public final class KeyValueStoreWithMapLocks extends KeyValueStore {
      * Calculates the index of a certain key in order to find to which map it's
      * bind
      * 
-     * @param key the key
+     * @param key
+     *            the key
      * @return the index of the map
      */
     private int getMapIndex(String key) {
