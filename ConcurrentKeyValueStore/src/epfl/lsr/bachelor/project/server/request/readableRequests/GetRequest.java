@@ -1,5 +1,6 @@
-package epfl.lsr.bachelor.project.server.request;
+package epfl.lsr.bachelor.project.server.request.readableRequests;
 
+import epfl.lsr.bachelor.project.server.request.ReadRequest;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
@@ -8,7 +9,7 @@ import epfl.lsr.bachelor.project.values.Value;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class GetRequest extends Request {
+public class GetRequest extends ReadRequest {
 
     /**
      * Construct the get-request with the key that maps the wanted value
@@ -18,22 +19,6 @@ public class GetRequest extends Request {
      */
     public GetRequest(String key) {
         super(key);
-    }
-
-    @Override
-    public void performAtomicAction(String key) {
-        READER_WRITER_HELPER_OVER_KEYS.initRead(key);
-        performAction();
-        READER_WRITER_HELPER_OVER_KEYS.endRead(key);
-        notifyRequestPerformed(this);
-    }
-
-    @Override
-    public void performAtomicAction(int index) {
-        READER_WRITER_HELPER_OVER_INDEXES.initRead(index);
-        performAction();
-        READER_WRITER_HELPER_OVER_INDEXES.endRead(index);
-        notifyRequestPerformed(this);
     }
 
     @Override

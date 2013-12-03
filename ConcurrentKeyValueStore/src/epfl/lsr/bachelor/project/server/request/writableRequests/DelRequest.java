@@ -1,5 +1,6 @@
-package epfl.lsr.bachelor.project.server.request;
+package epfl.lsr.bachelor.project.server.request.writableRequests;
 
+import epfl.lsr.bachelor.project.server.request.WriteRequest;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
@@ -8,7 +9,7 @@ import epfl.lsr.bachelor.project.util.Constants;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class DelRequest extends Request {
+public class DelRequest extends WriteRequest {
 
     /**
      * Construct the deletion-request with the key that maps the value that we
@@ -19,22 +20,6 @@ public class DelRequest extends Request {
      */
     public DelRequest(String key) {
         super(key);
-    }
-
-    @Override
-    public void performAtomicAction(String key) {
-        READER_WRITER_HELPER_OVER_KEYS.initWrite(key);
-        performAction();
-        READER_WRITER_HELPER_OVER_KEYS.endWrite(key);
-        notifyRequestPerformed(this);
-    }
-
-    @Override
-    public void performAtomicAction(int index) {
-        READER_WRITER_HELPER_OVER_INDEXES.initWrite(index);
-        performAction();
-        READER_WRITER_HELPER_OVER_INDEXES.endWrite(index);
-        notifyRequestPerformed(this);
     }
 
     @Override

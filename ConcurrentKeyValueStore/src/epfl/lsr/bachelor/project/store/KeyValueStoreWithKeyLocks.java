@@ -12,14 +12,14 @@ import epfl.lsr.bachelor.project.values.Value;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
+public final class KeyValueStoreWithKeyLocks extends KeyValueStore {
 
-    private static final HandMadeConcurrentKeyValueStore INSTANCE = new HandMadeConcurrentKeyValueStore();
+    private static final KeyValueStoreWithKeyLocks INSTANCE = new KeyValueStoreWithKeyLocks();
     private static final ReaderWriterHelper<String> READER_WRITER_HELPER = new ReaderWriterHelper<String>();
     
     private Map<String, Value<?>> mMap;
 
-    private HandMadeConcurrentKeyValueStore() {
+    private KeyValueStoreWithKeyLocks() {
         if (INSTANCE != null) {
             throw new IllegalStateException("Already instantiated");
         }
@@ -32,13 +32,8 @@ public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
      * 
      * @return the Key-Value store instance
      */
-    public static HandMadeConcurrentKeyValueStore getInstance() {
+    public static KeyValueStoreWithKeyLocks getInstance() {
         return INSTANCE;
-    }
-    
-    @Override
-    public ReaderWriterHelper<String> getReaderWriterHelper() {
-        return READER_WRITER_HELPER;
     }
 
     @Override
@@ -58,6 +53,6 @@ public final class HandMadeConcurrentKeyValueStore extends KeyValueStore {
 
     @Override
     public void execute(AtomicAction action, String key) {
-        action.performAtomicAction(key);
+        action.performAtomicAction(READER_WRITER_HELPER.retrieveLock(key));
     }
 }

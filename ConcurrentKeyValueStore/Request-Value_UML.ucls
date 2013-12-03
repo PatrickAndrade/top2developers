@@ -41,10 +41,10 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="epfl.lsr.bachelor.project.server.request.GetRequest" 
+  <class id="5" language="java" name="epfl.lsr.bachelor.project.server.request.readableRequests.GetRequest" 
     project="ConcurrentKeyValueStore" 
-    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/request/GetRequest.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/request/readableRequests/GetRequest.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="157" y="438"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -52,10 +52,10 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="epfl.lsr.bachelor.project.server.request.SetRequest" 
+  <class id="6" language="java" name="epfl.lsr.bachelor.project.server.request.writableRequests.SetRequest" 
     project="ConcurrentKeyValueStore" 
-    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/request/SetRequest.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/request/writableRequests/SetRequest.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="262" y="549"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -63,10 +63,10 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="epfl.lsr.bachelor.project.server.request.DelRequest" 
+  <class id="7" language="java" name="epfl.lsr.bachelor.project.server.request.writableRequests.DelRequest" 
     project="ConcurrentKeyValueStore" 
-    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/request/DelRequest.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/request/writableRequests/DelRequest.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="380" y="661"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -74,10 +74,10 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="epfl.lsr.bachelor.project.server.request.IncrRequest" 
+  <class id="8" language="java" name="epfl.lsr.bachelor.project.server.request.writableRequests.IncrRequest" 
     project="ConcurrentKeyValueStore" 
-    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/request/IncrRequest.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/request/writableRequests/IncrRequest.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="499" y="550"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -85,10 +85,10 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="epfl.lsr.bachelor.project.server.request.DecrRequest" 
+  <class id="9" language="java" name="epfl.lsr.bachelor.project.server.request.writableRequests.DecrRequest" 
     project="ConcurrentKeyValueStore" 
-    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/request/DecrRequest.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+    file="/ConcurrentKeyValueStore/src/epfl/lsr/bachelor/project/server/request/writableRequests/DecrRequest.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="604" y="437"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

@@ -3,23 +3,19 @@ package epfl.lsr.bachelor.project.server.request;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**
- * Represent a readable request
+ * Represent a void request (like ping requests for example)
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public abstract class ReadRequest extends Request {
+public abstract class VoidRequest extends Request {
 
-    public ReadRequest(String key) {
+    public VoidRequest(String key) {
         super(key);
     }
     
     @Override
     public void performAtomicAction(ReadWriteLock lock) {
-        lock.readLock().lock();
-        performAction();
-        lock.readLock().unlock();
-        notifyRequestPerformed(this);
     }
 
 }

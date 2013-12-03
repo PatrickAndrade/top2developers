@@ -5,9 +5,9 @@ import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import epfl.lsr.bachelor.project.server.RequestBuffer;
-import epfl.lsr.bachelor.project.server.request.ErrRequest;
 import epfl.lsr.bachelor.project.server.request.Request;
 import epfl.lsr.bachelor.project.server.request.RequestsComparator;
+import epfl.lsr.bachelor.project.server.request.voidRequests.ErrRequest;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**

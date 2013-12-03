@@ -1,7 +1,9 @@
 package epfl.lsr.bachelor.project.store;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.values.Value;
@@ -12,18 +14,18 @@ import epfl.lsr.bachelor.project.values.Value;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public final class ConcurrentKeyValueStore extends KeyValueStore {
+public final class KeyValueStoreWithGlobalLock extends KeyValueStore {
 
-	private static final ConcurrentKeyValueStore INSTANCE = new ConcurrentKeyValueStore();
-	private static final ReaderWriterHelper<String> READER_WRITER_HELPER = new ReaderWriterHelper<String>();
+	private static final KeyValueStoreWithGlobalLock INSTANCE = new KeyValueStoreWithGlobalLock();
+	private static final ReadWriteLock GLOBAL_LOCK = new ReentrantReadWriteLock();
 	
 	private Map<String, Value<?>> mMap;
 
-	private ConcurrentKeyValueStore() {
+	private KeyValueStoreWithGlobalLock() {
 		if (INSTANCE != null) {
 			throw new IllegalStateException("Already instantiated");
 		}
-		mMap = new ConcurrentHashMap<String, Value<?>>();
+		mMap = new HashMap<String, Value<?>>();
 	}
 
 	/**
@@ -31,14 +33,9 @@ public final class ConcurrentKeyValueStore extends KeyValueStore {
 	 * 
 	 * @return the Key-Value store instance
 	 */
-	public static ConcurrentKeyValueStore getInstance() {
+	public static KeyValueStoreWithGlobalLock getInstance() {
 		return INSTANCE;
 	}
-	
-    @Override
-    public ReaderWriterHelper<String> getReaderWriterHelper() {
-        return READER_WRITER_HELPER;
-    }
 	
     @Override
     public Value<?> get(String key) {
@@ -56,7 +53,7 @@ public final class ConcurrentKeyValueStore extends KeyValueStore {
     }
 
     @Override
-    public synchronized void execute(AtomicAction action, String key) {
-        action.performAtomicAction(key);
+    public void execute(AtomicAction action, String key) {
+        action.performAtomicAction(GLOBAL_LOCK);
     }
 }

@@ -1,4 +1,6 @@
-package epfl.lsr.bachelor.project.server.request;
+package epfl.lsr.bachelor.project.server.request.writableRequests;
+
+import epfl.lsr.bachelor.project.server.request.WriteRequest;
 
 /**
  * Represent an (h)increment request received from the client
@@ -6,7 +8,7 @@ package epfl.lsr.bachelor.project.server.request;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class IncrRequest extends Request {
+public class IncrRequest extends WriteRequest {
     private int mIncrement;
 
     /**
@@ -20,22 +22,6 @@ public class IncrRequest extends Request {
     public IncrRequest(String key, int increment) {
         super(key);
         mIncrement = increment;
-    }
-
-    @Override
-    public void performAtomicAction(String key) {
-        READER_WRITER_HELPER_OVER_KEYS.initWrite(key);
-        performAction();
-        READER_WRITER_HELPER_OVER_KEYS.endWrite(key);
-        notifyRequestPerformed(this);
-    }
-
-    @Override
-    public void performAtomicAction(int index) {
-        READER_WRITER_HELPER_OVER_INDEXES.initWrite(index);
-        performAction();
-        READER_WRITER_HELPER_OVER_INDEXES.endWrite(index);
-        notifyRequestPerformed(this);
     }
 
     @Override

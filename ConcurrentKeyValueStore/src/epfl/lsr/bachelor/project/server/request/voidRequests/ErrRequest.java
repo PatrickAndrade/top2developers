@@ -1,4 +1,6 @@
-package epfl.lsr.bachelor.project.server.request;
+package epfl.lsr.bachelor.project.server.request.voidRequests;
+
+import epfl.lsr.bachelor.project.server.request.VoidRequest;
 
 /**
  * Represent an error of command requested
@@ -6,7 +8,7 @@ package epfl.lsr.bachelor.project.server.request;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class ErrRequest extends Request {
+public class ErrRequest extends VoidRequest {
 
     /**
      * Construct an error request that will simply contain an error-message
@@ -22,14 +24,6 @@ public class ErrRequest extends Request {
     @Override
     public boolean canBePerformed() {
         return false;
-    }
-
-    @Override
-    public void performAtomicAction(String key) {
-    }
-
-    @Override
-    public void performAtomicAction(int index) {
     }
 
     @Override

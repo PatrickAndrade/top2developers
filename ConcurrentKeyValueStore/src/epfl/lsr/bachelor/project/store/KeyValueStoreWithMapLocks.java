@@ -15,13 +15,13 @@ import epfl.lsr.bachelor.project.values.Value;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public final class ConcurrentArrayKeyValueStore extends KeyValueStore {
-    private static final ConcurrentArrayKeyValueStore INSTANCE = new ConcurrentArrayKeyValueStore();
+public final class KeyValueStoreWithMapLocks extends KeyValueStore {
+    private static final KeyValueStoreWithMapLocks INSTANCE = new KeyValueStoreWithMapLocks();
     private static final ReaderWriterHelper<Integer> READER_WRITER_HELPER = new ReaderWriterHelper<Integer>();
     
     private List<Map<String, Value<?>>> mHashMapsList;
 
-    private ConcurrentArrayKeyValueStore() {
+    private KeyValueStoreWithMapLocks() {
         if (INSTANCE != null) {
             throw new IllegalStateException("Already instantiated");
         }
@@ -38,13 +38,8 @@ public final class ConcurrentArrayKeyValueStore extends KeyValueStore {
      * 
      * @return the Key-Value store instance
      */
-    public static ConcurrentArrayKeyValueStore getInstance() {
+    public static KeyValueStoreWithMapLocks getInstance() {
         return INSTANCE;
-    }
-    
-    @Override
-    public ReaderWriterHelper<Integer> getReaderWriterHelper() {
-        return READER_WRITER_HELPER;
     }
 
     @Override
@@ -64,7 +59,8 @@ public final class ConcurrentArrayKeyValueStore extends KeyValueStore {
 
     @Override
     public void execute(AtomicAction action, String key) {
-        action.performAtomicAction(getMapIndex(key));
+        int index = getMapIndex(key);
+        action.performAtomicAction(READER_WRITER_HELPER.retrieveLock(index));
     }
 
     /**

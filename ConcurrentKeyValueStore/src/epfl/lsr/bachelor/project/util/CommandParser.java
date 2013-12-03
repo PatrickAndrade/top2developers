@@ -1,14 +1,14 @@
 package epfl.lsr.bachelor.project.util;
 
-import epfl.lsr.bachelor.project.server.request.AppendRequest;
-import epfl.lsr.bachelor.project.server.request.DecrRequest;
-import epfl.lsr.bachelor.project.server.request.DelRequest;
-import epfl.lsr.bachelor.project.server.request.ErrRequest;
-import epfl.lsr.bachelor.project.server.request.GetRequest;
-import epfl.lsr.bachelor.project.server.request.IncrRequest;
-import epfl.lsr.bachelor.project.server.request.PingRequest;
 import epfl.lsr.bachelor.project.server.request.Request;
-import epfl.lsr.bachelor.project.server.request.SetRequest;
+import epfl.lsr.bachelor.project.server.request.readableRequests.GetRequest;
+import epfl.lsr.bachelor.project.server.request.voidRequests.ErrRequest;
+import epfl.lsr.bachelor.project.server.request.voidRequests.PingRequest;
+import epfl.lsr.bachelor.project.server.request.writableRequests.AppendRequest;
+import epfl.lsr.bachelor.project.server.request.writableRequests.DecrRequest;
+import epfl.lsr.bachelor.project.server.request.writableRequests.DelRequest;
+import epfl.lsr.bachelor.project.server.request.writableRequests.IncrRequest;
+import epfl.lsr.bachelor.project.server.request.writableRequests.SetRequest;
 import epfl.lsr.bachelor.project.values.Value;
 import epfl.lsr.bachelor.project.values.ValueInteger;
 import epfl.lsr.bachelor.project.values.ValueString;

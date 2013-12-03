@@ -1,4 +1,6 @@
-package epfl.lsr.bachelor.project.server.request;
+package epfl.lsr.bachelor.project.server.request.writableRequests;
+
+import epfl.lsr.bachelor.project.server.request.WriteRequest;
 
 /**
  * Represent an decrement request received from the client
@@ -6,7 +8,7 @@ package epfl.lsr.bachelor.project.server.request;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class DecrRequest extends Request {
+public class DecrRequest extends WriteRequest {
     private int mDecrement;
 
     /**
@@ -21,22 +23,6 @@ public class DecrRequest extends Request {
     public DecrRequest(String key, int decrement) {
         super(key);
         mDecrement = decrement;
-    }
-
-    @Override
-    public void performAtomicAction(String key) {
-        READER_WRITER_HELPER_OVER_KEYS.initWrite(getKey());
-        performAction();
-        READER_WRITER_HELPER_OVER_KEYS.endWrite(getKey());
-        notifyRequestPerformed(this);
-    }
-
-    @Override
-    public void performAtomicAction(int index) {
-        READER_WRITER_HELPER_OVER_INDEXES.initWrite(index);
-        performAction();
-        READER_WRITER_HELPER_OVER_INDEXES.endWrite(index);
-        notifyRequestPerformed(this);
     }
 
     @Override

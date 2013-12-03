@@ -1,5 +1,6 @@
-package epfl.lsr.bachelor.project.server.request;
+package epfl.lsr.bachelor.project.server.request.writableRequests;
 
+import epfl.lsr.bachelor.project.server.request.WriteRequest;
 import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
 
@@ -9,7 +10,7 @@ import epfl.lsr.bachelor.project.values.Value;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class SetRequest extends Request {
+public class SetRequest extends WriteRequest {
 
     /**
      * Construct the set-request with the key and the value associated
@@ -21,22 +22,6 @@ public class SetRequest extends Request {
      */
     public SetRequest(String key, Value<?> value) {
         super(key, value);
-    }
-
-    @Override
-    public void performAtomicAction(String key) {
-        READER_WRITER_HELPER_OVER_KEYS.initWrite(key);
-        performAction();
-        READER_WRITER_HELPER_OVER_KEYS.endWrite(key);
-        notifyRequestPerformed(this);
-    }
-
-    @Override
-    public void performAtomicAction(int index) {
-        READER_WRITER_HELPER_OVER_INDEXES.initWrite(index);
-        performAction();
-        READER_WRITER_HELPER_OVER_INDEXES.endWrite(index);
-        notifyRequestPerformed(this);
     }
 
     @Override

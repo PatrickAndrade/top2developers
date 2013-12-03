@@ -1,4 +1,6 @@
-package epfl.lsr.bachelor.project.server.request;
+package epfl.lsr.bachelor.project.server.request.voidRequests;
+
+import epfl.lsr.bachelor.project.server.request.VoidRequest;
 
 /**
  * Represent a get request received from the client
@@ -6,19 +8,11 @@ package epfl.lsr.bachelor.project.server.request;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class PingRequest extends Request {
+public class PingRequest extends VoidRequest {
 
     public PingRequest() {
         super(null);
         setMessageToReturn("pong");
-    }
-
-    @Override
-    public void performAtomicAction(String key) {
-    }
-
-    @Override
-    public void performAtomicAction(int index) {
     }
 
     @Override

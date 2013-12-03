@@ -15,14 +15,6 @@ import epfl.lsr.bachelor.project.values.ValueInteger;
 public abstract class KeyValueStore {
 
 	/**
-	 * Enables to retrieve the instance of the helper associated to this
-	 * implementation of the KV
-	 * 
-	 * @return the helper
-	 */
-	public abstract ReaderWriterHelper<?> getReaderWriterHelper();
-
-	/**
 	 * Enables to perform some atomic action in the KV
 	 * 
 	 * @param action
