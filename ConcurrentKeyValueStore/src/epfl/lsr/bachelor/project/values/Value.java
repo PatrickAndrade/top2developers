@@ -7,7 +7,7 @@ package epfl.lsr.bachelor.project.values;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public abstract class Value<K> implements Cloneable {
+public abstract class Value<K> {
 	private K mValue;
 
 	/**
