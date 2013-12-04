@@ -122,6 +122,11 @@ public class NIOConnection {
 		mWriterWorker = writerWorker;
 	}
 
+	/**
+	 * Get the channel of this connection
+	 * 
+	 * @return the channel
+	 */
 	public SocketChannel getChannel() {
 		return mSocketChannel;
 	}

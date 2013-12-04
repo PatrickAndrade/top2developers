@@ -34,8 +34,10 @@ public class NIOWriterWorker implements Runnable, ConnectionInterface {
 	/**
 	 * Default constructor
 	 * 
-	 * @param answerBuffer the answer buffer
-	 * @param writer the nio writer
+	 * @param answerBuffer
+	 *            the answer buffer
+	 * @param writer
+	 *            the nio writer
 	 */
 	public NIOWriterWorker(NIOAnswerBuffer answerBuffer, NIOWriter writer) {
 		mChannelConnectionMap = new ConcurrentHashMap<Channel, NIOConnection>();
@@ -53,7 +55,8 @@ public class NIOWriterWorker implements Runnable, ConnectionInterface {
 	 * @param connection
 	 *            the nio connection
 	 */
-	public void addConnection(SocketChannel socketChannel, NIOConnection connection) {
+	public void addConnection(SocketChannel socketChannel,
+			NIOConnection connection) {
 		connection.setWriterWorker(this);
 		mChannelConnectionMap.put(socketChannel, connection);
 	}
@@ -69,7 +72,8 @@ public class NIOWriterWorker implements Runnable, ConnectionInterface {
 	}
 
 	/**
-	 * Notify the worker that he can now send an answer
+	 * Notify the worker that a request is performed and wake up the thread if
+	 * it's the next request expected to be send
 	 * 
 	 * @param request
 	 *            the request that he can answer
@@ -99,7 +103,7 @@ public class NIOWriterWorker implements Runnable, ConnectionInterface {
 		mClosed.set(true);
 		notifyToSendAnAnswer();
 	}
-	
+
 	private synchronized void addNextConnection(Channel channel) {
 		mReadyChannelQueue.add(channel);
 		notifyToSendAnAnswer();
