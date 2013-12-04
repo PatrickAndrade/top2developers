@@ -6,7 +6,7 @@ import epfl.lsr.bachelor.project.client.PipelinedClient;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * General Benchmark
+ * General Benchmark enables to send several requests with several clients
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -16,18 +16,23 @@ public class GeneralBenchmarkPipelined {
 	private String[] mRequest;
 	private int[] mNumberOfSend;
 	private Thread[] mClients;
-	private static final long TEN_POWER_SIX = (long) Math.pow(10, 6);
-	private static final long TEN_POWER_THREE = (long) Math.pow(10, 3);
+	private static final long TEN_POWER_SIX = 1000000;
+	private static final long TEN_POWER_THREE = 1000;
 
 	/**
 	 * Default constructor
 	 * 
-	 * @param request
-	 * @param numberOfSend
-	 * @param numberClient
+	 * @param request the array of request
+	 * @param numberOfSend the array of number of time a request is send
+	 * @param numberClient the number of client (must be greater or equals than 1)
 	 */
 	public GeneralBenchmarkPipelined(String[] request, int[] numberOfSend,
 			int numberClient) {
+		
+		if (numberClient < 1) {
+			throw new IllegalArgumentException("numberClient < 1");
+		}
+		
 		mRequest = request;
 		mNumberOfSend = numberOfSend;
 

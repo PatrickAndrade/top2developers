@@ -6,7 +6,7 @@ package epfl.lsr.bachelor.project.benchmarks;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class SetAValueAndGetItBenchmark {
+public class SetGetItBenchmark {
 	public static void main(String[] args) {
 		int numberClient = 50;
 		String[] request = { "set a 2", "get a" };

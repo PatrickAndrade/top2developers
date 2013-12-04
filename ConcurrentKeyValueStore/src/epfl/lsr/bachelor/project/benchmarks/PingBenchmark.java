@@ -1,6 +1,6 @@
 package epfl.lsr.bachelor.project.benchmarks;
 /**
- * A ebnchmark that send ping command
+ * A benchmark that send ping command
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
