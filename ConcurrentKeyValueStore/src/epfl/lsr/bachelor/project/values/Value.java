@@ -2,7 +2,7 @@ package epfl.lsr.bachelor.project.values;
 
 
 /**
- * Abstract Value contained in the Key-Value store
+ * This is an abstract value contained in the KV-store
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -11,15 +11,17 @@ public abstract class Value<K> {
 	private K mValue;
 
 	/**
-	 * Constructor of the object
+	 * Constructor of the value
+	 * 
 	 * @param value the value to be represented
 	 */
-	public Value(K value) {
+	protected Value(K value) {
 		this.mValue = value;
 	}
 	
 	/**
-	 * This enables to get the value
+	 * Enables to get the value
+	 * 
 	 * @return the value represented by this object
 	 */
 	public K getValue() {
@@ -27,7 +29,8 @@ public abstract class Value<K> {
 	};
 	
 	/**
-	 * Set the value to the value given as newValue
+	 * Enables to set the value to the value given as newValue
+	 * 
 	 * @param newValue the new value to be set
 	 */
 	public void setValue(K newValue) {
@@ -35,7 +38,8 @@ public abstract class Value<K> {
 	}
 	
 	/**
-	 * This enables to know if this kind of value support the commands Incr/Decr
+	 * Enables to know if this kind of value support the commands incr/decr
+	 * 
 	 * @return true or false depending on the value itself
 	 */
 	public abstract boolean supportIncrementDecrement();
