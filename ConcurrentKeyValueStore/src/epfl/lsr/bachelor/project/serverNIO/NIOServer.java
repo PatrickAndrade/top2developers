@@ -254,7 +254,7 @@ public class NIOServer implements ServerInterface {
 	/**
 	 * Class that read the data from the sockets
 	 * 
-	 * @author Gregory Maitre
+	 * @author Gregory Maitre & Patrick Andrade
 	 * 
 	 */
 	private class NIOReader implements Runnable {
@@ -413,6 +413,12 @@ public class NIOServer implements ServerInterface {
 		}
 	}
 
+	/**
+	 * Class that write the data in the sockets
+	 * 
+	 * @author Gregory Maitre & Patrick Andrade
+	 * 
+	 */
 	public class NIOWriter implements Runnable {
 
 		private Selector mWriterSelector;
@@ -517,6 +523,11 @@ public class NIOServer implements ServerInterface {
 			}
 		}
 
+		/**
+		 * Notify the writer that he can send the answers
+		 * 
+		 * @param socketChannel the channel
+		 */
 		public void send(SocketChannel socketChannel) {
 			try {
 				register(socketChannel);
