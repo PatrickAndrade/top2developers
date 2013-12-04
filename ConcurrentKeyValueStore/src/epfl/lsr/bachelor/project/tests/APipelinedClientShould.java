@@ -372,42 +372,42 @@ public class APipelinedClientShould {
 	}
 
 	@Test
-	public void beFreeToSendBadHIncrementCommand() {
-		String command = "hincr keyIncr ";
+	public void beFreeToSendBadIncrementByCommand() {
+		String command = "incrby keyIncr ";
 		mClient.fakeCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				"-Err hincr/hdecr request one argument",
+				"-Err incrby/decrby request one argument",
 				mClient.getNextAnswerFromServer());
 	}
 
 	@Test
-	public void beFreeToSendBadHDecrementCommand() {
-		String command = "hdecr keyIncr ";
+	public void beFreeToSendBadDecrementByCommand() {
+		String command = "decrby keyIncr ";
 		mClient.fakeCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				"-Err hincr/hdecr request one argument",
+				"-Err incrby/decrby request one argument",
 				mClient.getNextAnswerFromServer());
 	}
 
 	@Test
-	public void beFreeToSendBadHIncrementCommandWithNoIntegerIncrementDecrement() {
-		String command = "hincr keyIncr valueIncr";
+	public void beFreeToSendBadIncrementByCommandWithNoIntegerIncrementDecrement() {
+		String command = "incrby keyIncr valueIncr";
 		mClient.fakeCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				"-Err hincr/hdecr need an integer as argument",
+				"-Err incrby/decrby need an integer as argument",
 				mClient.getNextAnswerFromServer());
 	}
 
 	@Test
-	public void beFreeToSendBadHDecrementCommandWithNoIntegerIncrementDecrement() {
-		String command = "hdecr keyIncr valueIncr";
+	public void beFreeToSendBadDecrementByCommandWithNoIntegerIncrementDecrement() {
+		String command = "decrby keyIncr valueIncr";
 		mClient.fakeCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
-				"-Err hincr/hdecr need an integer as argument",
+				"-Err incrby/decrby need an integer as argument",
 				mClient.getNextAnswerFromServer());
 	}
 }
