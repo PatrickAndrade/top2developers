@@ -13,15 +13,14 @@ public final class Constants {
 	public static final int READ_BUFFER_NIO = 9216;
 	public static final int NUMBER_OF_PIPELINED_WORKER = 100;
 	public static final int CONCURRENT_ARRAY_SIZE = 3 * NUMBER_OF_PIPELINED_WORKER;
-	public static final char NIO_TELNET_LAST_CHAR = (char) 13;
+	public static final char NIO_TELNET_LAST_CHAR = '\r';
 	
 	public static final String EMPTY_STRING = "";
-	public static final String WELCOME_STANDARD = "Server 1.0.1 (developed in JAVA)" + "\n\n" +
+	public static final String WELCOME_STANDARD = "Standard Server (developed in JAVA)" + "\n\n" +
 			"Running in standard mode" + "\n" + "Port: " + PORT + "\n";
-	public static final String WELCOME_NIO = "Server 1.0.1 (developed in JAVA)" + "\n\n" +
+	public static final String WELCOME_NIO = "NIO Server (developed in JAVA)" + "\n\n" +
 			"Running in NIO mode" + "\n" + "Port: " + PORT + "\n";
 	public static final String SERVER_CLOSED = "The server has been closed !";
-//	public static final String PROGRAMM_NAME = "ConcurrentKeyValueStore:" + Constants.PORT + " > ";
 	
 	public static final int GET_ARGUMENTS = 2;
 	public static final int SET_ARGUMENTS = 3;
@@ -47,6 +46,4 @@ public final class Constants {
 	public static final String INTEGER = "(integer)";
 	public static final String NO_SUCH_VALUE = "-Err no such value";
 	public static final String NOT_SUPPORTED = "-Err not supported for this value";
-	
 }
-
