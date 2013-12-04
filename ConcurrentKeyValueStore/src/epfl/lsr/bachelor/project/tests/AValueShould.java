@@ -11,7 +11,7 @@ import epfl.lsr.bachelor.project.values.ValueInteger;
 import epfl.lsr.bachelor.project.values.ValueString;
 
 /**
- * Tests of the value hierarchy
+ * General tests for the value hierarchy
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
