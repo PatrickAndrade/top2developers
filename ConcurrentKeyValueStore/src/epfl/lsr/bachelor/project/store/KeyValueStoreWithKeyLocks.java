@@ -7,7 +7,7 @@ import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Implementation of a K-V store that should be used with a
+ * Implementation of a KV-store that should be used with a
  * multi-threaded architecture. This uses a lock for each key as
  * synchronization mechanism
  * 
@@ -32,7 +32,7 @@ public final class KeyValueStoreWithKeyLocks extends KeyValueStore {
     /**
      * Enables to get the unique instance of the KV-store
      * 
-     * @return the Key-Value store instance
+     * @return the KV-store instance
      */
     public static KeyValueStoreWithKeyLocks getInstance() {
         return INSTANCE;

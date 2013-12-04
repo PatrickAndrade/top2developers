@@ -33,7 +33,7 @@ public final class KeyValueStoreWithGlobalLock extends KeyValueStore {
     /**
      * Enables to get the unique instance of the KV-store
      * 
-     * @return the Key-Value store instance
+     * @return the KV-store instance
      */
     public static KeyValueStoreWithGlobalLock getInstance() {
         return INSTANCE;
