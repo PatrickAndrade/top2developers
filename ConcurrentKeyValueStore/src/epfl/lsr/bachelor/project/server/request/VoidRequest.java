@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReadWriteLock;
  */
 public abstract class VoidRequest extends Request {
 
-    public VoidRequest(String key) {
+    protected VoidRequest(String key) {
         super(key);
     }
     
