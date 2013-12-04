@@ -14,7 +14,7 @@ import epfl.lsr.bachelor.project.client.Client;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * Tests of the client
+ * General tests for a client
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
