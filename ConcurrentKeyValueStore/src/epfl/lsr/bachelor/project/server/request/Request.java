@@ -39,7 +39,7 @@ abstract public class Request implements AtomicAction {
      * @param key
      *            the key to reference the value stored
      */
-    public Request(String key) {
+    protected Request(String key) {
         mKey = key;
     }
 
@@ -51,7 +51,7 @@ abstract public class Request implements AtomicAction {
      * @param value
      *            the value to be stored
      */
-    public Request(String key, Value<?> value) {
+    protected Request(String key, Value<?> value) {
         mKey = key;
         mValue = value;
     }
