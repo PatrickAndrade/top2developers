@@ -35,6 +35,7 @@ public final class Server implements ServerInterface {
 		mWorkers = worker;
 	}
 
+	@Override
 	public void start() {
 		try {
 			// We launch the server
@@ -67,9 +68,7 @@ public final class Server implements ServerInterface {
 		stop();
 	}
 
-	/**
-	 * Enables to stop the server
-	 */
+	@Override
 	public void stop() {
 		mThreadPool.shutdown();
 

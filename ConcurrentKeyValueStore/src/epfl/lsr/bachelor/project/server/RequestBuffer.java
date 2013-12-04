@@ -46,8 +46,8 @@ public class RequestBuffer {
 				e.printStackTrace();
 			}
 		}
+		
 		return (!mClosed.get()) ? mRequestList.removeFirst() : null;
-		//return mRequestList.removeFirst();
 	}
 	
 	/**
