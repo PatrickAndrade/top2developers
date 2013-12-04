@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import epfl.lsr.bachelor.project.serverNIO.NIOServer.NIOWriter;
-
 /**
  * This class encapsulate a list of answer to be send to the client
  * 
@@ -22,9 +20,8 @@ public class NIOAnswerBuffer {
 	/**
 	 * Default constructor
 	 * 
-	 * @param nioWriter
 	 */
-	public NIOAnswerBuffer(NIOWriter nioWriter) {
+	public NIOAnswerBuffer() {
 		mChannelAnswerMap = new HashMap<Channel, LinkedList<ByteBuffer>>();
 	}
 
@@ -58,9 +55,8 @@ public class NIOAnswerBuffer {
 
 		LinkedList<ByteBuffer> byteBufferList = mChannelAnswerMap.get(channel);
 
-		return ((byteBufferList != null) && (!byteBufferList
-				.isEmpty())) ? byteBufferList.getFirst() : null;
-		// return mRequestList.removeFirst();
+		return ((byteBufferList != null) && (!byteBufferList.isEmpty())) ? byteBufferList
+				.getFirst() : null;
 	}
 
 	/**
@@ -77,6 +73,8 @@ public class NIOAnswerBuffer {
 	 * Remove an answer that has been send
 	 * 
 	 * @param channel
+	 *            the channel to identify the list on which we want to remove
+	 *            the first request
 	 */
 	public synchronized void removeAnswer(Channel channel) {
 		LinkedList<ByteBuffer> byteBufferList = mChannelAnswerMap.get(channel);
@@ -89,11 +87,14 @@ public class NIOAnswerBuffer {
 	/**
 	 * Check if the list of answer is empty for a channel
 	 * 
-	 * @param socketChannel the channel
-	 * @return <code>true</code> if the list is empty or if it's <code>null</code>
+	 * @param socketChannel
+	 *            the channel
+	 * @return <code>true</code> if the list is empty or if it's
+	 *         <code>null</code>
 	 */
 	public synchronized boolean isEmpty(SocketChannel socketChannel) {
-		LinkedList<ByteBuffer> byteBufferList = mChannelAnswerMap.get(socketChannel);
+		LinkedList<ByteBuffer> byteBufferList = mChannelAnswerMap
+				.get(socketChannel);
 		return (byteBufferList == null) || byteBufferList.isEmpty();
 	}
 }

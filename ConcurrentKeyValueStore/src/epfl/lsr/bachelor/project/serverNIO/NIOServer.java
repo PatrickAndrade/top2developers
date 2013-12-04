@@ -424,7 +424,7 @@ public class NIOServer implements ServerInterface {
 		 */
 		public NIOWriter() throws IOException {
 			mWriterSelector = SelectorProvider.provider().openSelector();
-			mAnswerBuffer = new NIOAnswerBuffer(this);
+			mAnswerBuffer = new NIOAnswerBuffer();
 		}
 
 		/**

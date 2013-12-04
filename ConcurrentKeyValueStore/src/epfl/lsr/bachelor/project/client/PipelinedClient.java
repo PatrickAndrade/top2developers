@@ -165,7 +165,7 @@ public class PipelinedClient {
     }
 
     /**
-     * Enables to execute an hincrement command over the specified key with the
+     * Enables to execute an increment command over the specified key with the
      * specified increment
      * 
      * @param key
