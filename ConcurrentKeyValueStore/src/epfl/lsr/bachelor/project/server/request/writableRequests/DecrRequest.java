@@ -3,7 +3,7 @@ package epfl.lsr.bachelor.project.server.request.writableRequests;
 import epfl.lsr.bachelor.project.server.request.WriteRequest;
 
 /**
- * Represent a decrement request
+ * Represent a decrement(by) request
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
