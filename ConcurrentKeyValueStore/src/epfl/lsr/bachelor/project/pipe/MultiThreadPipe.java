@@ -28,6 +28,12 @@ final public class MultiThreadPipe implements WorkerPipeInterface {
 		mWorkerList = new ArrayList<ThreadPipe>();
 	}
 
+	/**
+	 * Create or return the single instance of MultiThreadPipe
+	 * 
+	 * @param requestBuffer the request buffer
+	 * @return the single instance of this class
+	 */
 	public static MultiThreadPipe getInstance(RequestBuffer requestBuffer) {
 		if (mInstance == null) {
 			mInstance = new MultiThreadPipe(requestBuffer);
@@ -36,6 +42,7 @@ final public class MultiThreadPipe implements WorkerPipeInterface {
 		return mInstance;
 	}
 
+	@Override
 	public void start() {
 		for (int i = 0; i < Constants.NUMBER_OF_PIPELINED_WORKER; i++) {
 			ThreadPipe worker = new ThreadPipe(mRequestBuffer);
@@ -44,6 +51,7 @@ final public class MultiThreadPipe implements WorkerPipeInterface {
 		}
 	}
 
+	@Override
 	public void close() {
 		for (ThreadPipe worker : mWorkerList) {
 			worker.close();
