@@ -12,11 +12,11 @@ import epfl.lsr.bachelor.project.values.Value;
  */
 public abstract class WriteRequest extends Request {
 
-    public WriteRequest(String key) {
+    protected WriteRequest(String key) {
         super(key);
     }
     
-    public WriteRequest(String key, Value<?> value) {
+    protected WriteRequest(String key, Value<?> value) {
         super(key, value);
     }
     
