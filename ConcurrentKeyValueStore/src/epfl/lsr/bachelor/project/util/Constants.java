@@ -35,8 +35,8 @@ public final class Constants {
 	public static final String DEL_COMMAND = "del";
 	public static final String INCR_COMMAND = "incr";
 	public static final String DECR_COMMAND = "decr";
-	public static final String HINCR_COMMAND = "hincr";
-	public static final String HDECR_COMMAND = "hdecr";
+	public static final String INCRBY_COMMAND = "incrby";
+	public static final String DECRBY_COMMAND = "decrby";
 	public static final String APPEND_COMMAND = "append";
 	public static final String PING_COMMAND = "ping";
 	public static final String QUIT_COMMAND = "quit";

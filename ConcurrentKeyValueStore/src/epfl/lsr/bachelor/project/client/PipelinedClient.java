@@ -174,7 +174,7 @@ public class PipelinedClient {
     public void increment(String key, int value) {
         if (isConnected()) {
             if (key != null) {
-                writeCommandAndSubmitToRequestReader(Constants.HINCR_COMMAND + " " + key + " " + value);
+                writeCommandAndSubmitToRequestReader(Constants.INCRBY_COMMAND + " " + key + " " + value);
             } else {
                 throw new IllegalArgumentException("key was null at increment-method !");
             }
@@ -206,7 +206,7 @@ public class PipelinedClient {
     public void decrement(String key, int value) {
         if (isConnected()) {
             if (key != null) {
-                writeCommandAndSubmitToRequestReader(Constants.HDECR_COMMAND + " " + key + " " + value);
+                writeCommandAndSubmitToRequestReader(Constants.DECRBY_COMMAND + " " + key + " " + value);
             } else {
                 throw new IllegalArgumentException("key was null at decrement-method !");
             }

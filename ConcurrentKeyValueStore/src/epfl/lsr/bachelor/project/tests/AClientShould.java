@@ -259,14 +259,14 @@ public class AClientShould {
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err unable to execute command 'fake'",
-				mClient.fakeCommand(command));
+				mClient.customCommand(command));
 	}
 
 	@Test
 	public void beFreeToSendNoCommand() {
 		String command = "";
 		assertEquals("Receive an error when the client send nothing",
-				Constants.EMPTY_STRING, mClient.fakeCommand(command));
+				Constants.EMPTY_STRING, mClient.customCommand(command));
 	}
 
 	@Test
@@ -305,7 +305,7 @@ public class AClientShould {
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err hincr/hdecr request one argument",
-				mClient.fakeCommand(command));
+				mClient.customCommand(command));
 	}
 
 	@Test
@@ -314,7 +314,7 @@ public class AClientShould {
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err hincr/hdecr request one argument",
-				mClient.fakeCommand(command));
+				mClient.customCommand(command));
 	}
 
 	@Test
@@ -323,7 +323,7 @@ public class AClientShould {
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err hincr/hdecr need an integer as argument",
-				mClient.fakeCommand(command));
+				mClient.customCommand(command));
 	}
 
 	@Test
@@ -332,7 +332,7 @@ public class AClientShould {
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err hincr/hdecr need an integer as argument",
-				mClient.fakeCommand(command));
+				mClient.customCommand(command));
 	}
 
 	@Test
