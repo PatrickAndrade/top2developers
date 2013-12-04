@@ -7,9 +7,10 @@ package epfl.lsr.bachelor.project.benchmarks;
  */
 public class IncrementDecrementBenchmark {
 	public static void main(String[] args) {
-		int numberClient = 50;
-		String[] request = { "incr a", "decr a" };
-		int[] numberOfSend = { 10000, 10000 };
+		final int numberClient = 50;
+		final int numberRequestSend = 10000;
+		String[] request = {"incr a", "decr a"};
+		int[] numberOfSend = {numberRequestSend, numberRequestSend};
 		GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(
 				request, numberOfSend, numberClient);
 		generalBenchmarkPipelined.start();

@@ -1,4 +1,5 @@
 package epfl.lsr.bachelor.project.benchmarks;
+
 /**
  * A benchmark that send ping command
  * 
@@ -7,10 +8,12 @@ package epfl.lsr.bachelor.project.benchmarks;
  */
 public class PingBenchmark {
 	public static void main(String[] args) {
-		int numberClient = 50;
+		final int numberClient = 50;
+		final int numberRequestSend = 10000;
 		String[] request = {"ping"};
-		int[] numberOfSend = {10000};
-		GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(request, numberOfSend, numberClient);
+		int[] numberOfSend = {numberRequestSend};
+		GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(
+				request, numberOfSend, numberClient);
 		generalBenchmarkPipelined.start();
 	}
 }
