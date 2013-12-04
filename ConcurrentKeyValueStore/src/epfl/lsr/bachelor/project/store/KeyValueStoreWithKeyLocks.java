@@ -30,7 +30,7 @@ public final class KeyValueStoreWithKeyLocks extends KeyValueStore {
     }
 
     /**
-     * Enables to get the unique instance of the Key-Value store
+     * Enables to get the unique instance of the KV-store
      * 
      * @return the Key-Value store instance
      */
