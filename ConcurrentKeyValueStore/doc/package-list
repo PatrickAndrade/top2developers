@@ -4,6 +4,9 @@ epfl.lsr.bachelor.project.connection
 epfl.lsr.bachelor.project.pipe
 epfl.lsr.bachelor.project.server
 epfl.lsr.bachelor.project.server.request
+epfl.lsr.bachelor.project.server.request.readableRequests
+epfl.lsr.bachelor.project.server.request.voidRequests
+epfl.lsr.bachelor.project.server.request.writableRequests
 epfl.lsr.bachelor.project.serverNIO
 epfl.lsr.bachelor.project.starter
 epfl.lsr.bachelor.project.store
