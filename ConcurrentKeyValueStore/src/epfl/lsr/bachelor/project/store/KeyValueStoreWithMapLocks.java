@@ -10,7 +10,7 @@ import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Implementation of a K-V store that should be used with a multi-threaded
+ * Implementation of a KV-store that should be used with a multi-threaded
  * architecture. This uses a lock for each map where a key is binded as
  * synchronization mechanism
  * 
@@ -36,9 +36,9 @@ public final class KeyValueStoreWithMapLocks extends KeyValueStore {
     }
 
     /**
-     * Enables to get the unique instance of the Key-Value store
+     * Enables to get the unique instance of the KV-store
      * 
-     * @return the Key-Value store instance
+     * @return the KV-store instance
      */
     public static KeyValueStoreWithMapLocks getInstance() {
         return INSTANCE;
@@ -67,7 +67,7 @@ public final class KeyValueStoreWithMapLocks extends KeyValueStore {
 
     /**
      * Calculates the index of a certain key in order to find to which map it's
-     * bind
+     * binded
      * 
      * @param key
      *            the key

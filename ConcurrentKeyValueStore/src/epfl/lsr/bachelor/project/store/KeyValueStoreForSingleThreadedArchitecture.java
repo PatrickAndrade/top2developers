@@ -7,8 +7,8 @@ import epfl.lsr.bachelor.project.server.request.AtomicAction;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Implementation of a K-V store that should be used only with a
- * single-threaded architecture. Otherwise this will not ensure any kind of
+ * Implementation of a KV-store that should be used only with a
+ * single-threaded architecture, otherwise this will not ensure any kind of
  * synchronization
  * 
  * @author Gregory Maitre & Patrick Andrade
@@ -22,7 +22,6 @@ public final class KeyValueStoreForSingleThreadedArchitecture extends KeyValueSt
     private Map<String, Value<?>> mMap;
 
     private KeyValueStoreForSingleThreadedArchitecture() {
-        super();
         if (INSTANCE != null) {
             throw new IllegalStateException("Already instantiated");
         }
@@ -31,9 +30,9 @@ public final class KeyValueStoreForSingleThreadedArchitecture extends KeyValueSt
     }
 
     /**
-     * Enables to get the unique instance of the Key-Value store
+     * Enables to get the unique instance of the KV-store
      * 
-     * @return the Key-Value store instance
+     * @return the KV-store instance
      */
     public static KeyValueStore getInstance() {
         return INSTANCE;
