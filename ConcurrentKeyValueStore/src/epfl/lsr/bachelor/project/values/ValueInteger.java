@@ -3,7 +3,7 @@ package epfl.lsr.bachelor.project.values;
 import epfl.lsr.bachelor.project.util.Utilities;
 
 /**
- * This is an an integer value contained in the KV-store
+ * This is an integer value contained in the KV-store
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
