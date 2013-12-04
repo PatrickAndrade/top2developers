@@ -10,7 +10,7 @@ import epfl.lsr.bachelor.project.server.request.Request;
  */
 public interface ConnectionInterface {
 	/**
-     * Enables to notify a previous waitUntilRequestIsPerformed()-call
+     * Enables to notify that a request has finished to be performed
      */
     void notifyThatRequestIsPerformed(Request request);
 }
