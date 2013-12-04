@@ -37,7 +37,7 @@ public class NIOServer implements ServerInterface {
 	private InetSocketAddress mInetSocketAddress;
 
 	// Store the data read in the corresponding buffer
-	private Map<Channel, StringBuilder> mChannelReadMap;
+	private Map<Channel, String> mChannelReadMap;
 
 	private Selector mSelector;
 
@@ -71,7 +71,7 @@ public class NIOServer implements ServerInterface {
 		mRequestBuffer = requestBuffer;
 		mWorkers = worker;
 
-		mChannelReadMap = new ConcurrentHashMap<Channel, StringBuilder>();
+		mChannelReadMap = new ConcurrentHashMap<Channel, String>();
 
 		mClosed = new AtomicBoolean();
 
@@ -137,7 +137,7 @@ public class NIOServer implements ServerInterface {
 		mReaderWorker.addConnection(socketChannel, connection);
 
 		// To identify the channel
-		mChannelReadMap.put(socketChannel, new StringBuilder(""));
+		mChannelReadMap.put(socketChannel, "");
 
 		mReader.register(socketChannel);
 
@@ -210,8 +210,6 @@ public class NIOServer implements ServerInterface {
 			} catch (IOException e) {
 			}
 		}
-
-		stop();
 	}
 
 	/**
@@ -256,7 +254,7 @@ public class NIOServer implements ServerInterface {
 	/**
 	 * Class that read the data from the sockets
 	 * 
-	 * @author Gregory Maitre & Patrick Andrade
+	 * @author Gregory Maitre
 	 * 
 	 */
 	private class NIOReader implements Runnable {
@@ -303,10 +301,13 @@ public class NIOServer implements ServerInterface {
 			String readData = new String(mReadByteBuffer.array()).substring(0,
 					byteRead);
 
-			// Get the datas that are already stored, append the new data
-			// read and update the data that we have already read
-			String dataAlreadyRead = mChannelReadMap.get(socketChannel)
-					.append(readData).toString();
+			// Get the datas that are already stored, add the data that we just
+			// read
+			// and update the data that we have already read
+			String dataAlreadyRead = mChannelReadMap.get(socketChannel);
+			mChannelReadMap
+					.put(socketChannel, dataAlreadyRead.concat(readData));
+			dataAlreadyRead = mChannelReadMap.get(socketChannel);
 
 			// if there are '\n' char, we can perform the request
 			if ((dataAlreadyRead != null) && (dataAlreadyRead.contains("\n"))) {
@@ -344,14 +345,11 @@ public class NIOServer implements ServerInterface {
 					}
 
 					if (dataAlreadyReadArray.length == commandToPerformInArraySize) {
-						StringBuilder dataRead = mChannelReadMap
-								.get(socketChannel);
-						dataRead.delete(0, dataRead.length());
+						mChannelReadMap.put(socketChannel, "");
 					} else {
-						StringBuilder dataRead = mChannelReadMap
-								.get(socketChannel);
-						dataRead.delete(0, dataRead.length())
-								.append(dataAlreadyReadArray[commandToPerformInArraySize]);
+						mChannelReadMap
+								.put(socketChannel,
+										dataAlreadyReadArray[commandToPerformInArraySize]);
 					}
 				}
 			}
@@ -363,8 +361,7 @@ public class NIOServer implements ServerInterface {
 		 * @param socketChannel
 		 * @throws ClosedChannelException
 		 */
-		public synchronized void register(SocketChannel socketChannel)
-				throws ClosedChannelException {
+		public synchronized void register(SocketChannel socketChannel) throws ClosedChannelException {
 			mReaderSelector.wakeup();
 			socketChannel.register(mReaderSelector, SelectionKey.OP_READ);
 		}
@@ -416,12 +413,6 @@ public class NIOServer implements ServerInterface {
 		}
 	}
 
-	/**
-	 * Class that write the data on the sockets
-	 * 
-	 * @author Gregory Maitre & Patrick Andrade
-	 * 
-	 */
 	public class NIOWriter implements Runnable {
 
 		private Selector mWriterSelector;
@@ -473,8 +464,7 @@ public class NIOServer implements ServerInterface {
 		 * @param socketChannel
 		 * @throws ClosedChannelException
 		 */
-		private synchronized void register(SocketChannel socketChannel)
-				throws ClosedChannelException {
+		public synchronized void register(SocketChannel socketChannel) throws ClosedChannelException {
 			mWriterSelector.wakeup();
 			socketChannel.register(mWriterSelector, SelectionKey.OP_WRITE);
 		}
@@ -495,7 +485,7 @@ public class NIOServer implements ServerInterface {
 
 					// Wait for an event
 					mWriterSelector.select();
-
+					
 					// Needed to avoid a call of select if we register a channel
 					synchronized (this) {
 					}
@@ -527,12 +517,6 @@ public class NIOServer implements ServerInterface {
 			}
 		}
 
-		/**
-		 * Notify the writer that he can send data
-		 * 
-		 * @param socketChannel
-		 *            the channel
-		 */
 		public void send(SocketChannel socketChannel) {
 			try {
 				register(socketChannel);
