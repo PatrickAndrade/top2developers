@@ -3,7 +3,7 @@ package epfl.lsr.bachelor.project.pipe;
 import epfl.lsr.bachelor.project.server.RequestBuffer;
 
 /**
- * Thread that performs the requests (it's like a pipe between RequestBuffer and KeyValueStore)
+ * Single thread that performs the requests (it's like a pipe between RequestBuffer and KeyValueStore)
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
