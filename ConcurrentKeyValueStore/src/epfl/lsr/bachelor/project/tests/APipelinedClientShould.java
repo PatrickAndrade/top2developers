@@ -373,8 +373,8 @@ public class APipelinedClientShould {
 
 	@Test
 
-	public void beFreeToSendBadHIncrementCommand() {
-		String command = "hincr keyIncr ";
+	public void beFreeToSendBadIncrementByCommand() {
+		String command = "incrby keyIncr ";
 		mClient.customCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
@@ -383,8 +383,8 @@ public class APipelinedClientShould {
 	}
 
 	@Test
-	public void beFreeToSendBadHDecrementCommand() {
-		String command = "hdecr keyIncr ";
+	public void beFreeToSendBadDecrementByCommand() {
+		String command = "decrby keyIncr ";
 		mClient.customCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
@@ -393,8 +393,8 @@ public class APipelinedClientShould {
 	}
 
 	@Test
-	public void beFreeToSendBadHIncrementCommandWithNoIntegerIncrementDecrement() {
-		String command = "hincr keyIncr valueIncr";
+	public void beFreeToSendBadIncrementByCommandWithNoIntegerIncrementDecrement() {
+		String command = "incrby keyIncr valueIncr";
 		mClient.customCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
@@ -403,8 +403,8 @@ public class APipelinedClientShould {
 	}
 
 	@Test
-	public void beFreeToSendBadHDecrementCommandWithNoIntegerIncrementDecrement() {
-		String command = "hdecr keyIncr valueIncr";
+	public void beFreeToSendBadDecrementByCommandWithNoIntegerIncrementDecrement() {
+		String command = "decrby keyIncr valueIncr";
 		mClient.customCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
