@@ -14,7 +14,7 @@ import epfl.lsr.bachelor.project.client.PipelinedClient;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * Tests of the client
+ * General tests for a pipelined client
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
