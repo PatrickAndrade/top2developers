@@ -92,10 +92,10 @@ public class Client {
 	}
 
 	/**
-	 * Enables to execute a fake command
+	 * Enables to execute a custom command
 	 * 
 	 */
-	public String fakeCommand(String command) {
+	public String customCommand(String command) {
 		return isConnected() ? sendAndGetAnswer(command) : null;
 	}
 
@@ -143,14 +143,14 @@ public class Client {
 	}
 
     /**
-     * Enables to execute an hincrement command over the specified key with the
+     * Enables to execute an increment command over the specified key with the
      * specified increment
      * 
      * @param key
      * @param value
      */
 	public String increment(String key, int value) {
-		return (!isConnected() || key == null) ? null : sendAndGetAnswer(Constants.HINCR_COMMAND
+		return (!isConnected() || key == null) ? null : sendAndGetAnswer(Constants.INCRBY_COMMAND
 				+ " " + key + " " + value);
 	}
 
@@ -172,7 +172,7 @@ public class Client {
      * @param value
      */
 	public String decrement(String key, int value) {
-		return (!isConnected() || key == null) ? null : sendAndGetAnswer(Constants.HDECR_COMMAND
+		return (!isConnected() || key == null) ? null : sendAndGetAnswer(Constants.DECRBY_COMMAND
 				+ " " + key + " " + value);
 	}
 

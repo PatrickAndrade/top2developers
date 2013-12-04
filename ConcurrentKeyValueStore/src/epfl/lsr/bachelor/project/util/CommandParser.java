@@ -78,19 +78,19 @@ public class CommandParser {
 					}
 				
 				// Handle hincr/hdecr-command
-				case Constants.HINCR_COMMAND:
-				case Constants.HDECR_COMMAND:
+				case Constants.INCRBY_COMMAND:
+				case Constants.DECRBY_COMMAND:
 					if (commandField.length < Constants.HINCR_HDECR_ARGUMENTS) {
-						return new ErrRequest("-Err " + Constants.HINCR_COMMAND + "/" +
-								Constants.HDECR_COMMAND + " request one argument");
+						return new ErrRequest("-Err " + Constants.INCRBY_COMMAND + "/" +
+								Constants.DECRBY_COMMAND + " request one argument");
 					}
 					// If the increment/decrement is not an integer we simply tell the client that
 					// we cannot perform the request
 					if (!Utilities.isInteger(commandField[2])) {
-						return new ErrRequest("-Err " + Constants.HINCR_COMMAND + "/" +
-								Constants.HDECR_COMMAND + " need an integer as argument");
+						return new ErrRequest("-Err " + Constants.INCRBY_COMMAND + "/" +
+								Constants.DECRBY_COMMAND + " need an integer as argument");
 					}
-					if (commandField[0].equals(Constants.HINCR_COMMAND)) {
+					if (commandField[0].equals(Constants.INCRBY_COMMAND)) {
 						return new IncrRequest(commandField[1], Integer.valueOf(commandField[2]));
 					} else {
 						return new DecrRequest(commandField[1], Integer.valueOf(commandField[2]));

@@ -8,9 +8,11 @@ package epfl.lsr.bachelor.project.benchmarks;
  */
 public class SetGetItBenchmark {
 	public static void main(String[] args) {
-		int numberClient = 50;
-		String[] request = { "set a 2", "get a" };
-		int[] numberOfSend = { 1, 10000 };
+		final int numberClient = 50;
+		final int numberRequestSend = 10000;
+		final int one = 1;
+		String[] request = {"set a 2", "get a"};
+		int[] numberOfSend = {one, numberRequestSend};
 		GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(
 				request, numberOfSend, numberClient);
 		generalBenchmarkPipelined.start();
