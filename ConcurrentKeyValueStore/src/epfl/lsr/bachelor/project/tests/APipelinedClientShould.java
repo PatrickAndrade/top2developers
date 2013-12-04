@@ -317,7 +317,7 @@ public class APipelinedClientShould {
 	@Test
 	public void beFreeToSendBadCommand() {
 		String command = "fake key value";
-		mClient.fakeCommand(command);
+		mClient.customCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err unable to execute command 'fake'",
@@ -327,7 +327,7 @@ public class APipelinedClientShould {
 	@Test
 	public void beFreeToSendNoCommand() {
 		String command = "";
-		mClient.fakeCommand(command);
+		mClient.customCommand(command);
 		assertEquals("Receive an error when the client send nothing",
 				Constants.EMPTY_STRING, mClient.getNextAnswerFromServer());
 	}
@@ -372,9 +372,10 @@ public class APipelinedClientShould {
 	}
 
 	@Test
-	public void beFreeToSendBadIncrementByCommand() {
-		String command = "incrby keyIncr ";
-		mClient.fakeCommand(command);
+
+	public void beFreeToSendBadHIncrementCommand() {
+		String command = "hincr keyIncr ";
+		mClient.customCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err incrby/decrby request one argument",
@@ -382,9 +383,9 @@ public class APipelinedClientShould {
 	}
 
 	@Test
-	public void beFreeToSendBadDecrementByCommand() {
-		String command = "decrby keyIncr ";
-		mClient.fakeCommand(command);
+	public void beFreeToSendBadHDecrementCommand() {
+		String command = "hdecr keyIncr ";
+		mClient.customCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err incrby/decrby request one argument",
@@ -392,9 +393,9 @@ public class APipelinedClientShould {
 	}
 
 	@Test
-	public void beFreeToSendBadIncrementByCommandWithNoIntegerIncrementDecrement() {
-		String command = "incrby keyIncr valueIncr";
-		mClient.fakeCommand(command);
+	public void beFreeToSendBadHIncrementCommandWithNoIntegerIncrementDecrement() {
+		String command = "hincr keyIncr valueIncr";
+		mClient.customCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err incrby/decrby need an integer as argument",
@@ -402,9 +403,9 @@ public class APipelinedClientShould {
 	}
 
 	@Test
-	public void beFreeToSendBadDecrementByCommandWithNoIntegerIncrementDecrement() {
-		String command = "decrby keyIncr valueIncr";
-		mClient.fakeCommand(command);
+	public void beFreeToSendBadHDecrementCommandWithNoIntegerIncrementDecrement() {
+		String command = "hdecr keyIncr valueIncr";
+		mClient.customCommand(command);
 		assertEquals(
 				"Doesn't receive an error when the client send some bad commands",
 				"-Err incrby/decrby need an integer as argument",

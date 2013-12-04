@@ -83,7 +83,7 @@ public class GeneralBenchmarkPipelined {
 			for (int i = 0; i < mRequest.length; i++) {
 				initTime = System.nanoTime();
 				for (int j = 0; j < mNumberOfSend[i]; j++) {
-					client.fakeCommand(mRequest[i]);
+					client.customCommand(mRequest[i]);
 				}
 
 				for (int j = 0; j < mNumberOfSend[i]; j++) {

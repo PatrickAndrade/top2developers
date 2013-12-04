@@ -89,10 +89,10 @@ public class PipelinedClient {
     }
 
     /**
-     * Enables to execute a fake command
+     * Enables to execute a custom command
      * 
      */
-    public void fakeCommand(String command) {
+    public void customCommand(String command) {
         if (isConnected()) {
             if (command != null) {
                 writeCommandAndSubmitToRequestReader(command);
