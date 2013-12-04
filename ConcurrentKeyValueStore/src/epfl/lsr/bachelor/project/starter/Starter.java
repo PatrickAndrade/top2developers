@@ -11,20 +11,20 @@ import epfl.lsr.bachelor.project.serverNIO.NIOServer;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * Point of entry of the application
+ * Point of entry of the application KV-store
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
 public final class Starter {
 
-	public final static String HOST = "127.0.0.1";
+	private final static String HOST = "127.0.0.1";
 	private static ServerInterface server = null;
 
 	public static void main(String[] args) throws IOException {
-		boolean isNIO = true;
-		RequestBuffer requestBuffer = new RequestBuffer();
-		WorkerPipeInterface worker = MultiThreadPipe
+		final boolean isNIO = true;
+		final RequestBuffer requestBuffer = new RequestBuffer();
+		final WorkerPipeInterface worker = MultiThreadPipe
 				.getInstance(requestBuffer);
 
 		if (isNIO) {
