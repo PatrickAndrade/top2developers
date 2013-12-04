@@ -3,7 +3,7 @@ package epfl.lsr.bachelor.project.server.request.writableRequests;
 import epfl.lsr.bachelor.project.server.request.WriteRequest;
 
 /**
- * Represent an decrement request received from the client
+ * Represent a decrement(by) request
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -12,7 +12,7 @@ public class DecrRequest extends WriteRequest {
     private int mDecrement;
 
     /**
-     * Construct the (h)decrement-request with the key and the decrement
+     * Construct the decrement(by)-request with the key and the decrement
      * associated
      * 
      * @param key

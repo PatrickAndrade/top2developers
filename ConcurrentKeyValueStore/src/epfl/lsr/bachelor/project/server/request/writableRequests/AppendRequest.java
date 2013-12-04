@@ -4,7 +4,7 @@ import epfl.lsr.bachelor.project.server.request.WriteRequest;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Represent a get request received from the client
+ * Represent an append request
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 

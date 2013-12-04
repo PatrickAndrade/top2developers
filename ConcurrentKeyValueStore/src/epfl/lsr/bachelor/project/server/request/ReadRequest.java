@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReadWriteLock;
  */
 public abstract class ReadRequest extends Request {
 
-    public ReadRequest(String key) {
+    protected ReadRequest(String key) {
         super(key);
     }
     

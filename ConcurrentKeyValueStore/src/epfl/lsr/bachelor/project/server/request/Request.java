@@ -12,7 +12,7 @@ import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Represent a request received from the client
+ * Represent an abstract request
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -34,12 +34,12 @@ abstract public class Request implements AtomicAction {
     protected static final KeyValueStore KEY_VALUE_STORE = KeyValueStoreWithKeyLocks.getInstance();
 
     /**
-     * Default constructor
+     * Constructor
      * 
      * @param key
      *            the key to reference the value stored
      */
-    public Request(String key) {
+    protected Request(String key) {
         mKey = key;
     }
 
@@ -51,14 +51,13 @@ abstract public class Request implements AtomicAction {
      * @param value
      *            the value to be stored
      */
-    public Request(String key, Value<?> value) {
+    protected Request(String key, Value<?> value) {
         mKey = key;
         mValue = value;
     }
 
     /**
-     * Call to perform the request. When we finish to perform the request, we
-     * must notify() the thread that wait for this monitor!
+     * Enables to perform the request
      * 
      */
     public void perform() {
@@ -80,7 +79,7 @@ abstract public class Request implements AtomicAction {
     /**
      * Enables to know if the request can be performed
      * 
-     * @return true or false depending on if it can be performed
+     * @return true if it can be performed, false otherwise
      */
     public boolean canBePerformed() {
         return true;
@@ -181,6 +180,9 @@ abstract public class Request implements AtomicAction {
     /**
      * Enables to notify the thread in waiting-mode that the request has been
      * performed. This must be called after performing the request
+     * 
+     * @param request
+     *            the request that has been performed
      */
     public void notifyRequestPerformed(Request request) {
         if (mConnection != null) {
@@ -194,7 +196,7 @@ abstract public class Request implements AtomicAction {
      * Enables to know if the the message to be returned after performing the
      * request is empty
      * 
-     * @return is the message empty or not
+     * @return true if the message is empty, false otherwise
      */
     public boolean isMessageEmpty() {
         return mMessageToReturn.equals(Constants.EMPTY_STRING);

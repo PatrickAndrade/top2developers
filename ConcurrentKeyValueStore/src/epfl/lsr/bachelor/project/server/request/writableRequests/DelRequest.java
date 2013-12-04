@@ -4,7 +4,7 @@ import epfl.lsr.bachelor.project.server.request.WriteRequest;
 import epfl.lsr.bachelor.project.util.Constants;
 
 /**
- * Represent a deletion request received from the client
+ * Represent a deletion request
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
