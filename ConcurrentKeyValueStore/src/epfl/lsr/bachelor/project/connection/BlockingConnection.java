@@ -66,7 +66,7 @@ public final class BlockingConnection extends IOConnection {
 	}
 
 	/**
-	 * Enables to call a wait
+	 * Add a request to be performed and wait until it's perform
 	 */
 	public synchronized void addRequestAndWait(Request request) {
 		try {
