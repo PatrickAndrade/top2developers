@@ -5,7 +5,7 @@ import epfl.lsr.bachelor.project.util.Constants;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
- * Represent a set request received from the client
+ * Represent a set request
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
