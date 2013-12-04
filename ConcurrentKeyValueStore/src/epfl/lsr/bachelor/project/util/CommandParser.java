@@ -14,7 +14,7 @@ import epfl.lsr.bachelor.project.values.ValueInteger;
 import epfl.lsr.bachelor.project.values.ValueString;
 
 /**
- * A command parser to handle requests from clients
+ * This is a command parser to handle requests from clients
  * 
  * @author Gregory Maitre & Patrick Andrade
  * 
@@ -77,7 +77,7 @@ public class CommandParser {
 						return new DecrRequest(commandField[1], 1);
 					}
 				
-				// Handle hincr/hdecr-command
+				// Handle incrby/decrby-command
 				case Constants.INCRBY_COMMAND:
 				case Constants.DECRBY_COMMAND:
 					if (commandField.length < Constants.HINCR_HDECR_ARGUMENTS) {
