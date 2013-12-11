@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
+import epfl.lsr.bachelor.project.connection.BlockingConnection;
 import epfl.lsr.bachelor.project.connection.IOConnection;
 import epfl.lsr.bachelor.project.connection.PipelinedConnection;
 import epfl.lsr.bachelor.project.pipe.WorkerPipeInterface;
@@ -28,11 +29,13 @@ public final class Server implements ServerInterface {
 	private WorkerPipeInterface mWorkers;
 
 	private InetSocketAddress mInetSocketAddress;
+    private boolean mIsPipelined;
 
-	public Server(int port, RequestBuffer requestBuffer, WorkerPipeInterface worker) {
+	public Server(int port, RequestBuffer requestBuffer, WorkerPipeInterface worker, boolean isPipelined) {
 		mInetSocketAddress = new InetSocketAddress(port);
 		mRequestBuffer = requestBuffer;
 		mWorkers = worker;
+		mIsPipelined = isPipelined;
 	}
 
 	@Override
@@ -51,8 +54,8 @@ public final class Server implements ServerInterface {
 
 				Socket socket = mServerSocket.accept();
 
-				IOConnection connection = new PipelinedConnection(socket,
-						mRequestBuffer);
+				IOConnection connection = mIsPipelined ? new PipelinedConnection(socket,
+						mRequestBuffer) : new BlockingConnection(socket, mRequestBuffer);
 
 				try {
 					mThreadPool.execute(connection);

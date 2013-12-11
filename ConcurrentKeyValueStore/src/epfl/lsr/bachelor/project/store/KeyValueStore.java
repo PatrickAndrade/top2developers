@@ -14,6 +14,32 @@ import epfl.lsr.bachelor.project.values.ValueInteger;
  */
 public abstract class KeyValueStore {
 
+    private static KeyValueStore mInstance;
+    
+    /**
+     * Enables to get the unique instance of the KV-store
+     * 
+     * @return the KV-store instance
+     */
+    public static KeyValueStore getInstance() {
+        if (mInstance == null) {
+            mInstance = new KeyValueStoreWithGlobalLock();
+        }
+        return mInstance;
+    }
+    
+    /**
+     * Enables to 
+     * set the unique instance of the KV-store
+     * 
+     * @return the KV-store instance
+     */
+    public static void setInstance(KeyValueStore instance) {
+        if (mInstance == null) {
+            mInstance = instance;
+        } 
+    }
+    
     /**
      * Enables to perform some atomic action in the KV-store
      * 

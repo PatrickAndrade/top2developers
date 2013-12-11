@@ -16,26 +16,12 @@ import epfl.lsr.bachelor.project.values.Value;
  */
 public final class KeyValueStoreWithKeyLocks extends KeyValueStore {
 
-    private static final KeyValueStoreWithKeyLocks INSTANCE = new KeyValueStoreWithKeyLocks();
     private static final ReaderWriterHelper<String> READER_WRITER_HELPER = new ReaderWriterHelper<String>();
     
     private Map<String, Value<?>> mMap;
 
-    private KeyValueStoreWithKeyLocks() {
-        if (INSTANCE != null) {
-            throw new IllegalStateException("Already instantiated");
-        }
-
+    public KeyValueStoreWithKeyLocks() {
         mMap = new HashMap<String, Value<?>>();
-    }
-
-    /**
-     * Enables to get the unique instance of the KV-store
-     * 
-     * @return the KV-store instance
-     */
-    public static KeyValueStoreWithKeyLocks getInstance() {
-        return INSTANCE;
     }
 
     @Override

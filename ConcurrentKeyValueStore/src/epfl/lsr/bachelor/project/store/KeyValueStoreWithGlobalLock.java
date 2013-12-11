@@ -18,25 +18,12 @@ import epfl.lsr.bachelor.project.values.Value;
  */
 public final class KeyValueStoreWithGlobalLock extends KeyValueStore {
 
-    private static final KeyValueStoreWithGlobalLock INSTANCE = new KeyValueStoreWithGlobalLock();
     private static final ReadWriteLock GLOBAL_LOCK = new ReentrantReadWriteLock();
 
     private Map<String, Value<?>> mMap;
 
-    private KeyValueStoreWithGlobalLock() {
-        if (INSTANCE != null) {
-            throw new IllegalStateException("Already instantiated");
-        }
+    public KeyValueStoreWithGlobalLock() {
         mMap = new HashMap<String, Value<?>>();
-    }
-
-    /**
-     * Enables to get the unique instance of the KV-store
-     * 
-     * @return the KV-store instance
-     */
-    public static KeyValueStoreWithGlobalLock getInstance() {
-        return INSTANCE;
     }
 
     @Override

@@ -18,30 +18,17 @@ import epfl.lsr.bachelor.project.values.Value;
  * 
  */
 public final class KeyValueStoreWithMapLocks extends KeyValueStore {
-    private static final KeyValueStoreWithMapLocks INSTANCE = new KeyValueStoreWithMapLocks();
     private static final ReaderWriterHelper<Integer> READER_WRITER_HELPER = new ReaderWriterHelper<Integer>();
 
     private List<Map<String, Value<?>>> mHashMapsList;
 
-    private KeyValueStoreWithMapLocks() {
-        if (INSTANCE != null) {
-            throw new IllegalStateException("Already instantiated");
-        }
+    public KeyValueStoreWithMapLocks() {
 
         mHashMapsList = new ArrayList<Map<String, Value<?>>>();
 
         for (int i = 0; i < Constants.CONCURRENT_ARRAY_SIZE; i++) {
             mHashMapsList.add(new HashMap<String, Value<?>>());
         }
-    }
-
-    /**
-     * Enables to get the unique instance of the KV-store
-     * 
-     * @return the KV-store instance
-     */
-    public static KeyValueStoreWithMapLocks getInstance() {
-        return INSTANCE;
     }
 
     @Override
@@ -74,7 +61,7 @@ public final class KeyValueStoreWithMapLocks extends KeyValueStore {
      * @return the index of the map
      */
     private int getMapIndex(String key) {
-        return key.hashCode() % Constants.CONCURRENT_ARRAY_SIZE;
+        return Math.abs(key.hashCode() % Constants.CONCURRENT_ARRAY_SIZE);
     }
 
 }
