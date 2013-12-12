@@ -1,0 +1,400 @@
+ -> incr a
+ -> Elapsed total time: 2868.002243 milliseconds
+ -> Average total time: 286.8002243 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2904.409055 milliseconds
+ -> Average total time: 290.4409055 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2904.50246 milliseconds
+ -> Average total time: 290.450246 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2895.775245 milliseconds
+ -> Average total time: 289.5775245 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2901.805448 milliseconds
+ -> Average total time: 290.1805448 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2901.389299 milliseconds
+ -> Average total time: 290.1389299 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2936.048961 milliseconds
+ -> Average total time: 293.6048961 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2924.36454 milliseconds
+ -> Average total time: 292.436454 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2932.611922 milliseconds
+ -> Average total time: 293.2611922 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2933.73252 milliseconds
+ -> Average total time: 293.373252 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2933.516413 milliseconds
+ -> Average total time: 293.3516413 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2931.699976 milliseconds
+ -> Average total time: 293.1699976 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2938.469988 milliseconds
+ -> Average total time: 293.8469988 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2935.285361 milliseconds
+ -> Average total time: 293.5285361 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2935.115148 milliseconds
+ -> Average total time: 293.5115148 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2932.541847 milliseconds
+ -> Average total time: 293.2541847 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2937.095093 milliseconds
+ -> Average total time: 293.7095093 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2943.544066 milliseconds
+ -> Average total time: 294.3544066 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2944.307969 milliseconds
+ -> Average total time: 294.4307969 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2945.961514 milliseconds
+ -> Average total time: 294.5961514 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2926.461792 milliseconds
+ -> Average total time: 292.6461792 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2916.970755 milliseconds
+ -> Average total time: 291.6970755 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2927.313386 milliseconds
+ -> Average total time: 292.7313386 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2956.032834 milliseconds
+ -> Average total time: 295.6032834 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2956.023986 milliseconds
+ -> Average total time: 295.6023986 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2920.698398 milliseconds
+ -> Average total time: 292.0698398 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2921.090669 milliseconds
+ -> Average total time: 292.1090669 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2925.181459 milliseconds
+ -> Average total time: 292.5181459 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2920.381163 milliseconds
+ -> Average total time: 292.0381163 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2916.108734 milliseconds
+ -> Average total time: 291.6108734 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2903.825821 milliseconds
+ -> Average total time: 290.3825821 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2877.814001 milliseconds
+ -> Average total time: 287.7814001 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2868.883478 milliseconds
+ -> Average total time: 286.8883478 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2908.695734 milliseconds
+ -> Average total time: 290.8695734 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2898.618027 milliseconds
+ -> Average total time: 289.8618027 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2886.633024 milliseconds
+ -> Average total time: 288.6633024 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2897.092131 milliseconds
+ -> Average total time: 289.7092131 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2974.016362 milliseconds
+ -> Average total time: 297.4016362 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2898.307219 milliseconds
+ -> Average total time: 289.8307219 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2892.245091 milliseconds
+ -> Average total time: 289.2245091 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2878.812033 milliseconds
+ -> Average total time: 287.8812033 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2877.19215 milliseconds
+ -> Average total time: 287.719215 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2878.569421 milliseconds
+ -> Average total time: 287.8569421 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2957.795141 milliseconds
+ -> Average total time: 295.7795141 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2954.171704 milliseconds
+ -> Average total time: 295.4171704 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2950.341667 milliseconds
+ -> Average total time: 295.0341667 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2939.464601 milliseconds
+ -> Average total time: 293.9464601 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2938.611294 milliseconds
+ -> Average total time: 293.8611294 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2941.577652 milliseconds
+ -> Average total time: 294.1577652 microseconds
+#################################################
+ -> incr a
+ -> Elapsed total time: 2933.923776 milliseconds
+ -> Average total time: 293.3923776 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 943.180397 milliseconds
+ -> Average total time: 94.3180397 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 919.904001 milliseconds
+ -> Average total time: 91.9904001 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 957.100778 milliseconds
+ -> Average total time: 95.7100778 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 947.855226 milliseconds
+ -> Average total time: 94.7855226 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 941.984057 milliseconds
+ -> Average total time: 94.1984057 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 996.764947 milliseconds
+ -> Average total time: 99.6764947 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1044.558254 milliseconds
+ -> Average total time: 104.4558254 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1028.589542 milliseconds
+ -> Average total time: 102.8589542 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1029.28999 milliseconds
+ -> Average total time: 102.928999 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1066.811448 milliseconds
+ -> Average total time: 106.6811448 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1064.212823 milliseconds
+ -> Average total time: 106.4212823 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1086.93223 milliseconds
+ -> Average total time: 108.693223 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1094.523781 milliseconds
+ -> Average total time: 109.4523781 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1082.25467 milliseconds
+ -> Average total time: 108.225467 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1063.420222 milliseconds
+ -> Average total time: 106.3420222 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1186.584073 milliseconds
+ -> Average total time: 118.6584073 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1226.685402 milliseconds
+ -> Average total time: 122.6685402 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1112.134421 milliseconds
+ -> Average total time: 111.2134421 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1255.796254 milliseconds
+ -> Average total time: 125.5796254 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1172.615045 milliseconds
+ -> Average total time: 117.2615045 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1253.121221 milliseconds
+ -> Average total time: 125.3121221 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1255.042633 milliseconds
+ -> Average total time: 125.5042633 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1288.938323 milliseconds
+ -> Average total time: 128.8938323 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1256.487414 milliseconds
+ -> Average total time: 125.6487414 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1294.23068 milliseconds
+ -> Average total time: 129.423068 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1276.847629 milliseconds
+ -> Average total time: 127.6847629 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1310.287555 milliseconds
+ -> Average total time: 131.0287555 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1319.392456 milliseconds
+ -> Average total time: 131.9392456 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1339.35776 milliseconds
+ -> Average total time: 133.935776 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1257.570401 milliseconds
+ -> Average total time: 125.7570401 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1310.214048 milliseconds
+ -> Average total time: 131.0214048 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1327.433707 milliseconds
+ -> Average total time: 132.7433707 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1300.835806 milliseconds
+ -> Average total time: 130.0835806 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1265.299118 milliseconds
+ -> Average total time: 126.5299118 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1343.451737 milliseconds
+ -> Average total time: 134.3451737 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1333.529787 milliseconds
+ -> Average total time: 133.3529787 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1383.289012 milliseconds
+ -> Average total time: 138.3289012 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1389.807839 milliseconds
+ -> Average total time: 138.9807839 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1355.458114 milliseconds
+ -> Average total time: 135.5458114 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1294.088936 milliseconds
+ -> Average total time: 129.4088936 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1347.815218 milliseconds
+ -> Average total time: 134.7815218 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1366.223306 milliseconds
+ -> Average total time: 136.6223306 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1391.696649 milliseconds
+ -> Average total time: 139.1696649 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1394.942108 milliseconds
+ -> Average total time: 139.4942108 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1405.899381 milliseconds
+ -> Average total time: 140.5899381 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1369.454446 milliseconds
+ -> Average total time: 136.9454446 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1413.64016 milliseconds
+ -> Average total time: 141.364016 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1416.426694 milliseconds
+ -> Average total time: 141.6426694 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1391.405838 milliseconds
+ -> Average total time: 139.1405838 microseconds
+#################################################
+ -> decr a
+ -> Elapsed total time: 1334.260791 milliseconds
+ -> Average total time: 133.4260791 microseconds
+#################################################
