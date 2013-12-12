@@ -2,7 +2,7 @@ package epfl.lsr.bachelor.project.starters;
 
 import java.io.IOException;
 
-import epfl.lsr.bachelor.project.store.KeyValueStoreForSingleThreadedArchitecture;
+import epfl.lsr.bachelor.project.store.KeyValueStoreWithKeyLocks;
 
 /**
  * 
@@ -11,7 +11,7 @@ import epfl.lsr.bachelor.project.store.KeyValueStoreForSingleThreadedArchitectur
  */
 public class StarterNIOSingle {
     public static void main(String[] args) throws IOException {
-        StartersConfiguration.start(true, false, false, new KeyValueStoreForSingleThreadedArchitecture());
+        StartersConfiguration.start(true, false, false, new KeyValueStoreWithKeyLocks());
     }
 }
 

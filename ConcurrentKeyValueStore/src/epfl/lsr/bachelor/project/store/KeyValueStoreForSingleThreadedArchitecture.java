@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import epfl.lsr.bachelor.project.server.request.AtomicAction;
+import epfl.lsr.bachelor.project.server.request.Request;
 import epfl.lsr.bachelor.project.values.Value;
 
 /**
@@ -40,5 +41,7 @@ public final class KeyValueStoreForSingleThreadedArchitecture extends KeyValueSt
     @Override
     public void execute(AtomicAction action, String key) {
         action.performAction();
+        Request request = (Request) action;
+        request.notifyRequestPerformed(request);
     }
 }

@@ -16,6 +16,7 @@ public class GeneralBenchmarkPipelined {
 	private String[] mRequest;
 	private int[] mNumberOfSend;
 	private Thread[] mClients;
+	private String mAddress;
 	private static final long TEN_POWER_SIX = 1000000;
 	private static final long TEN_POWER_THREE = 1000;
 
@@ -35,6 +36,7 @@ public class GeneralBenchmarkPipelined {
 		
 		mRequest = request;
 		mNumberOfSend = numberOfSend;
+		mAddress = "172.16.176.9";
 
 		if (mNumberOfSend.length != mRequest.length) {
 			throw new IllegalArgumentException(
@@ -72,7 +74,7 @@ public class GeneralBenchmarkPipelined {
 		@Override
 		public void run() {
 			PipelinedClient client = new PipelinedClient(new InetSocketAddress(
-					"127.0.0.1", Constants.PORT));
+					mAddress, Constants.PORT));
 			client.connect();
 
 			long totalTime = 0;

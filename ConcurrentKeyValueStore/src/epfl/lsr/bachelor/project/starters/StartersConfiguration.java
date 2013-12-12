@@ -20,7 +20,7 @@ import epfl.lsr.bachelor.project.util.Constants;
  */
 public final class StartersConfiguration {
 
-    private final static String HOST = "127.0.0.1";
+    private final static String HOST = "0.0.0.0";
     private static ServerInterface server = null;
 
     public static void start(final boolean isNIO, final boolean isPipelined, final boolean isMultiThreaded,
