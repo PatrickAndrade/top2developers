@@ -36,7 +36,7 @@ public class GeneralBenchmarkPipelined {
 		
 		mRequest = request;
 		mNumberOfSend = numberOfSend;
-		mAddress = "172.16.176.9";
+		mAddress = "127.0.0.1";
 
 		if (mNumberOfSend.length != mRequest.length) {
 			throw new IllegalArgumentException(
@@ -67,6 +67,7 @@ public class GeneralBenchmarkPipelined {
 				+ " microseconds");
 
 		System.out.println("#################################################");
+		System.out.flush();
 	}
 
 	private class ClientWorker implements Runnable {

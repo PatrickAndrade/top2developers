@@ -9,7 +9,7 @@ package epfl.lsr.bachelor.project.benchmarks;
  * 
  */
 public class ReadWriteBenchmark {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		final int numberClient = 50;
 		final int numberRequestSend = 10000;
 		final int one = 1;
@@ -36,6 +36,9 @@ public class ReadWriteBenchmark {
 		firstSetGeneralBenchmarkPipelined.start();
 		firstGetGeneralBenchmarkPipelined.start();
 		secondGetGeneralBenchmarkPipelined.start();
+
+		final int time = 50;
+		Thread.sleep(time);
 		lastSetGeneralBenchmarkPipelined.start();
 	}
 }
