@@ -11,7 +11,7 @@ public class SetGetItBenchmark {
 		final int numberClient = 50;
 		final int numberRequestSend = 10000;
 		final int one = 1;
-		String[] request = {"set a 2", "get a"};
+		String[] request = {"set", "get"};
 		int[] numberOfSend = {one, numberRequestSend};
 		GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(
 				request, numberOfSend, numberClient);

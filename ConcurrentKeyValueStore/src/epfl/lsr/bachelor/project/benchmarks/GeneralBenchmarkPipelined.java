@@ -23,17 +23,20 @@ public class GeneralBenchmarkPipelined {
 	/**
 	 * Default constructor
 	 * 
-	 * @param request the array of request
-	 * @param numberOfSend the array of number of time a request is send
-	 * @param numberClient the number of client (must be greater or equals than 1)
+	 * @param request
+	 *            the array of request
+	 * @param numberOfSend
+	 *            the array of number of time a request is send
+	 * @param numberClient
+	 *            the number of client (must be greater or equals than 1)
 	 */
 	public GeneralBenchmarkPipelined(String[] request, int[] numberOfSend,
 			int numberClient) {
-		
+
 		if (numberClient < 1) {
 			throw new IllegalArgumentException("numberClient < 1");
 		}
-		
+
 		mRequest = request;
 		mNumberOfSend = numberOfSend;
 		mAddress = "127.0.0.1";
@@ -81,12 +84,18 @@ public class GeneralBenchmarkPipelined {
 			long totalTime = 0;
 			long initTime = 0;
 			long finishedTime = 0;
+			final int rangeOfKeyValue = 100;
+			String command = "";
 
 			// Send pipelined requests
 			for (int i = 0; i < mRequest.length; i++) {
+				command = mRequest[i] + " "
+						+ (int) (Math.random() * rangeOfKeyValue)
+						+ " "
+						+ (int) (Math.random() * rangeOfKeyValue);
 				initTime = System.nanoTime();
 				for (int j = 0; j < mNumberOfSend[i]; j++) {
-					client.customCommand(mRequest[i]);
+					client.customCommand(command);
 				}
 
 				for (int j = 0; j < mNumberOfSend[i]; j++) {
@@ -95,7 +104,7 @@ public class GeneralBenchmarkPipelined {
 				finishedTime = System.nanoTime();
 				totalTime = finishedTime - initTime;
 
-				print(mRequest[i], (double) totalTime / (double) TEN_POWER_SIX,
+				print(command, (double) totalTime / (double) TEN_POWER_SIX,
 						(double) totalTime
 								/ (double) (mNumberOfSend[i] * TEN_POWER_THREE));
 			}
