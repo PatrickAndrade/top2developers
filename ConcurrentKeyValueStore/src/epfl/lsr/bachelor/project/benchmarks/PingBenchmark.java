@@ -11,9 +11,8 @@ public class PingBenchmark {
 		final int numberClient = 50;
 		final int numberRequestSend = 10000;
 		String[] request = {"ping"};
-		int[] numberOfSend = {numberRequestSend};
 		GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(
-				request, numberOfSend, numberClient);
+				request, numberRequestSend, numberClient);
 		generalBenchmarkPipelined.start();
 	}
 }

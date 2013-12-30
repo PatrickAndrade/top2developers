@@ -11,9 +11,8 @@ public class AppendBenchmark {
 		final int numberClient = 50;
 		final int numberRequestSend = 10000;
 		String[] request = {"append a a"};
-		int[] numberOfSend = {numberRequestSend};
 		GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(
-				request, numberOfSend, numberClient);
+				request, numberRequestSend, numberClient);
 		generalBenchmarkPipelined.start();
 	}
 }

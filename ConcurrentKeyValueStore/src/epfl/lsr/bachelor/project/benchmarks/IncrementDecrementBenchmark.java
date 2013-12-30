@@ -10,9 +10,8 @@ public class IncrementDecrementBenchmark {
 		final int numberClient = 50;
 		final int numberRequestSend = 10000;
 		String[] request = {"incr a", "decr a"};
-		int[] numberOfSend = {numberRequestSend, numberRequestSend};
 		GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(
-				request, numberOfSend, numberClient);
+				request, numberRequestSend, numberClient);
 		generalBenchmarkPipelined.start();
 	}
 }

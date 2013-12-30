@@ -1,6 +1,7 @@
 package epfl.lsr.bachelor.project.benchmarks;
 
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 
 import epfl.lsr.bachelor.project.client.PipelinedClient;
 import epfl.lsr.bachelor.project.util.Constants;
@@ -14,7 +15,7 @@ import epfl.lsr.bachelor.project.util.Constants;
 public class GeneralBenchmarkPipelined {
 
 	private String[] mRequest;
-	private int[] mNumberOfSend;
+	private int mNumberOfSend;
 	private Thread[] mClients;
 	private String mAddress;
 	private static final long TEN_POWER_SIX = 1000000;
@@ -30,7 +31,7 @@ public class GeneralBenchmarkPipelined {
 	 * @param numberClient
 	 *            the number of client (must be greater or equals than 1)
 	 */
-	public GeneralBenchmarkPipelined(String[] request, int[] numberOfSend,
+	public GeneralBenchmarkPipelined(String[] request, int numberOfSend,
 			int numberClient) {
 
 		if (numberClient < 1) {
@@ -39,11 +40,10 @@ public class GeneralBenchmarkPipelined {
 
 		mRequest = request;
 		mNumberOfSend = numberOfSend;
-		mAddress = "127.0.0.1";
+		mAddress = "192.168.0.18";
 
-		if (mNumberOfSend.length != mRequest.length) {
-			throw new IllegalArgumentException(
-					"Resquet.length != NumberOfRequest.length");
+		if (mNumberOfSend < 1) {
+			throw new IllegalArgumentException("NumberOfRequest < 1");
 		}
 
 		mClients = new Thread[numberClient];
@@ -88,26 +88,23 @@ public class GeneralBenchmarkPipelined {
 			String command = "";
 
 			// Send pipelined requests
-			for (int i = 0; i < mRequest.length; i++) {
-				command = mRequest[i] + " "
-						+ (int) (Math.random() * rangeOfKeyValue)
-						+ " "
+			initTime = System.nanoTime();
+			for (int j = 0; j < mNumberOfSend; j++) {
+				command = mRequest[(int) (Math.random() * mRequest.length)]
+						+ " " + (int) (Math.random() * rangeOfKeyValue) + " "
 						+ (int) (Math.random() * rangeOfKeyValue);
-				initTime = System.nanoTime();
-				for (int j = 0; j < mNumberOfSend[i]; j++) {
-					client.customCommand(command);
-				}
-
-				for (int j = 0; j < mNumberOfSend[i]; j++) {
-					client.getNextAnswerFromServer();
-				}
-				finishedTime = System.nanoTime();
-				totalTime = finishedTime - initTime;
-
-				print(command, (double) totalTime / (double) TEN_POWER_SIX,
-						(double) totalTime
-								/ (double) (mNumberOfSend[i] * TEN_POWER_THREE));
+				client.customCommand(command);
 			}
+
+			for (int j = 0; j < mNumberOfSend; j++) {
+				client.getNextAnswerFromServer();
+			}
+			finishedTime = System.nanoTime();
+			totalTime = finishedTime - initTime;
+
+			print(Arrays.toString(mRequest), (double) totalTime / (double) TEN_POWER_SIX,
+					(double) totalTime
+							/ (double) (mNumberOfSend * TEN_POWER_THREE));
 
 			client.disconnect();
 		}
