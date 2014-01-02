@@ -84,7 +84,7 @@ public class PipelinedClient {
             mBufferedReader.close();
             mDataOutputStream.close();
             mSocket.close();
-        } catch (IOException e) {
+        } catch (Throwable e) {
         }
     }
 
@@ -261,7 +261,6 @@ public class PipelinedClient {
             try {
                 return mServerAnswers.remove(0).get();
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
             }
 
         }
@@ -276,7 +275,6 @@ public class PipelinedClient {
 
             mServerAnswers.add(mThreadPool.submit(new RequestReader()));
         } catch (IOException e) {
-            e.printStackTrace();
         }
 
     }
