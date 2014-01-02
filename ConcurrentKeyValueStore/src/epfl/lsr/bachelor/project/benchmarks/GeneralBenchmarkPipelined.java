@@ -40,7 +40,7 @@ public class GeneralBenchmarkPipelined {
 
 		mRequest = request;
 		mNumberOfSend = numberOfSend;
-		mAddress = "192.168.0.18";
+		mAddress = "127.0.0.1";
 
 		if (mNumberOfSend < 1) {
 			throw new IllegalArgumentException("NumberOfRequest < 1");

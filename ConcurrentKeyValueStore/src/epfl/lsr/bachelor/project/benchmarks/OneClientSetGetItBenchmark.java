@@ -6,9 +6,9 @@ package epfl.lsr.bachelor.project.benchmarks;
  * @author Gregory Maitre & Patrick Andrade
  * 
  */
-public class SetGetItBenchmark {
+public class OneClientSetGetItBenchmark {
 	public static void main(String[] args) {
-		final int numberClient = 100;
+		final int numberClient = 1;
 		final int numberRequestSend = 10000;
 		String[] request = {"set", "get"};
 		GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(
