@@ -1,7 +1,10 @@
 package epfl.lsr.bachelor.project.benchmarks;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import epfl.lsr.bachelor.project.client.PipelinedClient;
 import epfl.lsr.bachelor.project.util.Constants;
@@ -20,6 +23,8 @@ public class GeneralBenchmarkPipelined {
 	private String mAddress;
 	private static final long TEN_POWER_SIX = 1000000;
 	private static final long TEN_POWER_THREE = 1000;
+	private AtomicInteger counter;
+	private ConcurrentLinkedQueue<Double> averageTime;
 
 	/**
 	 * Default constructor
@@ -40,7 +45,7 @@ public class GeneralBenchmarkPipelined {
 
 		mRequest = request;
 		mNumberOfSend = numberOfSend;
-		mAddress = "192.168.1.56";
+		mAddress = InetAddress.getLoopbackAddress().getHostAddress();//"192.168.1.56";
 
 		if (mNumberOfSend < 1) {
 			throw new IllegalArgumentException("NumberOfRequest < 1");
@@ -55,10 +60,25 @@ public class GeneralBenchmarkPipelined {
 	/**
 	 * Start the benchmark
 	 */
-	public void start() {
+	public synchronized double start() {
+		counter = new AtomicInteger(0);
+		averageTime = new ConcurrentLinkedQueue<Double>();
 		for (Thread thread : mClients) {
 			thread.start();
 		}
+		double average = 0;
+		try {
+			wait();
+			for (double time : averageTime) {
+				average += time;
+			}
+			average = average/averageTime.size();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return average;
 	}
 
 	private synchronized void print(String command, double elapsed,
@@ -71,10 +91,11 @@ public class GeneralBenchmarkPipelined {
 
 		System.out.println("#################################################");
 		System.out.flush();
+		
 	}
 
 	private class ClientWorker implements Runnable {
-
+		
 		@Override
 		public void run() {
 			PipelinedClient client = new PipelinedClient(new InetSocketAddress(
@@ -102,11 +123,21 @@ public class GeneralBenchmarkPipelined {
 			finishedTime = System.nanoTime();
 			totalTime = finishedTime - initTime;
 
-			print(Arrays.toString(mRequest), (double) totalTime / (double) TEN_POWER_SIX,
-					(double) totalTime
-							/ (double) (mNumberOfSend * TEN_POWER_THREE));
+//			print(Arrays.toString(mRequest), (double) totalTime / (double) TEN_POWER_SIX,
+//					(double) totalTime
+//							/ (double) (mNumberOfSend * TEN_POWER_THREE));
 
 			client.disconnect();
+			
+			averageTime.add((double) totalTime
+					/ (double) (mNumberOfSend * TEN_POWER_THREE));
+			
+			counter.incrementAndGet();
+			if (counter.get() >= mClients.length) {
+				synchronized (GeneralBenchmarkPipelined.this) {
+					GeneralBenchmarkPipelined.this.notify();
+				}
+			}
 		}
 	}
 }
