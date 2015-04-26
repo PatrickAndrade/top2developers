@@ -1,3 +1,4 @@
+% This script is used to plot the data against each other.
 load resultsIOSingle.txt;
 load resultsIOMultiPipelinedKeysLock.txt;
 
