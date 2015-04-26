@@ -18,7 +18,7 @@ public class Benchmark1ToN {
 	
 	public static void main(String[] args) throws IOException {
 		System.out.println("Test begin");
-		File file = new File("results.txt");
+		File file = new File("resultsIOMultiPipelinedKeysLock.txt");
 		
 		if (file.exists()) {
 			file.delete();
@@ -28,7 +28,7 @@ public class Benchmark1ToN {
 		BarreDeProgression barreDeProgression = new BarreDeProgression(maxNumberOfClients);
 		double average = 0;
 		
-		for (int numberOfClients = 1; numberOfClients < maxNumberOfClients; numberOfClients++) {
+		for (int numberOfClients = 1; numberOfClients <= maxNumberOfClients; numberOfClients++) {
 			GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(
 					request, numberRequestSend, numberOfClients);
 			average = generalBenchmarkPipelined.start();
