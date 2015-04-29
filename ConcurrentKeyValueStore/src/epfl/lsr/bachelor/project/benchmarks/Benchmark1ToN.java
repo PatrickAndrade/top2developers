@@ -18,7 +18,7 @@ public class Benchmark1ToN {
 	
 	public static void main(String[] args) throws IOException {
 		System.out.println("Test begin");
-		File file = new File("resultsIOMultiPipelinedKeysLock.txt");
+		File file = new File("resultsIOMultiPipelinedKeysLock_1toN.txt");
 		
 		if (file.exists()) {
 			file.delete();

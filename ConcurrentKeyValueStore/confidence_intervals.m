@@ -1,5 +1,5 @@
 % This scripts assumes at least 30 experiments data.
-load resultsIOSingle.txt;
+load resultsIOMultiPipelinedKeysLock_NtimesM.txt;
 figure
 hold all;
 
@@ -33,5 +33,5 @@ errorbar(2,m,ci);
 
 set(gca, 'XTickLabelMode', 'manual', 'XTickLabel', []);
 %ylim([1 2])
-%xlim([0.5 2.5])
+xlim([0.5 2.5])
 %print -r1600 -depsc2 confidence_intervals

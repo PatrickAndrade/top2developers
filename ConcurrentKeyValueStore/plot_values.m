@@ -1,6 +1,6 @@
 % This script is used to plot the data against each other.
-load resultsIOSingle.txt;
-load resultsIOMultiPipelinedKeysLock.txt;
+load resultsIOSingle_1toN.txt;
+load resultsIOMultiPipelinedKeysLock_1toN.txt;
 
 x=1:1:100; %range from 1 to 100 with step 1
 y=resultsIOSingle;

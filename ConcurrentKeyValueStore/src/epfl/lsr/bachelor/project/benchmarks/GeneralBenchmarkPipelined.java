@@ -20,7 +20,6 @@ public class GeneralBenchmarkPipelined {
 	private int mNumberOfSend;
 	private Thread[] mClients;
 	private String mAddress;
-	private static final long TEN_POWER_SIX = 1000000;
 	private static final long TEN_POWER_THREE = 1000;
 	private AtomicInteger counter;
 	private ConcurrentLinkedQueue<Double> averageTime;
@@ -73,24 +72,10 @@ public class GeneralBenchmarkPipelined {
 			}
 			average = average/averageTime.size();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return average;
-	}
-
-	private synchronized void print(String command, double elapsed,
-			double average) {
-		System.out.println(" -> " + command);
-		System.out.println(" -> Elapsed total time: " + elapsed
-				+ " milliseconds");
-		System.out.println(" -> Average total time: " + average
-				+ " microseconds");
-
-		System.out.println("#################################################");
-		System.out.flush();
-		
 	}
 
 	private class ClientWorker implements Runnable {
