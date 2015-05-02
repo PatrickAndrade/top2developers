@@ -11,23 +11,32 @@ import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
 public class Benchmark1ToN {
-	
-	static String[] request = {"set", "get"};
+
+	static String[] request = { "set", "get" };
 	final static int maxNumberOfClients = 100;
 	final static int numberRequestSend = 100;
-	
+
 	public static void main(String[] args) throws IOException {
 		System.out.println("Test begin");
-		File file = new File("resultsIOMultiPipelinedKeysLock_1toN.txt");
-		
+		File folder = new File("Results");
+
+		if (folder.exists() && !folder.isDirectory()) {
+			folder.delete();
+			folder.mkdir();
+		}
+
+		File file = new File(folder.getPath() + File.separatorChar
+				+ "test.txt");
+
 		if (file.exists()) {
 			file.delete();
 		}
-		
+
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-		BarreDeProgression barreDeProgression = new BarreDeProgression(maxNumberOfClients);
+		BarreDeProgression barreDeProgression = new BarreDeProgression(
+				maxNumberOfClients);
 		double average = 0;
-		
+
 		for (int numberOfClients = 1; numberOfClients <= maxNumberOfClients; numberOfClients++) {
 			GeneralBenchmarkPipelined generalBenchmarkPipelined = new GeneralBenchmarkPipelined(
 					request, numberRequestSend, numberOfClients);
@@ -35,7 +44,7 @@ public class Benchmark1ToN {
 			writer.write(Double.toString(average) + "\n");
 			barreDeProgression.increment();
 		}
-		
+
 		System.out.println("Test end");
 		writer.close();
 	}
