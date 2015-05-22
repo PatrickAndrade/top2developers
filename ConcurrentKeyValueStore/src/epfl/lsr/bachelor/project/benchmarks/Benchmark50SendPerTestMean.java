@@ -7,13 +7,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Benchmark50SendPerTestMedian {
+public class Benchmark50SendPerTestMean {
 
 	static String[] request = { "set", "get" };
-	final static int maxNumberOfClients = 500;
+	final static int maxNumberOfClients = 100;
 	final static int numberRequestSend = 100;
-	final static int step = 20;
-	final static int numberOfTest = 20;
+	final static int step = 10;
+	final static int numberOfTest = 50;
+	
+	public static double sum(ArrayList<Double> l) {
+		double sum = 0;
+		for(Double d : l)
+		    sum += d;
+		return sum;
+	}
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Test begin");
@@ -25,7 +32,7 @@ public class Benchmark50SendPerTestMedian {
 		}
 
 		File file = new File(folder.getPath() + File.separatorChar
-				+ "StarterNIOSingle.txt");
+				+ "test.txt");
 
 		if (file.exists()) {
 			file.delete();
@@ -46,8 +53,7 @@ public class Benchmark50SendPerTestMedian {
 			}
 			
 			Collections.sort(sampleTested);
-			writer.write(Double.toString(0.5 * (sampleTested.get((int)(sampleTested.size() / 2)) 
-					+ sampleTested.get((int)(sampleTested.size() / 2) + 1))) + "\n");
+			writer.write(Double.toString(sum(sampleTested) / sampleTested.size()) + "\n");
 			barreDeProgression.increment();
 		}
 

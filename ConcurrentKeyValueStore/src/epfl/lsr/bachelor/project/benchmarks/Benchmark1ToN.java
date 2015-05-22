@@ -13,7 +13,7 @@ import javax.swing.JProgressBar;
 public class Benchmark1ToN {
 
 	static String[] request = { "set", "get" };
-	final static int maxNumberOfClients = 100;
+	final static int maxNumberOfClients = 500;
 	final static int numberRequestSend = 100;
 
 	public static void main(String[] args) throws IOException {
@@ -26,7 +26,7 @@ public class Benchmark1ToN {
 		}
 
 		File file = new File(folder.getPath() + File.separatorChar
-				+ "test.txt");
+				+ "StarterNIOSingle.txt");
 
 		if (file.exists()) {
 			file.delete();

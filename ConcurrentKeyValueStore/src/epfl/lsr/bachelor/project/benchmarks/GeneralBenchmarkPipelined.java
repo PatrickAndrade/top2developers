@@ -43,7 +43,7 @@ public class GeneralBenchmarkPipelined {
 
 		mRequest = request;
 		mNumberOfSend = numberOfSend;
-		mAddress = InetAddress.getLoopbackAddress().getHostAddress();//"192.168.1.56";
+		mAddress = "192.168.0.1";//InetAddress.getLoopbackAddress().getHostAddress();
 
 		if (mNumberOfSend < 1) {
 			throw new IllegalArgumentException("NumberOfRequest < 1");
