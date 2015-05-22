@@ -46,7 +46,8 @@ public class Benchmark50SendPerTest {
 			}
 			
 			Collections.sort(sampleTested);
-			writer.write(Double.toString(sampleTested.get((int)(sampleTested.size() / 2))) + "\n");
+			writer.write(Double.toString(0.5 * (sampleTested.get((int)(sampleTested.size() / 2)) 
+					+ sampleTested.get((int)(sampleTested.size() / 2) + 1))) + "\n");
 			barreDeProgression.increment();
 		}
 
