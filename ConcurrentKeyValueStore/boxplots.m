@@ -32,4 +32,4 @@ boxplot(matrix, [1,2]);
 
 %print -r1600 -depsc2 part3_lambda70_withoutTransient
 % set(gcf,'PaperUnits','inches','PaperPosition',[0 0 16 12])
-% print('1toN','-dpng','-r0')
+print('1toN','-dpng','-r0')
