@@ -1,12 +1,4 @@
 % This scripts assumes at least 30 experiments data.
-% For now, this makes no sense since, for having confidence intervals, we
-% should repeat more than once (say 100 times) the same experiment and not
-% an experiment where the number of clients grows. For an experiment, we
-% could fix the number of clients, say 100, and do the experiment with this
-% fix number of clients. Then after doing say 50 experiments we can compute
-% confidence intervals. Finally, if we do it for any kind of server, we
-% will be able to compare between them (watch out ! this comparison makes
-% only sense for this fix number of clients, it could be that for a
 
 load Results_25clients\StarterIOMultiGlobalLock.txt;
 load Results_25clients\StarterIOMultiKeysLock.txt;
@@ -77,5 +69,5 @@ title('25 clients')
 ylabel('Average waiting time (microseconds)');
 xlim([0 12.5])
 ylim([1200 1360])
-set(gcf,'PaperUnits','inches','PaperPosition',[0 0 16 12])
-print('conf_25clients_mean','-dpng','-r0')
+%set(gcf,'PaperUnits','inches','PaperPosition',[0 0 16 12])
+%print('conf_25clients_mean','-dpng','-r0')

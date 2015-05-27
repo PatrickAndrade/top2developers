@@ -1,35 +1,34 @@
 % This script is used to plot the data against each other.
-x=1:1:500; %range from 1 to 100 with step 1
 
 figure;
 hold all;
 
-load Results\StarterIOMultiGlobalLock.txt;
-load Results\StarterIOMultiKeysLock.txt;
+load Results_300clients\StarterIOMultiGlobalLock.txt;
+load Results_300clients\StarterIOMultiKeysLock.txt;
 
+load Results_300clients\StarterIOMultiMapsLock.txt;
+load Results_300clients\StarterIOMultiPipelinedGlobalLock.txt;
 
-load Results\StarterIOMultiMapsLock.txt;
-load Results\StarterIOMultiPipelinedGlobalLock.txt;
+load Results_300clients\StarterIOMultiPipelinedKeysLock.txt;
+load Results_300clients\StarterIOMultiPipelinedMapsLock.txt;
 
+load Results_300clients\StarterIOSingle.txt;
+load Results_300clients\StarterIOSinglePipelined.txt;
 
-load Results\StarterIOMultiPipelinedKeysLock.txt;
-load Results\StarterIOMultiPipelinedMapsLock.txt;
+load Results_300clients\StarterNIOMultiGlobalLock.txt;
+load Results_300clients\StarterNIOMultiKeysLock.txt;
 
+load Results_300clients\StarterNIOMultiMapsLock.txt;
+load Results_300clients\StarterNIOSingle.txt;
 
-load Results\StarterIOSingle.txt;
-load Results\StarterIOSinglePipelined.txt;
+matrix = [StarterIOMultiGlobalLock, StarterIOMultiKeysLock, StarterIOMultiMapsLock, StarterIOMultiPipelinedGlobalLock, StarterIOMultiPipelinedKeysLock, StarterIOMultiPipelinedMapsLock, StarterIOSingle, StarterIOSinglePipelined, StarterNIOMultiGlobalLock, StarterNIOMultiKeysLock, StarterNIOMultiMapsLock, StarterNIOSingle];
+boxplot(matrix, 1:1:12);
 
-
-load Results\StarterNIOMultiGlobalLock.txt;
-load Results\StarterNIOMultiKeysLock.txt;
-
-
-load Results\StarterNIOMultiMapsLock.txt;
-load Results\StarterNIOSingle.txt;
-
-matrix = [StarterNIOSingle, StarterNIOMultiMapsLock];
-boxplot(matrix, [1,2]);
-
-%print -r1600 -depsc2 part3_lambda70_withoutTransient
-% set(gcf,'PaperUnits','inches','PaperPosition',[0 0 16 12])
-print('1toN','-dpng','-r0')
+set(gca,'xtick',1:1:12);
+set(gca,'xTickLabel',{'IOMultiGlobalLock','IOMultiKeysLock','IOMultiMapsLock','IOMultiPipelinedGlobalLock','IOMultiPipelinedKeysLock','IOMultiPipelinedMapsLock','IOSingle','IOSinglePipelined','NIOMultiGlobalLock','NIOMultiKeysLock','NIOMultiMapsLock','NIOSingle'})
+set(gca, 'XTickLabelRotation', 45)
+title('300 clients')
+ylabel('Average waiting time (microseconds)');
+xlim([0 12.5])
+%set(gcf,'PaperUnits','inches','PaperPosition',[0 0 16 12])
+%print('box_300clients','-dpng','-r0')
