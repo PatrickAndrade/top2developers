@@ -8,39 +8,74 @@
 % will be able to compare between them (watch out ! this comparison makes
 % only sense for this fix number of clients, it could be that for a
 
-load Results_10clients\StarterIOMultiGlobalLock.txt;
-load Results_10clients\StarterIOMultiKeysLock.txt;
+load Results_25clients\StarterIOMultiGlobalLock.txt;
+load Results_25clients\StarterIOMultiKeysLock.txt;
 
-load Results_10clients\StarterIOMultiMapsLock.txt;
-load Results_10clients\StarterIOMultiPipelinedGlobalLock.txt;
+load Results_25clients\StarterIOMultiMapsLock.txt;
+load Results_25clients\StarterIOMultiPipelinedGlobalLock.txt;
 
-load Results_10clients\StarterIOMultiPipelinedKeysLock.txt;
-load Results_10clients\StarterIOMultiPipelinedMapsLock.txt;
+load Results_25clients\StarterIOMultiPipelinedKeysLock.txt;
+load Results_25clients\StarterIOMultiPipelinedMapsLock.txt;
 
-load Results_10clients\StarterIOSingle.txt;
-load Results_10clients\StarterIOSinglePipelined.txt;
+load Results_25clients\StarterIOSingle.txt;
+load Results_25clients\StarterIOSinglePipelined.txt;
 
-load Results_10clients\StarterNIOMultiGlobalLock.txt;
-load Results_10clients\StarterNIOMultiKeysLock.txt;
+load Results_25clients\StarterNIOMultiGlobalLock.txt;
+load Results_25clients\StarterNIOMultiKeysLock.txt;
 
-load Results_10clients\StarterNIOMultiMapsLock.txt;
-load Results_10clients\StarterNIOSingle.txt;
+load Results_25clients\StarterNIOMultiMapsLock.txt;
+load Results_25clients\StarterNIOSingle.txt;
 
 figure
 hold all;
 
 % confidence level
 alpha = 0.05;
-N = 100;
+N = 300;
 
-values = StarterIOMultiGlobalLock;
+for loop=1:12
 
-m=mean(values);
-plot(2, m, 'bx')
-ci = norminv(1-alpha/2,0,1) * std(values)/sqrt(N); 
-errorbar(2,m,ci);
+    switch loop
+        case 1
+            values = StarterIOMultiGlobalLock;
+        case 2
+            values = StarterIOMultiKeysLock;
+        case 3
+            values = StarterIOMultiMapsLock;
+        case 4
+            values = StarterIOMultiPipelinedGlobalLock;
+        case 5
+            values = StarterIOMultiPipelinedKeysLock;
+        case 6
+            values = StarterIOMultiPipelinedMapsLock;
+        case 7
+            values = StarterIOSingle;
+        case 8
+            values = StarterIOSinglePipelined;
+        case 9
+            values = StarterNIOMultiGlobalLock;
+        case 10
+            values = StarterNIOMultiKeysLock;
+        case 11
+            values = StarterNIOMultiMapsLock;
+        case 12
+            values = StarterNIOSingle;
+        otherwise
+    end
 
-set(gca, 'XTickLabelMode', 'manual', 'XTickLabel', []);
-%ylim([1 2])
-xlim([0.5 2.5])
-%print -r1600 -depsc2 confidence_intervals
+
+    m=mean(values);
+    plot(loop, m, 'bx')
+    ci = norminv(1-alpha/2,0,1) * std(values)/sqrt(N); 
+    errorbar(loop,m,ci);
+end
+
+set(gca,'xtick',1:1:12);
+set(gca,'xTickLabel',{'IOMultiGlobalLock','IOMultiKeysLock','IOMultiMapsLock','IOMultiPipelinedGlobalLock','IOMultiPipelinedKeysLock','IOMultiPipelinedMapsLock','IOSingle','IOSinglePipelined','NIOMultiGlobalLock','NIOMultiKeysLock','NIOMultiMapsLock','NIOSingle'})
+set(gca, 'XTickLabelRotation', 45)
+title('25 clients')
+ylabel('Average waiting time (microseconds)');
+xlim([0 12.5])
+ylim([1200 1360])
+set(gcf,'PaperUnits','inches','PaperPosition',[0 0 16 12])
+print('conf_25clients_mean','-dpng','-r0')
